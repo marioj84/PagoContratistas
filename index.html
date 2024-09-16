@@ -89,12 +89,20 @@
             background-color: #800000;
         }
 
+        .verde {
+            background-color: #28a745;
+        }
+
         button:hover {
             background-color: #003380;
         }
 
         .burdeo:hover {
             background-color: #5a0000;
+        }
+
+        .verde:hover {
+            background-color: #218838;
         }
 
         #summary {
@@ -226,6 +234,7 @@
 
     <div style="text-align: center;">
         <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
+        <button id="updateSummaryBtn" class="verde hidden" onclick="viewSummary()">Actualizar Resumen</button>
     </div>
 
     <h3>Resumen</h3>
@@ -338,7 +347,8 @@
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
                 displaySummary();
-                document.getElementById('summaryBtn').classList.add('hidden'); // Ocultar botón de resumen
+                document.getElementById('summaryBtn').classList.add('hidden'); // Ocultar botón de ver resumen
+                document.getElementById('updateSummaryBtn').classList.remove('hidden'); // Mostrar botón de actualizar resumen
                 document.getElementById('finalizeBtn').classList.remove('hidden'); // Mostrar botón de finalizar
             }
         }
@@ -390,7 +400,7 @@
             document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th>Acciones</th></tr>';
             document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
             document.getElementById('finalizeBtn').classList.add('hidden');  // Ocultar el botón de finalizar
-            document.getElementById('summaryBtn').classList.add('hidden');  // Ocultar el botón de resumen
+            document.getElementById('updateSummaryBtn').classList.add('hidden');  // Ocultar el botón de actualizar resumen
             otData = [];  // Limpiar los datos
         }
     </script>
