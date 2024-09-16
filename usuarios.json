@@ -1,22 +1,82 @@
 {
-    "acornejo": "Cs23433",
-    "afuentes": "Eh14328",
-    "dojeda": "Ix44978",
-    "ealvarez": "Nk27042",
-    "fsoto": "Mh26963",
-    "fpalavicino": "Wl61194",
-    "ffuenzalida": "Ff69982",
-    "gstuardo": "Mk10705",
-    "hpavez": "Ub71917",
-    "hconstrucciones": "Pi54282",
-    "jvega": "Vs97623",
-    "jservicios": "Vh57463",
-    "jferrada": "Cy52525",
-    "jgallardo": "Iy97306",
-    "kantofagasta": "Eb34367",
-    "kcalama": "Ex32261",
-    "msuarez": "Qk45649",
-    "mvalencia": "Fk93098",
-    "vfernando": "Fa66156",
-    "ybecerra": "Eg91906"
+    "acornejo": {
+        "password": "Pp54028",
+        "nombre": "ANA CORNEJO"
+    },
+    "afuentes": {
+        "password": "Wx71283",
+        "nombre": "ANGELICA FUENTES FUENTES"
+    },
+    "dojeda": {
+        "password": "Lf92574",
+        "nombre": "DANIEL OJEDA"
+    },
+    "ealvarez": {
+        "password": "Hb15392",
+        "nombre": "EFRAIN ALVAREZ"
+    },
+    "fsoto": {
+        "password": "Wb49285",
+        "nombre": "FERNANDO SOTO"
+    },
+    "fpalavicino": {
+        "password": "Wl61194",
+        "nombre": "FREDDY PALAVICINO"
+    },
+    "ffuenzalida": {
+        "password": "Zm24736",
+        "nombre": "FUENZALIDA Y FUENZALIDA CIA. LTDA"
+    },
+    "gstuardo": {
+        "password": "Ns83742",
+        "nombre": "GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES"
+    },
+    "hpavez": {
+        "password": "Qe69258",
+        "nombre": "HUGO PAVEZ"
+    },
+    "hconstrucciones": {
+        "password": "Jt23957",
+        "nombre": "HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L."
+    },
+    "jvega": {
+        "password": "Rd38245",
+        "nombre": "JENNY VEGA"
+    },
+    "jservicios": {
+        "password": "Ct85147",
+        "nombre": "JMG SERVICIOS"
+    },
+    "jferrada": {
+        "password": "Xf56132",
+        "nombre": "JUAN FERRADA ESCOBAR"
+    },
+    "jgallardo": {
+        "password": "Pn84751",
+        "nombre": "JUAN GALLARDO CERDA"
+    },
+    "kantofagasta": {
+        "password": "Jv69481",
+        "nombre": "KLAIT ANTOFAGASTA"
+    },
+    "kcalama": {
+        "password": "Np51983",
+        "nombre": "KLAIT CALAMA"
+    },
+    "msuarez": {
+        "password": "Fx27893",
+        "nombre": "MANUEL SUAREZ"
+    },
+    "mvalencia": {
+        "password": "Vc13487",
+        "nombre": "MARLENE VALENCIA"
+    },
+    "vfernando": {
+        "password": "Xh94361",
+        "nombre": "VICTOR FERNANDO CRUCES CESPEDES"
+    },
+    "ybecerra": {
+        "password": "Np62537",
+        "nombre": "YANINA BECERRA"
+    }
 }
