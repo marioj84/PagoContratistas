@@ -505,6 +505,18 @@ function addRow() {
     // Cargar los precios al cargar la página
     document.addEventListener('DOMContentLoaded', loadPrecios);
 </script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+            window.location.href = "login.html";  // Redirigir a la página de login si no está autenticado
+        } else {
+            document.getElementById('contratista').value = loggedInUser;  // Mostrar el contratista logueado
+            document.getElementById('contratista').disabled = true;  // Deshabilitar la opción de cambiar el contratista
+        }
+    });
+</script>
 
 </body>
 </html>
