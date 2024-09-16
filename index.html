@@ -261,64 +261,73 @@
     <script>
         let otData = [];
 
-        function addRow() {
-            const table = document.getElementById('otTable');
-            const row = table.insertRow();
-            const otCell = row.insertCell(0);
-            const tipoCell = row.insertCell(1);
-            const cantCell = row.insertCell(2);
-            const descCell = row.insertCell(3);
-            const montoCell = row.insertCell(4);
-            const subtotalCell = row.insertCell(5);
-            const actionsCell = row.insertCell(6);
+function addRow() {
+    const table = document.getElementById('otTable');
+    const row = table.insertRow();
+    const otCell = row.insertCell(0);
+    const tipoCell = row.insertCell(1);
+    const cantCell = row.insertCell(2);
+    const descCell = row.insertCell(3);
+    const montoCell = row.insertCell(4);
+    const subtotalCell = row.insertCell(5);
+    const actionsCell = row.insertCell(6);
 
-            const inputOT = document.createElement('input');
-            inputOT.type = 'number';
-            inputOT.min = "1";
-            otCell.appendChild(inputOT);
+    const inputOT = document.createElement('input');
+    inputOT.type = 'number';
+    inputOT.min = "1";
+    otCell.appendChild(inputOT);
 
-            const selectTipo = document.createElement('select');
-            const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Cambio de Medidor'];
-            opciones.forEach(opcion => {
-                const optionElement = document.createElement('option');
-                optionElement.value = opcion;
-                optionElement.text = opcion;
-                selectTipo.appendChild(optionElement);
-            });
-            tipoCell.appendChild(selectTipo);
+    const selectTipo = document.createElement('select');
+    const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Cambio de Medidor'];
+    opciones.forEach(opcion => {
+        const optionElement = document.createElement('option');
+        optionElement.value = opcion;
+        optionElement.text = opcion;
+        selectTipo.appendChild(optionElement);
+    });
+    tipoCell.appendChild(selectTipo);
 
-            const inputCant = document.createElement('input');
-            inputCant.type = 'number';
-            inputCant.value = '1';
-            inputCant.min = '1';
-            inputCant.onchange = function() { updateSubtotal(row); };
-            cantCell.appendChild(inputCant);
+    const inputCant = document.createElement('input');
+    inputCant.type = 'number';
+    inputCant.value = '1';
+    inputCant.min = '1';
+    inputCant.onchange = function() { updateSubtotal(row); };
+    cantCell.appendChild(inputCant);
 
-            const inputDesc = document.createElement('input');
-            inputDesc.type = 'text';
-            descCell.appendChild(inputDesc);
+    const inputDesc = document.createElement('input');
+    inputDesc.type = 'text';
+    descCell.appendChild(inputDesc);
 
-            const inputMonto = document.createElement('input');
-            inputMonto.type = 'number';
-            inputMonto.placeholder = '$0.00';
-            inputMonto.min = "0";
-            inputMonto.onchange = function() { updateSubtotal(row); };
-            montoCell.appendChild(inputMonto);
+    const inputMonto = document.createElement('input');
+    inputMonto.type = 'number';
+    inputMonto.placeholder = '$0.00';
+    inputMonto.min = "0";
+    inputMonto.onchange = function() { updateSubtotal(row); };
+    montoCell.appendChild(inputMonto);
 
-            const inputSubtotal = document.createElement('input');
-            inputSubtotal.type = 'text';
-            inputSubtotal.value = '0.00';
-            inputSubtotal.disabled = true;
-            subtotalCell.appendChild(inputSubtotal);
+    const inputSubtotal = document.createElement('input');
+    inputSubtotal.type = 'text';
+    inputSubtotal.value = '0.00';
+    inputSubtotal.disabled = true;
+    subtotalCell.appendChild(inputSubtotal);
 
-            const deleteButton = document.createElement('button');
-            deleteButton.innerText = 'Eliminar OT';
-            deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.onclick = () => deleteRow(row);
-            actionsCell.appendChild(deleteButton);
+    // Crear botón Agregar OT
+    const addButton = document.createElement('button');
+    addButton.innerText = 'Agregar OT';
+    addButton.className = 'acciones-btn verde';
+    addButton.onclick = addRow;
+    actionsCell.appendChild(addButton);
 
-            document.getElementById('summaryBtn').classList.remove('hidden');
-        }
+    // Botón Eliminar OT
+    const deleteButton = document.createElement('button');
+    deleteButton.innerText = 'Eliminar OT';
+    deleteButton.className = 'acciones-btn burdeo';
+    deleteButton.onclick = () => deleteRow(row);
+    actionsCell.appendChild(deleteButton);
+
+    document.getElementById('summaryBtn').classList.remove('hidden');
+}
+
 
         function updateSubtotal(row) {
             const cantidad = row.cells[2].children[0].value;
