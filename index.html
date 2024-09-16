@@ -444,7 +444,7 @@
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-                       XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+                        XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             document.getElementById('contratista').value = '';
             document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-cant">Cant</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th class="col-subtotal">Subtotal</th><th>Acciones</th></tr>';
