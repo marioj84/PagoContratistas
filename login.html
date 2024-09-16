@@ -3,178 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso a Portal de Pago Contratistas</title>
+    <title>Login Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
+        
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        .container {
-            background-color: white;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 40px;
-            max-width: 400px;
-            width: 100%;
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
             text-align: center;
-            position: relative;
-        }
-
-        #logo {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 100px;
         }
 
         h2 {
             color: #004aad;
-            font-size: 1.8em;
             margin-bottom: 20px;
         }
 
-        h4 {
-            color: #666;
-            font-size: 1em;
-            margin-bottom: 20px;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        input {
-            padding: 12px;
-            margin: 10px 0;
+        input[type="text"], input[type="password"] {
             width: 100%;
-            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
             border: 1px solid #ccc;
-            font-size: 1em;
-        }
-
-        .password-wrapper {
-            position: relative;
-            display: flex;
-        }
-
-        .password-wrapper input {
-            flex: 1;
-            padding-right: 40px;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 1.2em;
-            color: #666;
+            border-radius: 5px;
         }
 
         button {
-            padding: 12px;
-            margin-top: 20px;
+            padding: 10px;
             width: 100%;
             background-color: #004aad;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 1em;
+            margin-top: 10px;
         }
 
         button:hover {
             background-color: #003380;
         }
 
-        #login-error {
+        .error-msg {
             color: red;
             font-size: 0.9em;
             display: none;
-            margin-bottom: 10px;
-        }
-
-        footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-        <h2>Ingreso a Portal de Pago Contratistas</h2>
-        <h4>Acceda con su usuario y contraseña</h4>
 
-        <div id="login-error">Usuario o contraseña incorrectos. Inténtelo de nuevo.</div>
-
-        <form id="login-form">
-            <input type="text" id="username" placeholder="Usuario" required><br>
-            <div class="password-wrapper">
-                <input type="password" id="password" placeholder="Contraseña" required>
-                <span class="toggle-password" onclick="togglePassword()">👁️</span>
-            </div>
-            <button type="button" onclick="login()">Iniciar sesión</button>
-        </form>
-
-        <footer>
-            Para asistencia, contacte a <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>
-        </footer>
+    <div class="login-container">
+        <h2>Login Contratistas</h2>
+        <input type="text" id="username" placeholder="Usuario">
+        <input type="password" id="password" placeholder="Contraseña">
+        <div class="error-msg" id="error-msg">Usuario o contraseña incorrectos</div>
+        <button onclick="login()">Iniciar Sesión</button>
     </div>
 
     <script>
-        let usuarios = {};
+        // Simulación de usuarios desde un archivo JSON
+        const usuarios = {
+            "acornejo": {
+                "password": "Pp54028",
+                "nombre": "ANA CORNEJO"
+            },
+            "afuentes": {
+                "password": "Wx71283",
+                "nombre": "ANGELICA FUENTES FUENTES"
+            },
+            "dojeda": {
+                "password": "Lf92574",
+                "nombre": "DANIEL OJEDA"
+            },
+            // Resto de los usuarios...
+        };
 
-        // Cargar los usuarios y contraseñas desde el archivo JSON
-        function loadUsuarios() {
-            fetch('https://marioj84.github.io/PagoContratistas/usuarios.json')  // Cambia la URL si es necesario
-            .then(response => response.json())
-            .then(data => {
-                usuarios = data;
-                console.log("Usuarios cargados:", usuarios);  // Verificar que los usuarios se carguen correctamente
-            })
-            .catch(error => {
-                console.error("Error al cargar usuarios:", error);
-            });
-        }
-
-        // Función para el login
         function login() {
-            const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas
-            const password = document.getElementById('password').value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorMsg = document.getElementById("error-msg");
 
-            // Verificar usuario y contraseña
+            // Validación de usuario y contraseña
             if (usuarios[username] && usuarios[username].password === password) {
-                localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
-                localStorage.setItem('loggedInName', usuarios[username].nombre);  // Guardar el nombre completo del contratista
-                window.location.href = "index.html";  // Redirigir al formulario de carga de OT
+                localStorage.setItem('loggedUser', JSON.stringify(usuarios[username]));
+                window.location.href = 'pagina_principal.html';  // Redirige a la página principal
             } else {
-                document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
+                errorMsg.style.display = "block";
             }
         }
-
-        // Mostrar u ocultar contraseña
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type;
-        }
-
-        // Cargar usuarios al iniciar la página
-        document.addEventListener('DOMContentLoaded', loadUsuarios);
     </script>
+
 </body>
 </html>
