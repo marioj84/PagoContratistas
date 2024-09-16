@@ -203,9 +203,6 @@
             document.getElementById('contratista').value = nombreContratista;  // Mostrar el contratista logueado
             document.getElementById('contratista').disabled = true;  // Deshabilitar la opción de cambiar el contratista
         }
-
-        // Cargar precios
-        loadPrecios();
     });
     </script>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
@@ -219,8 +216,28 @@
 
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista" disabled>
+        <select id="contratista" onchange="updateMontos()" disabled>
             <option value="">Seleccione un contratista</option>
+            <option value="ANA CORNEJO">ANA CORNEJO</option>
+            <option value="ANGELICA FUENTES FUENTES">ANGELICA FUENTES FUENTES</option>
+            <option value="DANIEL OJEDA">DANIEL OJEDA</option>
+            <option value="EFRAIN ALVAREZ">EFRAIN ALVAREZ</option>
+            <option value="FERNANDO SOTO">FERNANDO SOTO</option>
+            <option value="FREDDY PALAVICINO">FREDDY PALAVICINO</option>
+            <option value="FUENZALIDA Y FUENZALIDA CIA. LTDA">FUENZALIDA Y FUENZALIDA CIA. LTDA</option>
+            <option value="GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES">GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES</option>
+            <option value="HUGO PAVEZ">HUGO PAVEZ</option>
+            <option value="HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.">HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.</option>
+            <option value="JENNY VEGA">JENNY VEGA</option>
+            <option value="JMG SERVICIOS">JMG SERVICIOS</option>
+            <option value="JUAN FERRADA ESCOBAR">JUAN FERRADA ESCOBAR</option>
+            <option value="JUAN GALLARDO CERDA">JUAN GALLARDO CERDA</option>
+            <option value="KLAIT ANTOFAGASTA">KLAIT ANTOFAGASTA</option>
+            <option value="KLAIT CALAMA">KLAIT CALAMA</option>
+            <option value="MANUEL SUAREZ">MANUEL SUAREZ</option>
+            <option value="MARLENE VALENCIA">MARLENE VALENCIA</option>
+            <option value="VICTOR FERNANDO CRUCES CESPEDES">VICTOR FERNANDO CRUCES CESPEDES</option>
+            <option value="YANINA BECERRA">YANINA BECERRA</option>
         </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
@@ -253,6 +270,7 @@
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
     </footer>
+
     <script>
         let otData = [];
 
@@ -444,55 +462,57 @@
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-                        XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             document.getElementById('contratista').value = '';
             document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-cant">Cant</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th class="col-subtotal">Subtotal</th><th>Acciones</th></tr>';
             document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
             document.getElementById('finalizeBtn').classList.add('hidden');  
             document.getElementById('updateSummaryBtn').classList.add('hidden');  
-            otData = []; 
+            otData = [];
         }
-
-        // Función para cargar los precios desde el archivo JSON
-        let precios = {};
-
-        function loadPrecios() {
-            fetch('https://marioj84.github.io/PagoContratistas/precios.json')
-                .then(response => response.json())
-                .then(data => {
-                    precios = data;
-                    console.log("Precios cargados:", precios);
-                })
-                .catch(error => {
-                    console.error("Error al cargar los precios:", error);
-                });
-        }
-
-        // Función para actualizar los montos según el contratista y el tipo de trabajo seleccionado
-        function updateMontos() {
-            const contratista = localStorage.getItem('loggedInName').toUpperCase().trim();  // Obtener contratista logueado y normalizar
-            const filas = document.querySelectorAll('#otTable tr');
-
-            filas.forEach((fila, index) => {
-                if (index === 0) return;  // Saltar la fila de cabecera
-
-                const tipoTrabajo = fila.cells[1].children[0].value.trim();
-                const montoInput = fila.cells[4].children[0];
-
-                // Verificar si existen precios para el contratista y el tipo de trabajo
-                if (contratista in precios && tipoTrabajo in precios[contratista]) {
-                    montoInput.value = precios[contratista][tipoTrabajo];  // Poner el precio predeterminado
-                    updateSubtotal(fila);  // Recalcular el subtotal
-                } else {
-                    montoInput.value = '0.00';  // Si no hay precio predeterminado, poner 0.00
-                }
-            });
-        }
-
-        // Cargar los precios al cargar la página
-        document.addEventListener('DOMContentLoaded', loadPrecios);
     </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script>
+    let precios = {}; // Aquí se almacenarán los precios cargados del archivo JSON
+
+    // Función para cargar los precios desde el archivo JSON
+    function loadPrecios() {
+        fetch('https://marioj84.github.io/PagoContratistas/precios.json')  // URL de tu archivo JSON
+        .then(response => response.json())  // Convertir la respuesta a JSON
+        .then(data => {
+            precios = data;
+            console.log("Precios cargados:", precios);  // Para depuración, puedes eliminar esto después
+        })
+        .catch(error => {
+            console.error("Error al cargar los precios:", error);
+        });
+    }
+
+    // Función para actualizar los montos según el contratista y el tipo de trabajo seleccionado
+    function updateMontos() {
+        const contratista = document.getElementById('contratista').value.trim().toLowerCase();  // Normalizar el contratista
+        const filas = document.querySelectorAll('#otTable tr');  // Obtener todas las filas de la tabla OT
+
+        filas.forEach((fila, index) => {
+            if (index === 0) return; // Saltar la fila de cabecera
+
+            const tipoTrabajo = fila.cells[1].children[0].value.trim().toLowerCase();  // Normalizar el tipo de trabajo
+            const montoInput = fila.cells[4].children[0];  // Obtener el campo de Monto
+
+            // Verificar si existen precios para el contratista y el tipo de trabajo
+            if (contratista in precios && tipoTrabajo in precios[contratista]) {
+                montoInput.value = precios[contratista][tipoTrabajo];  // Poner el precio predeterminado
+                updateSubtotal(fila);  // Recalcular el subtotal
+            } else {
+                montoInput.value = '0.00';  // Si no hay precio predeterminado, poner 0.00
+            }
+        });
+    }
+
+    // Cargar los precios al cargar la página
+    document.addEventListener('DOMContentLoaded', loadPrecios);
+    </script>
 </body>
 </html>
