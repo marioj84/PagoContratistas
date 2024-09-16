@@ -97,11 +97,29 @@
         // Función para obtener el nombre completo del contratista en base al nombre de usuario
 function obtenerNombreContratista(username) {
     const nombresContratistas = {
-        "acornejo": "ANA CORNEJO",
-        "afuentes": "ANGELICA FUENTES FUENTES",
-        "dojeda": "DANIEL OJEDA",
-        "ealvarez": "EFRAIN ALVAREZ",
-        "fsoto": "FERNANDO SOTO",
+        {
+    "acornejo": "ANA CORNEJO",
+    "afuentes": "ANGELICA FUENTES FUENTES",
+    "dojeda": "DANIEL OJEDA",
+    "ealvarez": "EFRAIN ALVAREZ",
+    "fsoto": "FERNANDO SOTO",
+    "fpalavicino": "FREDDY PALAVICINO",
+    "ffuenzalida": "FUENZALIDA Y FUENZALIDA CIA. LTDA",
+    "gstuardo": "GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES",
+    "hpavez": "HUGO PAVEZ",
+    "hconstrucciones": "HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.",
+    "jvega": "JENNY VEGA",
+    "jservicios": "JMG SERVICIOS",
+    "jferrada": "JUAN FERRADA ESCOBAR",
+    "jgallardo": "JUAN GALLARDO CERDA",
+    "kantofagasta": "KLAIT ANTOFAGASTA",
+    "kcalama": "KLAIT CALAMA",
+    "msuarez": "MANUEL SUAREZ",
+    "mvalencia": "MARLENE VALENCIA",
+    "vfernando": "VICTOR FERNANDO CRUCES CESPEDES",
+    "ybecerra": "YANINA BECERRA"
+}
+
         // Agrega el resto de los usuarios con sus nombres completos...
     };
     return nombresContratistas[username] || '';  // Retorna el nombre completo o vacío si no lo encuentra
