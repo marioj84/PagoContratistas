@@ -29,11 +29,12 @@
             margin-bottom: 20px;
         }
 
+        /* Estilo del logo, doble de tamaño en pantallas grandes */
         #logo {
             position: absolute;
             top: 20px;
             left: 20px;
-            width: 240px;
+            width: 240px; /* Doble tamaño para pantallas grandes */
         }
 
         table {
@@ -61,10 +62,6 @@
             padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-
-        td input[type="number"] {
-            max-width: 80px;
         }
 
         td select {
@@ -162,7 +159,7 @@
             }
 
             #logo {
-                width: 180px;
+                width: 180px; /* Ajuste en tablets */
             }
         }
 
@@ -186,185 +183,60 @@
             }
 
             #logo {
-                width: 120px;
+                width: 120px; /* Ajuste en celulares */
             }
         }
     </style>
 </head>
 <body>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const loggedInUser = localStorage.getItem('loggedInUser');
-        const nombreContratista = localStorage.getItem('loggedInName');
-        
-        if (!loggedInUser || !nombreContratista) {
-            window.location.href = "login.html";  // Redirigir a la página de login si no está autenticado
-        } else {
-            document.getElementById('contratista').value = nombreContratista;  // Mostrar el contratista logueado
-            document.getElementById('contratista').disabled = true;  // Deshabilitar la opción de cambiar el contratista
-        }
-    });
-    </script>
-    
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
+    <!-- Descripción del uso de la página -->
     <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
+    <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
-    <select id="contratista" disabled></select>
-
-    <button onclick="addRow()">Cargar OT</button>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <select id="contratista">
+            <option value="">Seleccione un contratista</option>
+            <option value="ANA CORNEJO">ANA CORNEJO</option>
+            <option value="ANGELICA FUENTES FUENTES">ANGELICA FUENTES FUENTES</option>
+            <option value="DANIEL OJEDA">DANIEL OJEDA</option>
+            <option value="EFRAIN ALVAREZ">EFRAIN ALVAREZ</option>
+            <option value="FERNANDO SOTO">FERNANDO SOTO</option>
+            <option value="FREDDY PALAVICINO">FREDDY PALAVICINO</option>
+            <option value="FUENZALIDA Y FUENZALIDA CIA. LTDA">FUENZALIDA Y FUENZALIDA CIA. LTDA</option>
+            <option value="GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES">GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES</option>
+            <option value="HUGO PAVEZ">HUGO PAVEZ</option>
+            <option value="HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.">HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.</option>
+            <option value="JENNY VEGA">JENNY VEGA</option>
+            <option value="JMG SERVICIOS">JMG SERVICIOS</option>
+            <option value="JUAN FERRADA ESCOBAR">JUAN FERRADA ESCOBAR</option>
+            <option value="JUAN GALLARDO CERDA">JUAN GALLARDO CERDA</option>
+            <option value="KLAIT ANTOFAGASTA">KLAIT ANTOFAGASTA</option>
+            <option value="KLAIT CALAMA">KLAIT CALAMA</option>
+            <option value="MANUEL SUAREZ">MANUEL SUAREZ</option>
+            <option value="MARLENE VALENCIA">MARLENE VALENCIA</option>
+            <option value="VICTOR FERNANDO CRUCES CESPEDES">VICTOR FERNANDO CRUCES CESPEDES</option>
+            <option value="YANINA BECERRA">YANINA BECERRA</option>
+        </select>
+        <button onclick="addRow()">Cargar OT</button>
+    </div>
 
     <table id="otTable">
         <tr>
-            <th>OT</th>
+            <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
-            <th>Cant</th>
-            <th>Descripción</th>
-            <th>Monto</th>
-            <th>Subtotal</th>
+            <th class="col-descripcion">Descripción</th>
+            <th class="col-monto">Monto</th>
             <th>Acciones</th>
         </tr>
     </table>
-
-    <script>
-        let precios = {}; // Aquí se almacenarán los precios cargados del archivo JSON
-
-        // Función para cargar los precios desde el archivo JSON
-        function loadPrecios() {
-            fetch('https://marioj84.github.io/PagoContratistas/precios.json')
-            .then(response => response.json())
-            .then(data => {
-                precios = data;
-            })
-            .catch(error => {
-                console.error("Error al cargar los precios:", error);
-            });
-        }
-
-        // Función para agregar una nueva fila de OT
-        function addRow() {
-            const table = document.getElementById('otTable');
-            const row = table.insertRow();
-            const otCell = row.insertCell(0);
-            const tipoCell = row.insertCell(1);
-            const cantCell = row.insertCell(2);
-            const descCell = row.insertCell(3);
-            const montoCell = row.insertCell(4);
-            const subtotalCell = row.insertCell(5);
-            const actionsCell = row.insertCell(6);
-
-            const inputOT = document.createElement('input');
-            inputOT.type = 'number';
-            inputOT.min = "1";
-            otCell.appendChild(inputOT);
-
-            const selectTipo = document.createElement('select');
-            const opciones = [
-                'Retiro de Medidor', 
-                'Reinstalación de Medidor', 
-                'Presupuesto Trabajo en Terreno', 
-                'Cambio de Medidor', 
-                'Verificación de Medidor en Terreno', 
-                'Cambio de Ubicación Medidor', 
-                'Verificación de Lectura', 
-                'Revisión de Merma', 
-                'PH y Análisis de Medidor'
-            ];
-
-            opciones.forEach(opcion => {
-                const optionElement = document.createElement('option');
-                optionElement.value = opcion;
-                optionElement.text = opcion;
-                selectTipo.appendChild(optionElement);
-            });
-
-            // Agregar un evento de cambio para actualizar solo la fila seleccionada
-            selectTipo.onchange = function() {
-                updateMontoFila(row);
-            };
-            tipoCell.appendChild(selectTipo);
-
-            const inputCant = document.createElement('input');
-            inputCant.type = 'number';
-            inputCant.value = '1';
-            inputCant.min = '1';
-            inputCant.onchange = function() {
-                updateSubtotal(row);
-            };
-            cantCell.appendChild(inputCant);
-
-            const inputDesc = document.createElement('input');
-            inputDesc.type = 'text';
-            descCell.appendChild(inputDesc);
-
-                        const inputMonto = document.createElement('input');
-            inputMonto.type = 'number';
-            inputMonto.placeholder = '$0.00';
-            inputMonto.min = "0";
-            inputMonto.onchange = function() {
-                updateSubtotal(row);
-            };
-            montoCell.appendChild(inputMonto);
-
-            const inputSubtotal = document.createElement('input');
-            inputSubtotal.type = 'text';
-            inputSubtotal.value = '0.00';
-            inputSubtotal.disabled = true;
-            subtotalCell.appendChild(inputSubtotal);
-
-            const addButton = document.createElement('button');
-            addButton.innerText = 'Agregar OT';
-            addButton.className = 'acciones-btn verde';
-            addButton.onclick = addRow;
-            actionsCell.appendChild(addButton);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.innerText = 'Eliminar OT';
-            deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.onclick = () => deleteRow(row);
-            actionsCell.appendChild(deleteButton);
-
-            updateMontoFila(row);  // Actualizar el monto predeterminado de la fila al agregarla
-            document.getElementById('summaryBtn').classList.remove('hidden');
-        }
-
-        // Función para actualizar el subtotal de una fila
-        function updateSubtotal(row) {
-            const cantidad = row.cells[2].children[0].value;
-            const monto = row.cells[4].children[0].value;
-            const subtotal = parseFloat(cantidad) * parseFloat(monto);
-            row.cells[5].children[0].value = isNaN(subtotal) ? '0.00' : subtotal.toFixed(2);
-        }
-
-        // Función para actualizar el monto de una fila cuando se selecciona un tipo de OT
-        function updateMontoFila(row) {
-            const contratista = document.getElementById('contratista').value.trim();
-            const tipoTrabajo = row.cells[1].children[0].value;
-            const montoInput = row.cells[4].children[0];
-
-            if (precios[contratista] && precios[contratista][tipoTrabajo]) {
-                montoInput.value = precios[contratista][tipoTrabajo];
-            } else {
-                montoInput.value = '0.00';
-            }
-            updateSubtotal(row);  // Actualizar el subtotal de la fila
-        }
-
-        // Función para eliminar una fila
-        function deleteRow(row) {
-            row.remove();
-        }
-
-        // Cargar los precios al cargar la página
-        document.addEventListener('DOMContentLoaded', loadPrecios);
-
-    </script>
 
     <div style="text-align: center;">
         <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
@@ -378,16 +250,70 @@
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
     </div>
 
+    <!-- Pie de página con contacto -->
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script>
         let otData = [];
 
-        // Función para ver el resumen
+        function addRow() {
+            const table = document.getElementById('otTable');
+            const row = table.insertRow();
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const descCell = row.insertCell(2);
+            const montoCell = row.insertCell(3);
+            const actionsCell = row.insertCell(4);
+
+            const inputOT = document.createElement('input');
+            inputOT.type = 'number';
+            inputOT.step = "1";  
+            inputOT.min = "1";
+            otCell.appendChild(inputOT);
+
+            const selectTipo = document.createElement('select');
+            const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Presupuesto Trabajo en Terreno', 'Cambio de Medidor', 'Verificación de Medidor en Terreno', 'Cambio de Ubicación Medidor', 'Verificación de Lectura', 'Revisión de Merma', 'PH y Análisis de Medidor'];
+            opciones.forEach(opcion => {
+                const optionElement = document.createElement('option');
+                optionElement.value = opcion;
+                optionElement.text = opcion;
+                selectTipo.appendChild(optionElement);
+            });
+            tipoCell.appendChild(selectTipo);
+
+            const inputDesc = document.createElement('input');
+            inputDesc.type = 'text';
+            descCell.appendChild(inputDesc);
+
+            const inputMonto = document.createElement('input');
+            inputMonto.type = 'number';
+            inputMonto.placeholder = '$0.00';
+            inputMonto.step = "0.01";
+            inputMonto.min = "0";
+            montoCell.appendChild(inputMonto);
+
+            const addButton = document.createElement('button');
+            addButton.innerText = 'Agregar nueva OT';
+            addButton.className = 'acciones-btn';
+            addButton.onclick = addRow;
+            actionsCell.appendChild(addButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Eliminar OT';
+            deleteButton.className = 'acciones-btn burdeo';
+            deleteButton.onclick = () => deleteRow(row);
+            actionsCell.appendChild(deleteButton);
+
+            document.getElementById('summaryBtn').classList.remove('hidden');
+        }
+
+        function deleteRow(row) {
+            row.remove(); 
+        }
+
         function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
@@ -406,22 +332,20 @@
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
                 const tipo = row.cells[1].children[0].value;
-                const cantidad = row.cells[2].children[0].value;
-                const descripcion = row.cells[3].children[0].value.trim();
-                const monto = row.cells[4].children[0].value.trim();
-                const subtotal = row.cells[5].children[0].value.trim();
+                const descripcion = row.cells[2].children[0].value.trim();
+                const monto = row.cells[3].children[0].value.trim();
 
-                if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
+                if (ot === "" || descripcion === "" || monto === "") {
                     document.getElementById('error-msg').style.display = "block";
                     const cells = row.cells;
                     cells[0].children[0].style.border = ot === "" ? "2px solid red" : "";  
-                    cells[3].children[0].style.border = descripcion === "" ? "2px solid red" : "";  
-                    cells[4].children[0].style.border = monto === "" ? "2px solid red" : "";  
+                    cells[2].children[0].style.border = descripcion === "" ? "2px solid red" : "";  
+                    cells[3].children[0].style.border = monto === "" ? "2px solid red" : "";  
                     valid = false;
                     break;
                 } else {
                     const fechaCarga = new Date().toLocaleString();
-                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto: parseFloat(monto).toFixed(2), subtotal: parseFloat(subtotal).toFixed(2), fechaCarga });
+                    otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2), fechaCarga });
                 }
             }
 
@@ -443,9 +367,9 @@
                 if (!resumenPorTipo[data.tipo]) {
                     resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
                 }
-                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
-                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
-                totalMonto += parseFloat(data.subtotal);
+                resumenPorTipo[data.tipo].cantidad += 1;
+                resumenPorTipo[data.tipo].total += parseFloat(data.monto);
+                totalMonto += parseFloat(data.monto);
                 totalTrabajos += 1;
             });
 
@@ -467,28 +391,33 @@
             ];
 
             const detalleContent = [
-                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal", "Fecha de Carga"]
+                ["Contratista", "OT", "Tipo de OT", "Descripción", "Monto", "Fecha de Carga"]
             ];
 
             let total = 0;
 
             otData.forEach(row => {
-                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal, row.fechaCarga]);
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.descripcion, row.monto, row.fechaCarga]);
                 const resumenRow = resumenContent.find(res => res[1] === row.tipo);
                 if (!resumenRow) {
-                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+                    resumenContent.push([1, row.tipo, row.monto]);
                 } else {
-                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
-                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+                    resumenRow[0] += 1;
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.monto)).toFixed(2);
                 }
-                total += parseFloat(row.subtotal);
+                total += parseFloat(row.monto);
             });
 
             resumenContent.push(["", "Total", total.toFixed(2)]);
 
             const workbook = XLSX.utils.book_new();
+
             const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
             const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+            const resumenHeader = { font: { bold: true }, alignment: { horizontal: "center" }, fill: { fgColor: { rgb: "FFFF00" } } };
+            const detalleHeader = { font: { bold: true }, alignment: { horizontal: "center" }, fill: { fgColor: { rgb: "FFCC99" } } };
+            XLSX.utils.sheet_add_aoa(resumenSheet, [["", ""]], { origin: -1 });
 
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
@@ -496,57 +425,13 @@
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             document.getElementById('contratista').value = '';
-            document.getElementById('otTable').innerHTML = '<tr><th>OT</th><th>Tipo de OT</th><th>Cant</th><th>Descripción</th><th>Monto</th><th>Subtotal</th><th>Acciones</th></tr>';
+            document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th>Acciones</th></tr>';
             document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
-                        document.getElementById('finalizeBtn').classList.add('hidden');  
+            document.getElementById('finalizeBtn').classList.add('hidden');  
             document.getElementById('updateSummaryBtn').classList.add('hidden');  
             otData = []; 
         }
-
     </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-    <script>
-        let precios = {}; // Aquí se almacenarán los precios cargados del archivo JSON
-
-        // Función para cargar los precios desde el archivo JSON
-        function loadPrecios() {
-            fetch('https://marioj84.github.io/PagoContratistas/precios.json')  // URL de tu archivo JSON
-            .then(response => response.json())  // Convertir la respuesta a JSON
-            .then(data => {
-                precios = data;
-                console.log("Precios cargados:", precios);  // Para depuración
-            })
-            .catch(error => {
-                console.error("Error al cargar los precios:", error);
-            });
-        }
-
-        // Función para actualizar los montos según el contratista y el tipo de trabajo seleccionado
-        function updateMontos() {
-            const contratista = localStorage.getItem('loggedInName');  // Obtener el nombre del contratista logueado
-            const filas = document.querySelectorAll('#otTable tr');  // Obtener todas las filas de la tabla OT
-
-            filas.forEach((fila, index) => {
-                if (index === 0) return; // Saltar la fila de cabecera
-
-                const tipoTrabajo = fila.cells[1].children[0].value;  // Obtener el tipo de trabajo seleccionado
-                const montoInput = fila.cells[4].children[0];  // Obtener el campo de Monto
-
-                // Verificar si existen precios para el contratista y el tipo de trabajo
-                if (precios[contratista] && precios[contratista][tipoTrabajo]) {
-                    montoInput.value = precios[contratista][tipoTrabajo];
-                } else {
-                    montoInput.value = '0.00';  // Si no hay precio predeterminado, poner 0.00
-                }
-                updateSubtotal(fila);  // Recalcular el subtotal
-            });
-        }
-
-        // Cargar los precios al cargar la página
-        document.addEventListener('DOMContentLoaded', loadPrecios);
-
-    </script>
-
 </body>
 </html>
