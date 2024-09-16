@@ -497,22 +497,25 @@ function addRow() {
 
     // Función para actualizar los montos según el contratista y el tipo de trabajo seleccionado
     function updateMontos() {
-        const contratista = document.getElementById('contratista').value;  // Obtener contratista seleccionado
-        const filas = document.querySelectorAll('#otTable tr');  // Obtener todas las filas de la tabla OT
+    const contratista = document.getElementById('contratista').value.trim().toLowerCase();  // Normalizar el contratista
+    const filas = document.querySelectorAll('#otTable tr');  // Obtener todas las filas de la tabla OT
 
-        filas.forEach((fila, index) => {
-            if (index === 0) return; // Saltar la fila de cabecera
+    filas.forEach((fila, index) => {
+        if (index === 0) return; // Saltar la fila de cabecera
 
-            const tipoTrabajo = fila.cells[1].children[0].value;  // Obtener tipo de trabajo seleccionado
-            const montoInput = fila.cells[4].children[0];  // Obtener el campo de Monto
+        const tipoTrabajo = fila.cells[1].children[0].value.trim().toLowerCase();  // Normalizar el tipo de trabajo
+        const montoInput = fila.cells[4].children[0];  // Obtener el campo de Monto
 
-            // Verificar si existen precios para el contratista y el tipo de trabajo
-            if (contratista in precios && tipoTrabajo in precios[contratista]) {
-                montoInput.value = precios[contratista][tipoTrabajo];  // Poner el precio predeterminado
-                updateSubtotal(fila);  // Recalcular el subtotal
-            }
-        });
-    }
+        // Verificar si existen precios para el contratista y el tipo de trabajo
+        if (contratista in precios && tipoTrabajo in precios[contratista]) {
+            montoInput.value = precios[contratista][tipoTrabajo];  // Poner el precio predeterminado
+            updateSubtotal(fila);  // Recalcular el subtotal
+        } else {
+            montoInput.value = '0.00';  // Si no hay precio predeterminado, poner 0.00
+        }
+    });
+}
+
 
     // Cargar los precios al cargar la página
     document.addEventListener('DOMContentLoaded', loadPrecios);
