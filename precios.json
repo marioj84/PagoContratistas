@@ -2,11 +2,221 @@
   "ANA CORNEJO": {
     "Retiro de Medidor": 100.00,
     "Reinstalación de Medidor": 200.00,
-    "Cambio de Medidor": 150.00
+    "Presupuesto Trabajo en Terreno": 300.00,
+    "Cambio de Medidor": 150.00,
+    "Verificación de Medidor en Terreno": 120.00,
+    "Cambio de Ubicación Medidor": 250.00,
+    "Verificación de Lectura": 80.00,
+    "Revisión de Merma": 110.00,
+    "PH y Análisis de Medidor": 90.00
   },
   "ANGELICA FUENTES FUENTES": {
     "Retiro de Medidor": 120.00,
     "Reinstalación de Medidor": 220.00,
-    "Cambio de Medidor": 160.00
+    "Presupuesto Trabajo en Terreno": 320.00,
+    "Cambio de Medidor": 160.00,
+    "Verificación de Medidor en Terreno": 130.00,
+    "Cambio de Ubicación Medidor": 260.00,
+    "Verificación de Lectura": 90.00,
+    "Revisión de Merma": 115.00,
+    "PH y Análisis de Medidor": 95.00
+  },
+  "DANIEL OJEDA": {
+    "Retiro de Medidor": 110.00,
+    "Reinstalación de Medidor": 210.00,
+    "Presupuesto Trabajo en Terreno": 310.00,
+    "Cambio de Medidor": 155.00,
+    "Verificación de Medidor en Terreno": 125.00,
+    "Cambio de Ubicación Medidor": 255.00,
+    "Verificación de Lectura": 85.00,
+    "Revisión de Merma": 112.00,
+    "PH y Análisis de Medidor": 92.00
+  },
+  "EFRAIN ALVAREZ": {
+    "Retiro de Medidor": 130.00,
+    "Reinstalación de Medidor": 230.00,
+    "Presupuesto Trabajo en Terreno": 330.00,
+    "Cambio de Medidor": 170.00,
+    "Verificación de Medidor en Terreno": 140.00,
+    "Cambio de Ubicación Medidor": 270.00,
+    "Verificación de Lectura": 95.00,
+    "Revisión de Merma": 118.00,
+    "PH y Análisis de Medidor": 98.00
+  },
+  "FERNANDO SOTO": {
+    "Retiro de Medidor": 115.00,
+    "Reinstalación de Medidor": 215.00,
+    "Presupuesto Trabajo en Terreno": 315.00,
+    "Cambio de Medidor": 165.00,
+    "Verificación de Medidor en Terreno": 135.00,
+    "Cambio de Ubicación Medidor": 265.00,
+    "Verificación de Lectura": 88.00,
+    "Revisión de Merma": 113.00,
+    "PH y Análisis de Medidor": 93.00
+  },
+  "FREDDY PALAVICINO": {
+    "Retiro de Medidor": 140.00,
+    "Reinstalación de Medidor": 240.00,
+    "Presupuesto Trabajo en Terreno": 340.00,
+    "Cambio de Medidor": 180.00,
+    "Verificación de Medidor en Terreno": 145.00,
+    "Cambio de Ubicación Medidor": 275.00,
+    "Verificación de Lectura": 100.00,
+    "Revisión de Merma": 120.00,
+    "PH y Análisis de Medidor": 100.00
+  },
+  "FUENZALIDA Y FUENZALIDA CIA. LTDA": {
+    "Retiro de Medidor": 125.00,
+    "Reinstalación de Medidor": 225.00,
+    "Presupuesto Trabajo en Terreno": 325.00,
+    "Cambio de Medidor": 175.00,
+    "Verificación de Medidor en Terreno": 137.00,
+    "Cambio de Ubicación Medidor": 267.00,
+    "Verificación de Lectura": 89.00,
+    "Revisión de Merma": 114.00,
+    "PH y Análisis de Medidor": 94.00
+  },
+  "GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES": {
+    "Retiro de Medidor": 135.00,
+    "Reinstalación de Medidor": 235.00,
+    "Presupuesto Trabajo en Terreno": 335.00,
+    "Cambio de Medidor": 185.00,
+    "Verificación de Medidor en Terreno": 146.00,
+    "Cambio de Ubicación Medidor": 276.00,
+    "Verificación de Lectura": 101.00,
+    "Revisión de Merma": 121.00,
+    "PH y Análisis de Medidor": 101.00
+  },
+  "HUGO PAVEZ": {
+    "Retiro de Medidor": 145.00,
+    "Reinstalación de Medidor": 245.00,
+    "Presupuesto Trabajo en Terreno": 345.00,
+    "Cambio de Medidor": 190.00,
+    "Verificación de Medidor en Terreno": 150.00,
+    "Cambio de Ubicación Medidor": 280.00,
+    "Verificación de Lectura": 105.00,
+    "Revisión de Merma": 125.00,
+    "PH y Análisis de Medidor": 105.00
+  },
+  "HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.": {
+    "Retiro de Medidor": 155.00,
+    "Reinstalación de Medidor": 255.00,
+    "Presupuesto Trabajo en Terreno": 355.00,
+    "Cambio de Medidor": 200.00,
+    "Verificación de Medidor en Terreno": 160.00,
+    "Cambio de Ubicación Medidor": 290.00,
+    "Verificación de Lectura": 110.00,
+    "Revisión de Merma": 130.00,
+    "PH y Análisis de Medidor": 110.00
+  },
+  "JENNY VEGA": {
+    "Retiro de Medidor": 160.00,
+    "Reinstalación de Medidor": 260.00,
+    "Presupuesto Trabajo en Terreno": 360.00,
+    "Cambio de Medidor": 205.00,
+    "Verificación de Medidor en Terreno": 165.00,
+    "Cambio de Ubicación Medidor": 295.00,
+    "Verificación de Lectura": 115.00,
+    "Revisión de Merma": 135.00,
+    "PH y Análisis de Medidor": 115.00
+  },
+  "JMG SERVICIOS": {
+    "Retiro de Medidor": 170.00,
+    "Reinstalación de Medidor": 270.00,
+    "Presupuesto Trabajo en Terreno": 370.00,
+    "Cambio de Medidor": 210.00,
+    "Verificación de Medidor en Terreno": 170.00,
+    "Cambio de Ubicación Medidor": 300.00,
+    "Verificación de Lectura": 120.00,
+    "Revisión de Merma": 140.00,
+    "PH y Análisis de Medidor": 120.00
+  },
+  "JUAN FERRADA ESCOBAR": {
+    "Retiro de Medidor": 175.00,
+    "Reinstalación de Medidor": 275.00,
+    "Presupuesto Trabajo en Terreno": 375.00,
+    "Cambio de Medidor": 215.00,
+    "Verificación de Medidor en Terreno": 175.00,
+    "Cambio de Ubicación Medidor": 305.00,
+    "Verificación de Lectura": 125.00,
+    "Revisión de Merma": 145.00,
+    "PH y Análisis de Medidor": 125.00
+  },
+  "JUAN GALLARDO CERDA": {
+    "Retiro de Medidor": 180.00,
+    "Reinstalación de Medidor": 280.00,
+    "Presupuesto Trabajo en Terreno": 380.00,
+    "Cambio de Medidor": 220.00,
+    "Verificación de Medidor en Terreno": 180.00,
+    "Cambio de Ubicación Medidor": 310.00,
+    "Verificación de Lectura": 130.00,
+    "Revisión de Merma": 150.00,
+    "PH y Análisis de Medidor": 130.00
+  },
+  "KLAIT ANTOFAGASTA": {
+    "Retiro de Medidor": 185.00,
+    "Reinstalación de Medidor": 285.00,
+    "Presupuesto Trabajo en Terreno": 385.00,
+    "Cambio de Medidor": 225.00,
+    "Verificación de Medidor en Terreno": 185.00,
+    "Cambio de Ubicación Medidor": 315.00,
+    "Verificación de Lectura": 135.00,
+    "Revisión de Merma": 155.00,
+    "PH y Análisis de Medidor": 135.00
+  },
+  "KLAIT CALAMA": {
+    "Retiro de Medidor": 190.00,
+    "Reinstalación de Medidor": 290.00,
+    "Presupuesto Trabajo en Terreno": 390.00,
+    "Cambio de Medidor": 230.00,
+    "Verificación de Medidor en Terreno": 190.00,
+    "Cambio de Ubicación Medidor": 320.00,
+    "Verificación de Lectura": 140.00,
+    "Revisión de Merma": 160.00,
+    "PH y Análisis de Medidor": 140.00
+  },
+  "MANUEL SUAREZ": {
+    "Retiro de Medidor": 195.00,
+    "Reinstalación de Medidor": 295.00,
+    "Presupuesto Trabajo en Terreno": 395.00,
+    "Cambio de Medidor": 235.00,
+    "Verificación de Medidor en Terreno": 195.00,
+    "Cambio de Ubicación Medidor": 325.00,
+    "Verificación de Lectura": 145.00,
+    "Revisión de Merma": 165.00,
+    "PH y Análisis de Medidor": 145.00
+  },
+  "MARLENE VALENCIA": {
+    "Retiro de Medidor": 200.00,
+    "Reinstalación de Medidor": 300.00,
+    "Presupuesto Trabajo en Terreno": 400.00,
+    "Cambio de Medidor": 240.00,
+    "Verificación de Medidor en Terreno": 200.00,
+    "Cambio de Ubicación Medidor": 330.00,
+    "Verificación de Lectura": 150.00,
+    "Revisión de Merma": 170.00,
+    "PH y Análisis de Medidor": 150.00
+  },
+  "VICTOR FERNANDO CRUCES CESPEDES": {
+    "Retiro de Medidor": 205.00,
+    "Reinstalación de Medidor": 305.00,
+    "Presupuesto Trabajo en Terreno": 405.00,
+    "Cambio de Medidor": 245.00,
+    "Verificación de Medidor en Terreno": 205.00,
+    "Cambio de Ubicación Medidor": 335.00,
+    "Verificación de Lectura": 155.00,
+    "Revisión de Merma": 175.00,
+    "PH y Análisis de Medidor": 155.00
+  },
+  "YANINA BECERRA": {
+    "Retiro de Medidor": 210.00,
+    "Reinstalación de Medidor": 310.00,
+    "Presupuesto Trabajo en Terreno": 410.00,
+    "Cambio de Medidor": 250.00,
+    "Verificación de Medidor en Terreno": 210.00,
+    "Cambio de Ubicación Medidor": 340.00,
+    "Verificación de Lectura": 160.00,
+    "Revisión de Merma": 180.00,
+    "PH y Análisis de Medidor": 160.00
   }
 }
