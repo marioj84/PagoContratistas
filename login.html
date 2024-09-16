@@ -100,7 +100,7 @@
             // Validación de usuario y contraseña
             if (usuarios[username] && usuarios[username].password === password) {
                 localStorage.setItem('loggedUser', JSON.stringify(usuarios[username]));
-                window.location.href = 'pagina_principal.html';  // Redirige a la página principal
+                window.location.href = 'index.html';  // Redirige a la página principal
             } else {
                 errorMsg.style.display = "block";
             }
