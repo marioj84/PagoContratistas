@@ -226,6 +226,41 @@
             <option value="VICTOR FERNANDO CRUCES CESPEDES">VICTOR FERNANDO CRUCES CESPEDES</option>
             <option value="YANINA BECERRA">YANINA BECERRA</option>
         </select>
+        <button onclick="addRow()">Cargar OT</button>
+    </div>
+
+    <table id="otTable">
+        <tr>
+            <th class="col-ot">OT</th>
+            <th>Tipo de OT</th>
+            <th class="col-cant">Cant</th>
+            <th class="col-descripcion">Descripción</th>
+            <th class="col-monto">Monto</th>
+            <th class="col-subtotal">Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+    </table>
+
+    <div style="text-align: center;">
+        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
+        <button id="updateSummaryBtn" class="verde hidden" onclick="viewSummary()">Actualizar Resumen</button>
+    </div>
+
+    <h3>Resumen</h3>
+    <div id="summary">Total Facturado: $0.00</div>
+
+    <div style="text-align: center;">
+        <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
+    </div>
+
+    <footer>
+        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+    </footer>
+
+    <script>
+        let otData = [];
+
         function addRow() {
     const table = document.getElementById('otTable');
     const row = table.insertRow();
@@ -293,98 +328,6 @@
     document.getElementById('summaryBtn').classList.remove('hidden');
 }
 
-    </div>
-
-    <table id="otTable">
-        <tr>
-            <th class="col-ot">OT</th>
-            <th>Tipo de OT</th>
-            <th class="col-cant">Cant</th>
-            <th class="col-descripcion">Descripción</th>
-            <th class="col-monto">Monto</th>
-            <th class="col-subtotal">Subtotal</th>
-            <th>Acciones</th>
-        </tr>
-    </table>
-
-    <div style="text-align: center;">
-        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
-        <button id="updateSummaryBtn" class="verde hidden" onclick="viewSummary()">Actualizar Resumen</button>
-    </div>
-
-    <h3>Resumen</h3>
-    <div id="summary">Total Facturado: $0.00</div>
-
-    <div style="text-align: center;">
-        <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
-    </div>
-
-    <footer>
-        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
-        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-    </footer>
-
-    <script>
-        let otData = [];
-
-        function addRow() {
-            const table = document.getElementById('otTable');
-            const row = table.insertRow();
-            const otCell = row.insertCell(0);
-            const tipoCell = row.insertCell(1);
-            const cantCell = row.insertCell(2);
-            const descCell = row.insertCell(3);
-            const montoCell = row.insertCell(4);
-            const subtotalCell = row.insertCell(5);
-            const actionsCell = row.insertCell(6);
-
-            const inputOT = document.createElement('input');
-            inputOT.type = 'number';
-            inputOT.min = "1";
-            otCell.appendChild(inputOT);
-
-            const selectTipo = document.createElement('select');
-            const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Cambio de Medidor'];
-            opciones.forEach(opcion => {
-                const optionElement = document.createElement('option');
-                optionElement.value = opcion;
-                optionElement.text = opcion;
-                selectTipo.appendChild(optionElement);
-            });
-            tipoCell.appendChild(selectTipo);
-
-            const inputCant = document.createElement('input');
-            inputCant.type = 'number';
-            inputCant.value = '1';
-            inputCant.min = '1';
-            inputCant.onchange = function() { updateSubtotal(row); };
-            cantCell.appendChild(inputCant);
-
-            const inputDesc = document.createElement('input');
-            inputDesc.type = 'text';
-            descCell.appendChild(inputDesc);
-
-            const inputMonto = document.createElement('input');
-            inputMonto.type = 'number';
-            inputMonto.placeholder = '$0.00';
-            inputMonto.min = "0";
-            inputMonto.onchange = function() { updateSubtotal(row); };
-            montoCell.appendChild(inputMonto);
-
-            const inputSubtotal = document.createElement('input');
-            inputSubtotal.type = 'text';
-            inputSubtotal.value = '0.00';
-            inputSubtotal.disabled = true;
-            subtotalCell.appendChild(inputSubtotal);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.innerText = 'Eliminar OT';
-            deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.onclick = () => deleteRow(row);
-            actionsCell.appendChild(deleteButton);
-
-            document.getElementById('summaryBtn').classList.remove('hidden');
-        }
 
         function updateSubtotal(row) {
             const cantidad = row.cells[2].children[0].value;
