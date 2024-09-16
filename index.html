@@ -6,7 +6,7 @@
     <title>Pago Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
+        
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
@@ -20,6 +20,27 @@
             text-align: center;
             font-size: 1.8em;
             margin-bottom: 10px;
+        }
+
+        h4 {
+            text-align: center;
+            color: #999;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        #logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
         }
 
         table {
@@ -62,6 +83,19 @@
             border-radius: 5px;
             font-size: 0.9em;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .burdeo {
+            background-color: #800000;
+        }
+
+        button:hover {
+            background-color: #003380;
+        }
+
+        .burdeo:hover {
+            background-color: #5a0000;
         }
 
         #summary {
@@ -74,11 +108,31 @@
             margin-bottom: 20px;
         }
 
+        label {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        #contratista {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: auto;
+        }
+
         #error-msg {
             color: red;
             font-size: 0.9em;
             display: none;
             margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
         }
 
         footer {
@@ -90,8 +144,16 @@
     </style>
 </head>
 <body>
+    <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
+    <!-- Descripción del uso de la página -->
+    <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
+       Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
+       Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
+
+    <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
+
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista</label>
     <select id="contratista">
@@ -99,6 +161,9 @@
         <option value="ANA CORNEJO">ANA CORNEJO</option>
         <option value="ANGELICA FUENTES FUENTES">ANGELICA FUENTES FUENTES</option>
         <option value="DANIEL OJEDA">DANIEL OJEDA</option>
+        <option value="EFRAIN ALVAREZ">EFRAIN ALVAREZ</option>
+        <option value="FERNANDO SOTO">FERNANDO SOTO</option>
+        <option value="FREDDY PALAVICINO">FREDDY PALAVICINO</option>
         <!-- Agrega más contratistas aquí -->
     </select>
 
@@ -128,9 +193,12 @@
         <button id="finalizeBtn" class="burdeo" onclick="finalizarYEnviar()">Finalizar y Enviar</button>
     </div>
 
+    <!-- Pie de página con contacto -->
     <footer>Para cualquier duda o consulta, contactar a Mario Jaimes: <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.</footer>
 
     <script>
+        let otData = [];
+
         // Función para enviar los datos a Google Sheets
         function finalizarYEnviar() {
             const contratista = document.getElementById('contratista').value;
@@ -170,6 +238,47 @@
                 alert('Por favor, complete todos los campos antes de enviar.');
             }
         }
+
+        function addRow() {
+            const table = document.getElementById('otTable');
+            const row = table.insertRow();
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const descCell = row.insertCell(2);
+            const montoCell = row.insertCell(3);
+
+            const inputOT = document.createElement('input');
+            inputOT.type = 'number';
+            inputOT.min = "1";
+            otCell.appendChild(inputOT);
+
+            const selectTipo = document.createElement('select');
+            const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Presupuesto Trabajo en Terreno', 'Cambio de Medidor', 'Verificación de Medidor en Terreno', 'Cambio de Ubicación Medidor', 'Verificación de Lectura', 'Revisión de Merma', 'PH y Análisis de Medidor'];
+            opciones.forEach(opcion => {
+                const optionElement = document.createElement('option');
+                optionElement.value = opcion;
+                optionElement.text = opcion;
+                selectTipo.appendChild(optionElement);
+            });
+            tipoCell.appendChild(selectTipo);
+
+            const inputDesc = document.createElement('input');
+            inputDesc.type = 'text';
+            descCell.appendChild(inputDesc);
+
+            const inputMonto = document.createElement('input');
+            inputMonto.type = 'number';
+            inputMonto.placeholder = '$0.00';
+            inputMonto.min = "0";
+            montoCell.appendChild(inputMonto);
+
+            document.getElementById('summaryBtn').classList.remove('hidden');
+        }
+
+        function deleteRow(row) {
+            row.remove(); 
+        }
+
     </script>
 </body>
 </html>
