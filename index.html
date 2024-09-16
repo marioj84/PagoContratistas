@@ -120,6 +120,11 @@
             display: none;
         }
 
+        .asterisk {
+            color: red;
+            margin-left: 5px;
+        }
+
         /* Estilos responsivos */
         @media (max-width: 768px) {
             h2 {
@@ -144,7 +149,7 @@
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
-    <label for="contratista">Nombre del Contratista (obligatorio)</label>
+    <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <input id="contratista" type="text" placeholder="Ingrese el nombre del contratista" />
 
     <table id="otTable">
@@ -178,9 +183,11 @@
             const montoCell = row.insertCell(3);
             const actionsCell = row.insertCell(4);
 
-            // Campo para OT
+            // Campo para OT, solo acepta números enteros
             const inputOT = document.createElement('input');
-            inputOT.type = 'text';
+            inputOT.type = 'number';
+            inputOT.step = "1";  // Solo enteros
+            inputOT.min = "1";
             otCell.appendChild(inputOT);
 
             // Campo desplegable para tipo de OT
@@ -207,7 +214,7 @@
             inputMonto.min = "0";
             montoCell.appendChild(inputMonto);
 
-            // Botón de eliminar fila
+            // Botón de eliminar fila, junto al botón de agregar
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar';
             deleteButton.onclick = () => deleteRow(row);
@@ -224,11 +231,16 @@
             const contratista = document.getElementById('contratista').value.trim();
             let valid = true;
 
+            // Validar nombre del contratista
             if (contratista === "") {
                 document.getElementById('error-msg').style.display = "block";
+                document.getElementById('contratista-asterisk').classList.remove('hidden');
                 valid = false;
+            } else {
+                document.getElementById('contratista-asterisk').classList.add('hidden');
             }
 
+            // Validar campos de la tabla
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
@@ -238,39 +250,49 @@
 
                 if (ot === "" || descripcion === "" || monto === "") {
                     document.getElementById('error-msg').style.display = "block";
+                    const cells = row.cells;
+                    cells[0].children[0].style.border = ot === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
+                    cells[2].children[0].style.border = descripcion === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
+                    cells[3].children[0].style.border = monto === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
                     valid = false;
                     break;
+                } else {
+                    otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2) });
                 }
-
-                otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2) });
             }
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
                 displaySummary();
-                document.getElementById('downloadBtn').classList.remove('hidden'); // Mostrar botón de descarga
+                document.getElementById('downloadBtn').classList.remove('hidden');  // Mostrar botón de descarga
             }
         }
 
         function displaySummary() {
             const resumenPorTipo = {};
             let totalMonto = 0;
+            let totalTrabajos = 0;
 
             otData.forEach(data => {
                 if (!resumenPorTipo[data.tipo]) {
-                    resumenPorTipo[data.tipo] = 0;
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
                 }
-                resumenPorTipo[data.tipo] += parseFloat(data.monto);
+                resumenPorTipo[data.tipo].cantidad += 1;
+                resumenPorTipo[data.tipo].total += parseFloat(data.monto);
                 totalMonto += parseFloat(data.monto);
+                totalTrabajos += 1;
             });
 
-            let resumenTexto = `Hola ${otData[0].contratista}, este es el resumen de los valores ingresados:<br><br>`;
-            for (const tipo in resumenPorTipo) {
-                resumenTexto += `Tipo de OT: ${tipo} - Total: $${resumenPorTipo[tipo].toFixed(2)}<br>`;
-            }
-            resumenTexto += `<br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+            // Generar resumen en formato tabla
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
 
-            document.getElementById('summary').innerHTML = resumenTexto;
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
         }
 
         function exportToCSV() {
