@@ -203,7 +203,7 @@
 
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista">
+        <select id="contratista" onchange="updateMontos()">
             <option value="">Seleccione un contratista</option>
             <option value="ANA CORNEJO">ANA CORNEJO</option>
             <option value="ANGELICA FUENTES FUENTES">ANGELICA FUENTES FUENTES</option>
@@ -278,12 +278,25 @@ function addRow() {
     otCell.appendChild(inputOT);
 
     const selectTipo = document.createElement('select');
-const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Presupuesto Trabajo en Terreno', 'Cambio de Medidor', 'Verificación de Medidor en Terreno', 'Cambio de Ubicación Medidor', 'Verificación de Lectura', 'Revisión de Merma', 'PH y Análisis de Medidor'];    opciones.forEach(opcion => {
+    const opciones = [
+        'Retiro de Medidor', 
+        'Reinstalación de Medidor', 
+        'Presupuesto Trabajo en Terreno', 
+        'Cambio de Medidor', 
+        'Verificación de Medidor en Terreno', 
+        'Cambio de Ubicación Medidor', 
+        'Verificación de Lectura', 
+        'Revisión de Merma', 
+        'PH y Análisis de Medidor'
+    ];
+    opciones.forEach(opcion => {
         const optionElement = document.createElement('option');
         optionElement.value = opcion;
         optionElement.text = opcion;
         selectTipo.appendChild(optionElement);
     });
+    
+    selectTipo.onchange = function() { updateMontos(); };  // Llamar a updateMontos cuando se seleccione un tipo
     tipoCell.appendChild(selectTipo);
 
     const inputCant = document.createElement('input');
@@ -310,14 +323,12 @@ const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Presupuesto
     inputSubtotal.disabled = true;
     subtotalCell.appendChild(inputSubtotal);
 
-    // Crear botón Agregar OT
     const addButton = document.createElement('button');
     addButton.innerText = 'Agregar OT';
     addButton.className = 'acciones-btn verde';
     addButton.onclick = addRow;
     actionsCell.appendChild(addButton);
 
-    // Botón Eliminar OT
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'Eliminar OT';
     deleteButton.className = 'acciones-btn burdeo';
@@ -456,5 +467,44 @@ const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Presupuesto
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script>
+    let precios = {}; // Aquí se almacenarán los precios cargados del archivo JSON
+
+    // Función para cargar los precios desde el archivo JSON
+    function loadPrecios() {
+        fetch('https://marioj84.github.io/PagoContratistas/precios.json')  // URL de tu archivo JSON
+        .then(response => response.json())  // Convertir la respuesta a JSON
+        .then(data => {
+            precios = data;
+            console.log("Precios cargados:", precios);  // Para depuración, puedes eliminar esto después
+        })
+        .catch(error => {
+            console.error("Error al cargar los precios:", error);
+        });
+    }
+
+    // Función para actualizar los montos según el contratista y el tipo de trabajo seleccionado
+    function updateMontos() {
+        const contratista = document.getElementById('contratista').value;  // Obtener contratista seleccionado
+        const filas = document.querySelectorAll('#otTable tr');  // Obtener todas las filas de la tabla OT
+
+        filas.forEach((fila, index) => {
+            if (index === 0) return; // Saltar la fila de cabecera
+
+            const tipoTrabajo = fila.cells[1].children[0].value;  // Obtener tipo de trabajo seleccionado
+            const montoInput = fila.cells[4].children[0];  // Obtener el campo de Monto
+
+            // Verificar si existen precios para el contratista y el tipo de trabajo
+            if (contratista in precios && tipoTrabajo in precios[contratista]) {
+                montoInput.value = precios[contratista][tipoTrabajo];  // Poner el precio predeterminado
+                updateSubtotal(fila);  // Recalcular el subtotal
+            }
+        });
+    }
+
+    // Cargar los precios al cargar la página
+    document.addEventListener('DOMContentLoaded', loadPrecios);
+</script>
+
 </body>
 </html>
