@@ -29,6 +29,13 @@
             margin-bottom: 20px;
         }
 
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
         #logo {
             position: absolute;
             top: 20px;
@@ -61,6 +68,10 @@
             padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+
+        td select {
+            width: auto;  /* Ajuste para que el campo select sea del tamaño adecuado */
         }
 
         td input[type="number"]::-webkit-outer-spin-button,
@@ -124,11 +135,11 @@
         }
 
         #contratista {
-            width: 100%;
             padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
             margin-bottom: 10px;
+            width: auto; /* Ajuste de ancho al tamaño del nombre más largo */
         }
 
         #error-msg {
@@ -184,12 +195,24 @@
                 font-size: 0.8em;
             }
         }
+
+        /* Pie de página */
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #999;
+        }
     </style>
 </head>
 <body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
-    <h4>Esta es una página de prueba, no oficial.</h4>
+    
+    <!-- Descripción del uso de la página -->
+    <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
+       Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
+       Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
@@ -243,6 +266,12 @@
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
     </div>
+
+    <!-- Pie de página con contacto -->
+    <footer>
+        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+    </footer>
 
     <script>
         let otData = [];
@@ -340,7 +369,8 @@
                     valid = false;
                     break;
                 } else {
-                    otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2) });
+                    const fechaCarga = new Date().toLocaleString();
+                    otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2), fechaCarga });
                 }
             }
 
@@ -381,18 +411,47 @@
         }
 
         function finalizeAndDownload() {
-            // Generar archivo XLS
-            const xlsContent = [
-                ["Contratista", "OT", "Tipo de OT", "Descripción", "Monto"]
+            // Generar archivo XLS con dos hojas
+            const resumenContent = [
+                ["Resumen de Cobros del Mes"],
+                ["Cantidad", "Tipo de OT", "Valor"]
             ];
 
+            const detalleContent = [
+                ["Contratista", "OT", "Tipo de OT", "Descripción", "Monto", "Fecha de Carga"]
+            ];
+
+            let total = 0;
+
+            // Llenar el contenido de las hojas
             otData.forEach(row => {
-                xlsContent.push([row.contratista, row.ot, row.tipo, row.descripcion, row.monto]);
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.descripcion, row.monto, row.fechaCarga]);
+                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+                if (!resumenRow) {
+                    resumenContent.push([1, row.tipo, row.monto]);
+                } else {
+                    resumenRow[0] += 1;
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.monto)).toFixed(2);
+                }
+                total += parseFloat(row.monto);
             });
 
-            const worksheet = XLSX.utils.aoa_to_sheet(xlsContent);
+            resumenContent.push(["", "Total", total.toFixed(2)]);
+
+            // Crear el libro de Excel
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen_OT");
+            
+            // Hoja de resumen con logo
+            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+            const logoUrl = 'https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg';
+            XLSX.utils.sheet_add_aoa(resumenSheet, [["", ""]], { origin: -1 });
+            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+
+            // Hoja de detalle
+            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+            // Guardar el archivo
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             // Limpiar los datos y comenzar de nuevo
