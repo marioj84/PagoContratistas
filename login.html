@@ -3,56 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Contratistas</title>
+    <title>Ingreso a Portal de Pago Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+
+        .container {
+            background-color: white;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        #logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+        }
+
         h2 {
             color: #004aad;
-            text-align: center;
             font-size: 1.8em;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
+
+        h4 {
+            color: #666;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
         form {
-            text-align: center;
-            margin-top: 50px;
+            margin-top: 20px;
         }
+
         input {
-            padding: 10px;
-            margin: 10px;
-            width: 200px;
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
         }
+
         button {
-            padding: 10px 20px;
+            padding: 12px;
+            margin-top: 20px;
+            width: 100%;
             background-color: #004aad;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1em;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+
+        button:hover {
+            background-color: #003380;
+        }
+
         #login-error {
             color: red;
-            text-align: center;
+            font-size: 0.9em;
             display: none;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <h2>Iniciar Sesión - Contratistas</h2>
-    
-    <div id="login-error">Usuario o contraseña incorrectos. Inténtelo de nuevo.</div>
+    <div class="container">
+        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+        <h2>Ingreso a Portal de Pago Contratistas</h2>
+        <h4>Acceda con su usuario y contraseña</h4>
 
-    <form id="login-form">
-        <input type="text" id="username" placeholder="Usuario" required><br>
-        <input type="password" id="password" placeholder="Contraseña" required><br>
-        <button type="button" onclick="login()">Iniciar sesión</button>
-    </form>
+        <div id="login-error">Usuario o contraseña incorrectos. Inténtelo de nuevo.</div>
+
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Usuario" required><br>
+            <input type="password" id="password" placeholder="Contraseña" required><br>
+            <button type="button" onclick="login()">Iniciar sesión</button>
+        </form>
+
+        <footer>
+            Para asistencia, contacte a <a href="mailto:soporte@empresa.com">soporte@empresa.com</a>
+        </footer>
+    </div>
 
     <script>
         let usuarios = {};
@@ -67,63 +125,22 @@
             })
             .catch(error => {
                 console.error("Error al cargar usuarios:", error);
-                alert("Error al cargar usuarios. Verifique la URL del archivo JSON.");
             });
         }
 
         // Función para el login
-    function login() {
-    const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas y eliminar espacios
-    const password = document.getElementById('password').value.trim();
+        function login() {
+            const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas y eliminar espacios
+            const password = document.getElementById('password').value.trim();
 
-    console.log("Usuario ingresado:", username);
-    console.log("Contraseña ingresada:", password);
-
-    // Verificar usuario y contraseña
-    if (usuarios[username] && usuarios[username] === password) {
-        console.log("Inicio de sesión exitoso para:", username);
-
-        // Guardar el usuario logueado y su nombre completo
-        const nombreContratista = obtenerNombreContratista(username);
-        localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
-        localStorage.setItem('nombreContratista', nombreContratista);  // Guardar el nombre completo del contratista
-
-        window.location.href = "index.html";  // Redirigir al formulario de carga de OT
-    } else {
-        console.log("Usuario o contraseña incorrectos");
-        document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
-    }
-}
-        // Función para obtener el nombre completo del contratista en base al nombre de usuario
-function obtenerNombreContratista(username) {
-    const nombresContratistas = {
-        {
-    "acornejo": "ANA CORNEJO",
-    "afuentes": "ANGELICA FUENTES FUENTES",
-    "dojeda": "DANIEL OJEDA",
-    "ealvarez": "EFRAIN ALVAREZ",
-    "fsoto": "FERNANDO SOTO",
-    "fpalavicino": "FREDDY PALAVICINO",
-    "ffuenzalida": "FUENZALIDA Y FUENZALIDA CIA. LTDA",
-    "gstuardo": "GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES",
-    "hpavez": "HUGO PAVEZ",
-    "hconstrucciones": "HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.",
-    "jvega": "JENNY VEGA",
-    "jservicios": "JMG SERVICIOS",
-    "jferrada": "JUAN FERRADA ESCOBAR",
-    "jgallardo": "JUAN GALLARDO CERDA",
-    "kantofagasta": "KLAIT ANTOFAGASTA",
-    "kcalama": "KLAIT CALAMA",
-    "msuarez": "MANUEL SUAREZ",
-    "mvalencia": "MARLENE VALENCIA",
-    "vfernando": "VICTOR FERNANDO CRUCES CESPEDES",
-    "ybecerra": "YANINA BECERRA"
-}
-
-        // Agrega el resto de los usuarios con sus nombres completos...
-    };
-    return nombresContratistas[username] || '';  // Retorna el nombre completo o vacío si no lo encuentra
-}
+            // Verificar usuario y contraseña
+            if (usuarios[username] && usuarios[username] === password) {
+                localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
+                window.location.href = "index.html";  // Redirigir al formulario de carga de OT
+            } else {
+                document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
+            }
+        }
 
         // Cargar usuarios al iniciar la página
         document.addEventListener('DOMContentLoaded', loadUsuarios);
