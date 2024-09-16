@@ -18,14 +18,14 @@
         h2 {
             color: #004aad;
             text-align: center;
-            font-size: 2.5em;
+            font-size: 1.8em; /* Tamaño reducido */
             margin-bottom: 10px;
         }
 
         h4 {
             text-align: center;
             color: #999;
-            font-size: 1.2em;
+            font-size: 1em; /* Tamaño reducido */
             margin-bottom: 20px;
         }
 
@@ -45,32 +45,32 @@
         }
 
         th, td {
-            padding: 12px;
+            padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            font-size: 0.9em; /* Tamaño reducido */
         }
 
         th {
             background-color: #fdd835;
             color: #004aad;
-            font-size: 1.2em;
         }
 
         td input, td select {
             width: 100%;
-            padding: 8px;
+            padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 8px 15px;
             margin: 10px;
             background-color: #004aad;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1.2em;
+            font-size: 0.9em; /* Tamaño reducido */
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -88,7 +88,7 @@
         }
 
         #summary {
-            font-size: 1.5em;
+            font-size: 1.2em; /* Tamaño reducido */
             background-color: #fdd835;
             color: #004aad;
             padding: 10px;
@@ -98,28 +98,40 @@
         }
 
         label {
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 10px;
             display: block;
+            color: #333;
         }
 
         #contratista {
             margin-bottom: 20px;
         }
 
+        #error-msg {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         /* Estilos responsivos */
         @media (max-width: 768px) {
             h2 {
-                font-size: 2em;
+                font-size: 1.5em;
             }
 
             table, th, td {
-                font-size: 1em;
+                font-size: 0.8em;
             }
 
             button {
-                font-size: 1em;
+                font-size: 0.8em;
             }
         }
     </style>
@@ -129,26 +141,26 @@
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     <h4>Esta es una página de prueba, no oficial.</h4>
 
+    <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
+
     <!-- Contratista -->
-    <label for="contratista">Nombre del Contratista</label>
+    <label for="contratista">Nombre del Contratista (obligatorio)</label>
     <input id="contratista" type="text" placeholder="Ingrese el nombre del contratista" />
 
     <table id="otTable">
         <tr>
-            <th>ID</th>
             <th>OT</th>
             <th>Tipo de OT</th>
             <th>Descripción</th>
             <th>Monto</th>
-            <th>Fecha y Hora</th>
-            <th>Editar</th>
+            <th>Acciones</th>
         </tr>
     </table>
 
     <div style="text-align: center;">
         <button onclick="addRow()">Agregar nueva OT</button>
         <button onclick="finalize()">Finalizar</button>
-        <button class="burdeo" onclick="exportToCSV()">Descargar OT cargadas</button>
+        <button id="downloadBtn" class="burdeo hidden" onclick="exportToCSV()">Descargar OT cargadas</button>
     </div>
 
     <h3>Resumen</h3>
@@ -156,21 +168,15 @@
 
     <script>
         let otData = [];
-        let idCounter = 1;
 
         function addRow() {
             const table = document.getElementById('otTable');
             const row = table.insertRow();
-            const idCell = row.insertCell(0);
-            const otCell = row.insertCell(1);
-            const tipoCell = row.insertCell(2);
-            const descCell = row.insertCell(3);
-            const montoCell = row.insertCell(4);
-            const fechaHoraCell = row.insertCell(5);
-            const editCell = row.insertCell(6);
-
-            // Asignar un ID único
-            idCell.innerText = idCounter++;
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const descCell = row.insertCell(2);
+            const montoCell = row.insertCell(3);
+            const actionsCell = row.insertCell(4);
 
             // Campo para OT
             const inputOT = document.createElement('input');
@@ -201,41 +207,49 @@
             inputMonto.min = "0";
             montoCell.appendChild(inputMonto);
 
-            // Fecha y Hora de creación
-            const now = new Date();
-            const fechaHora = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-            fechaHoraCell.innerText = fechaHora;
-
-            // Botón de editar
-            const editButton = document.createElement('button');
-            editButton.innerText = 'Editar';
-            editButton.onclick = () => editRow(row);
-            editCell.appendChild(editButton);
+            // Botón de eliminar fila
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Eliminar';
+            deleteButton.onclick = () => deleteRow(row);
+            actionsCell.appendChild(deleteButton);
         }
 
-        function editRow(row) {
-            const cells = row.cells;
-            for (let i = 1; i <= 4; i++) {
-                cells[i].children[0].disabled = false; // Habilitar edición
-            }
+        function deleteRow(row) {
+            row.remove();  // Eliminar la fila
         }
 
         function finalize() {
             const table = document.getElementById('otTable');
             otData = [];
-            const contratista = document.getElementById('contratista').value;
+            const contratista = document.getElementById('contratista').value.trim();
+            let valid = true;
+
+            if (contratista === "") {
+                document.getElementById('error-msg').style.display = "block";
+                valid = false;
+            }
+
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
-                const id = row.cells[0].innerText;
-                const ot = row.cells[1].children[0].value;
-                const tipo = row.cells[2].children[0].value;
-                const descripcion = row.cells[3].children[0].value;
-                const monto = parseFloat(row.cells[4].children[0].value) || 0;
-                const fechaHora = row.cells[5].innerText;
-                otData.push({ id, contratista, ot, tipo, descripcion, monto, fechaHora });
+                const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value;
+                const descripcion = row.cells[2].children[0].value.trim();
+                const monto = row.cells[3].children[0].value.trim();
+
+                if (ot === "" || descripcion === "" || monto === "") {
+                    document.getElementById('error-msg').style.display = "block";
+                    valid = false;
+                    break;
+                }
+
+                otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2) });
             }
-            displaySummary();
-            table.innerHTML = '<tr><th>ID</th><th>OT</th><th>Tipo de OT</th><th>Descripción</th><th>Monto</th><th>Fecha y Hora</th><th>Editar</th></tr>'; // Limpia la tabla
+
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                displaySummary();
+                document.getElementById('downloadBtn').classList.remove('hidden'); // Mostrar botón de descarga
+            }
         }
 
         function displaySummary() {
@@ -246,8 +260,8 @@
                 if (!resumenPorTipo[data.tipo]) {
                     resumenPorTipo[data.tipo] = 0;
                 }
-                resumenPorTipo[data.tipo] += data.monto;
-                totalMonto += data.monto;
+                resumenPorTipo[data.tipo] += parseFloat(data.monto);
+                totalMonto += parseFloat(data.monto);
             });
 
             let resumenTexto = `Hola ${otData[0].contratista}, este es el resumen de los valores ingresados:<br><br>`;
@@ -260,9 +274,9 @@
         }
 
         function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,ID,Contratista,OT,Tipo de OT,Descripción,Monto,Fecha y Hora\n";
+            let csvContent = "data:text/csv;charset=utf-8,Contratista,OT,Tipo de OT,Descripción,Monto\n";
             otData.forEach(row => {
-                csvContent += `${row.id},${row.contratista},${row.ot},${row.tipo},${row.descripcion},${row.monto},${row.fechaHora}\n`;
+                csvContent += `${row.contratista},${row.ot},${row.tipo},${row.descripcion},${row.monto}\n`;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
