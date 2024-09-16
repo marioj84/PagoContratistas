@@ -410,21 +410,22 @@
             otData = []; 
         }
 
-        // Verificar si el usuario ha iniciado sesión
-        document.addEventListener('DOMContentLoaded', function() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            const loggedInName = localStorage.getItem('loggedInName');
+     <script>
+    // Verificar si el usuario ha iniciado sesión
+    document.addEventListener('DOMContentLoaded', function() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        const loggedInName = localStorage.getItem('loggedInName');
 
-            // Si no hay un usuario logueado, redirigir a la página de login
-            if (!loggedInUser || !loggedInName) {
-                window.location.href = 'login.html';
-                return;
-            }
+        // Si no hay un usuario logueado, redirigir a la página de login
+        if (!loggedInUser || !loggedInName) {
+            window.location.href = 'login.html';
+            return;
+        }
 
-            // Si el usuario está logueado, mostrar su nombre
-            document.getElementById('nombre-contratista').textContent = loggedInName;
-        });
-    </script>
+        // Si el usuario está logueado, mostrar su nombre
+        document.getElementById('nombre-contratista').textContent = loggedInName;
+    });
+</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 </body>
 </html>
