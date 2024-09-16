@@ -5,12 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        /* ... (todos los estilos anteriores) ... */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #004aad;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            text-align: center;
+            color: #999;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        #logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 120px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        th {
+            background-color: #fdd835;
+            color: #004aad;
+        }
+
+        td input, td select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        td select {
+            width: auto;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .burdeo {
+            background-color: #800000;
+        }
+
+        .verde {
+            background-color: #28a745;
+        }
+
+        button:hover {
+            background-color: #003380;
+        }
+
+        .burdeo:hover {
+            background-color: #5a0000;
+        }
+
+        .verde:hover {
+            background-color: #218838;
+        }
+
+        #summary {
+            font-size: 1.2em;
+            background-color: #fdd835;
+            color: #004aad;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        #contratista {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: auto;
+        }
+
+        #error-msg {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #999;
+        }
     </style>
 </head>
 <body>
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
+    <!-- Descripción del uso de la página -->
+    <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. Al finalizar, se generará un resumen de los valores ingresados.</p>
+
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
@@ -18,9 +163,10 @@
     <select id="contratista">
         <option value="">Seleccione un contratista</option>
         <option value="ANA CORNEJO">ANA CORNEJO</option>
+        <option value="ANGELICA FUENTES FUENTES">ANGELICA FUENTES FUENTES</option>
         <option value="DANIEL OJEDA">DANIEL OJEDA</option>
         <option value="EFRAIN ALVAREZ">EFRAIN ALVAREZ</option>
-        <!-- Más contratistas -->
+        <!-- Agrega más contratistas aquí -->
     </select>
 
     <!-- Datos de la OT -->
@@ -37,7 +183,7 @@
                 <select id="tipo">
                     <option value="Retiro de Medidor">Retiro de Medidor</option>
                     <option value="Cambio de Medidor">Cambio de Medidor</option>
-                    <!-- Más tipos de OT -->
+                    <!-- Agrega más tipos de OT aquí -->
                 </select>
             </td>
             <td><input type="text" id="descripcion" placeholder="Descripción del trabajo"></td>
@@ -49,6 +195,7 @@
         <button id="finalizeBtn" class="burdeo" onclick="finalizarYEnviar()">Finalizar y Enviar</button>
     </div>
 
+    <!-- Pie de página con contacto -->
     <footer>Para cualquier duda o consulta, contactar a Mario Jaimes: <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.</footer>
 
     <script>
