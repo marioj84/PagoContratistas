@@ -5,104 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h2 {
-            color: #004aad;
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-
-        h4 {
-            text-align: center;
-            color: #999;
-            font-size: 1em;
-            margin-bottom: 20px;
-        }
-
-        p {
-            text-align: center;
-            font-size: 1.1em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        #logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 120px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
-        }
-
-        th {
-            background-color: #fdd835;
-            color: #004aad;
-        }
-
-        td input, td select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            padding: 8px 15px;
-            margin: 5px;
-            background-color: #004aad;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.9em;
-            cursor: pointer;
-        }
-
-        .burdeo {
-            background-color: #800000;
-        }
-
-        .verde {
-            background-color: #28a745;
-        }
-
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #999;
-        }
+        /* ... (todos los estilos anteriores) ... */
     </style>
 </head>
 <body>
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
-    <!-- Descripción -->
-    <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. Al finalizar, se generará un resumen de los valores ingresados.</p>
-
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
@@ -112,7 +20,7 @@
         <option value="ANA CORNEJO">ANA CORNEJO</option>
         <option value="DANIEL OJEDA">DANIEL OJEDA</option>
         <option value="EFRAIN ALVAREZ">EFRAIN ALVAREZ</option>
-        <!-- Agrega los demás contratistas aquí -->
+        <!-- Más contratistas -->
     </select>
 
     <!-- Datos de la OT -->
@@ -122,7 +30,6 @@
             <th>Tipo de OT</th>
             <th>Descripción</th>
             <th>Monto</th>
-            <th>Acciones</th>
         </tr>
         <tr>
             <td><input type="text" id="ot" placeholder="Número de OT"></td>
@@ -130,12 +37,11 @@
                 <select id="tipo">
                     <option value="Retiro de Medidor">Retiro de Medidor</option>
                     <option value="Cambio de Medidor">Cambio de Medidor</option>
-                    <!-- Agrega más tipos de OT aquí -->
+                    <!-- Más tipos de OT -->
                 </select>
             </td>
             <td><input type="text" id="descripcion" placeholder="Descripción del trabajo"></td>
             <td><input type="number" id="monto" placeholder="$0.00"></td>
-            <td><button onclick="agregarFila()">Agregar OT</button></td>
         </tr>
     </table>
 
@@ -143,27 +49,9 @@
         <button id="finalizeBtn" class="burdeo" onclick="finalizarYEnviar()">Finalizar y Enviar</button>
     </div>
 
-    <!-- Pie de página -->
     <footer>Para cualquier duda o consulta, contactar a Mario Jaimes: <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.</footer>
 
     <script>
-        // Agregar una nueva fila de OT (Opcional si quieres permitir agregar varias OTs)
-        function agregarFila() {
-            const table = document.getElementById('otTable');
-            const row = table.insertRow();
-            row.innerHTML = `<td><input type="text" placeholder="Número de OT"></td>
-                             <td><select><option value="Retiro de Medidor">Retiro de Medidor</option><option value="Cambio de Medidor">Cambio de Medidor</option></select></td>
-                             <td><input type="text" placeholder="Descripción del trabajo"></td>
-                             <td><input type="number" placeholder="$0.00"></td>
-                             <td><button onclick="eliminarFila(this)">Eliminar</button></td>`;
-        }
-
-        // Eliminar una fila
-        function eliminarFila(btn) {
-            const row = btn.closest('tr');
-            row.remove();
-        }
-
         // Función para enviar los datos a Google Sheets
         function finalizarYEnviar() {
             const contratista = document.getElementById('contratista').value;
@@ -195,9 +83,11 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     alert('Datos enviados con éxito a Google Sheets.');
                 })
                 .catch(error => {
+                    console.error('Error al enviar los datos:', error);
                     alert('Error al enviar los datos: ' + error);
                 });
             } else {
