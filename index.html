@@ -18,14 +18,14 @@
         h2 {
             color: #004aad;
             text-align: center;
-            font-size: 1.8em; /* Tamaño reducido */
+            font-size: 1.8em;
             margin-bottom: 10px;
         }
 
         h4 {
             text-align: center;
             color: #999;
-            font-size: 1em; /* Tamaño reducido */
+            font-size: 1em;
             margin-bottom: 20px;
         }
 
@@ -48,7 +48,7 @@
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            font-size: 0.9em; /* Tamaño reducido */
+            font-size: 0.9em;
         }
 
         th {
@@ -70,7 +70,7 @@
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 0.9em; /* Tamaño reducido */
+            font-size: 0.9em;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -88,7 +88,7 @@
         }
 
         #summary {
-            font-size: 1.2em; /* Tamaño reducido */
+            font-size: 1.2em;
             background-color: #fdd835;
             color: #004aad;
             padding: 10px;
@@ -106,7 +106,11 @@
         }
 
         #contratista {
-            margin-bottom: 20px;
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
         }
 
         #error-msg {
@@ -123,6 +127,16 @@
         .asterisk {
             color: red;
             margin-left: 5px;
+        }
+
+        .acciones-btn {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /* Reducir el interlineado entre filas de OT */
+        table tr {
+            line-height: 1.2;
         }
 
         /* Estilos responsivos */
@@ -150,7 +164,10 @@
 
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
-    <input id="contratista" type="text" placeholder="Ingrese el nombre del contratista" />
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input id="contratista" type="text" placeholder="Ingrese el nombre del contratista" />
+        <button onclick="addRow()">Cargar OT</button>
+    </div>
 
     <table id="otTable">
         <tr>
@@ -163,14 +180,14 @@
     </table>
 
     <div style="text-align: center;">
-        <button onclick="addRow()">Ver Resumen</button>
+        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
     </div>
 
     <h3>Resumen</h3>
     <div id="summary">Total Facturado: $0.00</div>
 
-    <div id="finalizeSection" style="text-align: center;" class="hidden">
-        <button class="burdeo" onclick="finalize()">Finalizar y Guardar</button>
+    <div style="text-align: center;">
+        <button id="finalizeBtn" class="burdeo hidden" onclick="finalize()">Finalizar y Guardar</button>
     </div>
 
     <script>
@@ -216,36 +233,22 @@
             inputMonto.min = "0";
             montoCell.appendChild(inputMonto);
 
-            // Botones de agregar y eliminar en la columna de acciones
+            // Botones de agregar/eliminar en "Acciones"
             const addButton = document.createElement('button');
             addButton.innerText = 'Agregar nueva OT';
+            addButton.className = 'acciones-btn';
             addButton.onclick = addRow;
             actionsCell.appendChild(addButton);
 
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
+            deleteButton.className = 'acciones-btn';
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
         }
 
         function deleteRow(row) {
             row.remove();  // Eliminar la fila
-        }
-
-        function finalize() {
-            // Limpiar todos los datos y reiniciar la página
-            otData = [];
-            document.getElementById('otTable').innerHTML = `
-                <tr>
-                    <th>OT</th>
-                    <th>Tipo de OT</th>
-                    <th>Descripción</th>
-                    <th>Monto</th>
-                    <th>Acciones</th>
-                </tr>`;
-            document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
-            document.getElementById('finalizeSection').classList.add('hidden');
-            document.getElementById('downloadBtn').classList.add('hidden');
         }
 
         function viewSummary() {
@@ -260,4 +263,74 @@
                 document.getElementById('contratista-asterisk').classList.remove('hidden');
                 valid = false;
             } else {
-                document.getElementById('contratista-aster
+                document.getElementById('contratista-asterisk').classList.add('hidden');
+            }
+
+            // Validar campos de la tabla
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value;
+                const descripcion = row.cells[2].children[0].value.trim();
+                const monto = row.cells[3].children[0].value.trim();
+
+                if (ot === "" || descripcion === "" || monto === "") {
+                    document.getElementById('error-msg').style.display = "block";
+                    const cells = row.cells;
+                    cells[0].children[0].style.border = ot === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
+                    cells[2].children[0].style.border = descripcion === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
+                    cells[3].children[0].style.border = monto === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
+                    valid = false;
+                    break;
+                } else {
+                    otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2) });
+                }
+            }
+
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                displaySummary();
+                document.getElementById('summaryBtn').classList.add('hidden'); // Ocultar botón de resumen
+                document.getElementById('finalizeBtn').classList.remove('hidden'); // Mostrar botón de finalizar
+            }
+        }
+
+        function displaySummary() {
+            const resumenPorTipo = {};
+            let totalMonto = 0;
+            let totalTrabajos = 0;
+
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += 1;
+                resumenPorTipo[data.tipo].total += parseFloat(data.monto);
+                totalMonto += parseFloat(data.monto);
+                totalTrabajos += 1;
+            });
+
+            // Generar resumen en formato tabla
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+        }
+
+        function finalize() {
+            // Aquí limpiar los datos y comenzar de nuevo
+            document.getElementById('contratista').value = '';
+            document.getElementById('otTable').innerHTML = '<tr><th>OT</th><th>Tipo de OT</th><th>Descripción</th><th>Monto</th><th>Acciones</th></tr>';
+            document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
+            document.getElementById('finalizeBtn').classList.add('hidden');  // Ocultar el botón de finalizar
+            document.getElementById('summaryBtn').classList.remove('hidden');  // Mostrar el botón de resumen
+            otData = [];  // Limpiar los datos
+        }
+    </script>
+</body>
+</html>
