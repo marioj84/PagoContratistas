@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        /* Estilo básico para fuentes y colores */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         
         body {
@@ -17,7 +16,7 @@
         }
 
         h2 {
-            color: #004aad; /* Color azul Lipigas */
+            color: #004aad;
             text-align: center;
             font-size: 2.5em;
             margin-bottom: 10px;
@@ -33,7 +32,7 @@
         #logo {
             position: absolute;
             top: 20px;
-            right: 20px;
+            left: 20px;
             width: 120px;
         }
 
@@ -52,7 +51,7 @@
         }
 
         th {
-            background-color: #fdd835; /* Amarillo Lipigas */
+            background-color: #fdd835;
             color: #004aad;
             font-size: 1.2em;
         }
@@ -76,8 +75,16 @@
             transition: background-color 0.3s ease;
         }
 
+        .burdeo {
+            background-color: #800000;
+        }
+
         button:hover {
             background-color: #003380;
+        }
+
+        .burdeo:hover {
+            background-color: #5a0000;
         }
 
         #summary {
@@ -118,7 +125,7 @@
     </style>
 </head>
 <body>
-    <img id="logo" src="logo.png" alt="Logo Empresa"> <!-- Aquí puedes poner el logo de tu empresa -->
+    <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     <h4>Esta es una página de prueba, no oficial.</h4>
 
@@ -128,17 +135,20 @@
 
     <table id="otTable">
         <tr>
+            <th>ID</th>
             <th>OT</th>
             <th>Tipo de OT</th>
             <th>Descripción</th>
             <th>Monto</th>
+            <th>Fecha y Hora</th>
+            <th>Editar</th>
         </tr>
     </table>
 
     <div style="text-align: center;">
         <button onclick="addRow()">Agregar nueva OT</button>
         <button onclick="finalize()">Finalizar</button>
-        <button onclick="exportToCSV()">Descargar OT cargadas</button>
+        <button class="burdeo" onclick="exportToCSV()">Descargar OT cargadas</button>
     </div>
 
     <h3>Resumen</h3>
@@ -146,14 +156,21 @@
 
     <script>
         let otData = [];
+        let idCounter = 1;
 
         function addRow() {
             const table = document.getElementById('otTable');
             const row = table.insertRow();
-            const otCell = row.insertCell(0);
-            const tipoCell = row.insertCell(1);
-            const descCell = row.insertCell(2);
-            const montoCell = row.insertCell(3);
+            const idCell = row.insertCell(0);
+            const otCell = row.insertCell(1);
+            const tipoCell = row.insertCell(2);
+            const descCell = row.insertCell(3);
+            const montoCell = row.insertCell(4);
+            const fechaHoraCell = row.insertCell(5);
+            const editCell = row.insertCell(6);
+
+            // Asignar un ID único
+            idCell.innerText = idCounter++;
 
             // Campo para OT
             const inputOT = document.createElement('input');
@@ -180,10 +197,27 @@
             const inputMonto = document.createElement('input');
             inputMonto.type = 'number';
             inputMonto.placeholder = '$0.00';
-            inputMonto.oninput = function() {
-                inputMonto.value = parseFloat(inputMonto.value).toFixed(2); // Limita a dos decimales
-            };
+            inputMonto.step = "0.01";
+            inputMonto.min = "0";
             montoCell.appendChild(inputMonto);
+
+            // Fecha y Hora de creación
+            const now = new Date();
+            const fechaHora = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+            fechaHoraCell.innerText = fechaHora;
+
+            // Botón de editar
+            const editButton = document.createElement('button');
+            editButton.innerText = 'Editar';
+            editButton.onclick = () => editRow(row);
+            editCell.appendChild(editButton);
+        }
+
+        function editRow(row) {
+            const cells = row.cells;
+            for (let i = 1; i <= 4; i++) {
+                cells[i].children[0].disabled = false; // Habilitar edición
+            }
         }
 
         function finalize() {
@@ -192,28 +226,43 @@
             const contratista = document.getElementById('contratista').value;
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
-                const ot = row.cells[0].children[0].value;
-                const tipo = row.cells[1].children[0].value;
-                const descripcion = row.cells[2].children[0].value;
-                const monto = parseFloat(row.cells[3].children[0].value) || 0;
-                otData.push({ contratista, ot, tipo, descripcion, monto });
+                const id = row.cells[0].innerText;
+                const ot = row.cells[1].children[0].value;
+                const tipo = row.cells[2].children[0].value;
+                const descripcion = row.cells[3].children[0].value;
+                const monto = parseFloat(row.cells[4].children[0].value) || 0;
+                const fechaHora = row.cells[5].innerText;
+                otData.push({ id, contratista, ot, tipo, descripcion, monto, fechaHora });
             }
             displaySummary();
-            table.innerHTML = '<tr><th>OT</th><th>Tipo de OT</th><th>Descripción</th><th>Monto</th></tr>'; // Limpia la tabla
+            table.innerHTML = '<tr><th>ID</th><th>OT</th><th>Tipo de OT</th><th>Descripción</th><th>Monto</th><th>Fecha y Hora</th><th>Editar</th></tr>'; // Limpia la tabla
         }
 
         function displaySummary() {
+            const resumenPorTipo = {};
             let totalMonto = 0;
+
             otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = 0;
+                }
+                resumenPorTipo[data.tipo] += data.monto;
                 totalMonto += data.monto;
             });
-            document.getElementById('summary').innerText = `Total Facturado: $${totalMonto.toFixed(2)}`;
+
+            let resumenTexto = `Hola ${otData[0].contratista}, este es el resumen de los valores ingresados:<br><br>`;
+            for (const tipo in resumenPorTipo) {
+                resumenTexto += `Tipo de OT: ${tipo} - Total: $${resumenPorTipo[tipo].toFixed(2)}<br>`;
+            }
+            resumenTexto += `<br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTexto;
         }
 
         function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,Contratista,OT,Tipo de OT,Descripción,Monto\n";
+            let csvContent = "data:text/csv;charset=utf-8,ID,Contratista,OT,Tipo de OT,Descripción,Monto,Fecha y Hora\n";
             otData.forEach(row => {
-                csvContent += `${row.contratista},${row.ot},${row.tipo},${row.descripcion},${row.monto}\n`;
+                csvContent += `${row.id},${row.contratista},${row.ot},${row.tipo},${row.descripcion},${row.monto},${row.fechaHora}\n`;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
