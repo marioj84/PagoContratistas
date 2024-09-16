@@ -5,32 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
+        /* Estilo básico para fuentes y colores */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #004aad; /* Color azul Lipigas */
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
+
         th, td {
-            padding: 8px;
+            padding: 12px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
+
+        th {
+            background-color: #fdd835; /* Amarillo Lipigas */
+            color: #004aad;
+            font-size: 1.2em;
+        }
+
+        td input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
         button {
-            margin: 5px;
-            padding: 10px;
-            background-color: #007bff;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #004aad;
             color: white;
             border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: #003380;
+        }
+
+        #summary {
+            font-size: 1.5em;
+            background-color: #fdd835;
+            color: #004aad;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2em;
+            }
+
+            table, th, td {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+
     <table id="otTable">
         <tr>
             <th>OT</th>
@@ -39,13 +100,15 @@
             <th>Monto</th>
         </tr>
     </table>
-    <br>
-    <button onclick="addRow()">Insertar Fila</button>
-    <button onclick="finalize()">Finalizar</button>
-    <button onclick="exportToCSV()">Exportar Resumen</button>
+
+    <div style="text-align: center;">
+        <button onclick="addRow()">Insertar Fila</button>
+        <button onclick="finalize()">Finalizar</button>
+        <button onclick="exportToCSV()">Exportar Resumen</button>
+    </div>
 
     <h3>Resumen</h3>
-    <div id="summary"></div>
+    <div id="summary">Total Facturado: $0.00</div>
 
     <script>
         let otData = [];
