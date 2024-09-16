@@ -203,7 +203,19 @@
         }
     });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const nombreContratista = localStorage.getItem('nombreContratista');
     
+    if (!loggedInUser || !nombreContratista) {
+        window.location.href = "login.html";  // Redirigir a la página de login si no está autenticado
+    } else {
+        document.getElementById('contratista').value = nombreContratista;  // Mostrar el contratista logueado
+        document.getElementById('contratista').disabled = true;  // Deshabilitar la opción de cambiar el contratista
+    }
+});
+</script>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
