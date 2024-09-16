@@ -151,19 +151,21 @@
             });
         }
 
-        // Función para el login
-        function login() {
-            const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas y eliminar espacios
-            const password = document.getElementById('password').value.trim();
+// Función para el login
+function login() {
+    const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas
+    const password = document.getElementById('password').value.trim();
 
-            // Verificar usuario y contraseña
-            if (usuarios[username] && usuarios[username] === password) {
-                localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
-                window.location.href = "index.html";  // Redirigir al formulario de carga de OT
-            } else {
-                document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
-            }
-        }
+    // Verificar usuario y contraseña
+    if (usuarios[username] && usuarios[username].password === password) {
+        localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
+        localStorage.setItem('loggedInName', usuarios[username].nombre);  // Guardar el nombre completo del contratista
+        window.location.href = "index.html";  // Redirigir al formulario de carga de OT
+    } else {
+        document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
+    }
+}
+
 
         // Mostrar u ocultar contraseña
         function togglePassword() {
