@@ -1,8 +1,22 @@
 {
-  "ANA CORNEJO": "password123",
-  "ANGELICA FUENTES FUENTES": "password456",
-  "DANIEL OJEDA": "password789",
-  "EFRAIN ALVAREZ": "password321",
-  "FERNANDO SOTO": "password654"
-  // Agrega más contratistas y contraseñas
+    "acornejo": "123456789",
+    "afuentes": "123456789",
+    "dojeda": "123456789",
+    "ealvarez": "123456789",
+    "fsoto": "123456789",
+    "fpalavicino": "123456789",
+    "fy": "123456789",
+    "gstuardo": "123456789",
+    "hpavez": "123456789",
+    "hconstrucciones": "123456789",
+    "jvega": "123456789",
+    "jservicios": "123456789",
+    "jferrada": "123456789",
+    "jgallardo": "123456789",
+    "kantofagasta": "123456789",
+    "kcalama": "123456789",
+    "msuarez": "123456789",
+    "mvalencia": "123456789",
+    "vfernando": "123456789",
+    "ybecerra": "123456789"
 }
