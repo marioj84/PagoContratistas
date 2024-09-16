@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Contratistas</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+    <table id="otTable">
+        <tr>
+            <th>OT</th>
+            <th>Tipo de OT</th>
+            <th>Descripción</th>
+            <th>Monto</th>
+        </tr>
+    </table>
+    <br>
+    <button onclick="addRow()">Insertar Fila</button>
+    <button onclick="finalize()">Finalizar</button>
+    <button onclick="exportToCSV()">Exportar Resumen</button>
+
+    <h3>Resumen</h3>
+    <div id="summary"></div>
+
+    <script>
+        let otData = [];
+
+        function addRow() {
+            const table = document.getElementById('otTable');
+            const row = table.insertRow();
+            for (let i = 0; i < 4; i++) {
+                const cell = row.insertCell(i);
+                const input = document.createElement('input');
+                input.type = 'text';
+                cell.appendChild(input);
+            }
+        }
+
+        function finalize() {
+            const table = document.getElementById('otTable');
+            otData = [];
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value;
+                const tipo = row.cells[1].children[0].value;
+                const descripcion = row.cells[2].children[0].value;
+                const monto = parseFloat(row.cells[3].children[0].value) || 0;
+                otData.push({ ot, tipo, descripcion, monto });
+            }
+            displaySummary();
+        }
+
+        function displaySummary() {
+            let totalMonto = 0;
+            otData.forEach(data => {
+                totalMonto += data.monto;
+            });
+            document.getElementById('summary').innerText = `Total Facturado: $${totalMonto.toFixed(2)}`;
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,OT,Tipo de OT,Descripción,Monto\n";
+            otData.forEach(row => {
+                csvContent += `${row.ot},${row.tipo},${row.descripcion},${row.monto}\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'resumen_ot.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
