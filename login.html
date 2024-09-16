@@ -1,91 +1,38 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Contratistas</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        h2 {
-            color: #004aad;
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-        form {
-            text-align: center;
-            margin-top: 50px;
-        }
-        input {
-            padding: 10px;
-            margin: 10px;
-            width: 200px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #004aad;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-        #login-error {
-            color: red;
-            text-align: center;
-            display: none;
-        }
-    </style>
-</head>
-<body>
-    <h2>Iniciar Sesión - Contratistas</h2>
-    
-    <div id="login-error">Usuario o contraseña incorrectos. Inténtelo de nuevo.</div>
+<script>
+    let usuarios = {};
 
-    <form id="login-form">
-        <input type="text" id="username" placeholder="Usuario" required><br>
-        <input type="password" id="password" placeholder="Contraseña" required><br>
-        <button type="button" onclick="login()">Iniciar sesión</button>
-    </form>
+    // Cargar los usuarios y contraseñas desde el archivo JSON
+    function loadUsuarios() {
+        fetch('https://marioj84.github.io/PagoContratistas/usuarios.json')  // Cambia la URL si es necesario
+        .then(response => response.json())
+        .then(data => {
+            usuarios = data;
+            console.log("Usuarios cargados:", usuarios);  // Verificar que los usuarios se carguen correctamente
+        })
+        .catch(error => {
+            console.error("Error al cargar usuarios:", error);
+        });
+    }
 
-    <script>
-        let usuarios = {};
+    // Función para el login
+    function login() {
+        const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas y eliminar espacios
+        const password = document.getElementById('password').value.trim();
 
-        // Cargar los usuarios y contraseñas desde el archivo JSON
-        function loadUsuarios() {
-            fetch('https://marioj84.github.io/PagoContratistas/usuarios.json')  // Cambia la URL si es necesario
-            .then(response => response.json())
-            .then(data => {
-                usuarios = data;
-                console.log("Usuarios cargados:", usuarios);  // Puedes quitar esto luego, es solo para verificar
-            })
-            .catch(error => {
-                console.error("Error al cargar usuarios:", error);
-            });
+        console.log("Usuario ingresado:", username);
+        console.log("Contraseña ingresada:", password);
+
+        // Verificar usuario y contraseña
+        if (usuarios[username] && usuarios[username] === password) {
+            console.log("Inicio de sesión exitoso para:", username);
+            localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
+            window.location.href = "index.html";  // Redirigir al formulario de carga de OT
+        } else {
+            console.log("Usuario o contraseña incorrectos");
+            document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
         }
+    }
 
-        // Función para el login
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            // Verificar usuario y contraseña
-            if (usuarios[username] && usuarios[username] === password) {
-                localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
-                window.location.href = "index.html";  // Redirigir al formulario de carga de OT
-            } else {
-                document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
-            }
-        }
-
-        // Cargar usuarios al iniciar la página
-        document.addEventListener('DOMContentLoaded', loadUsuarios);
-    </script>
-</body>
-</html>
+    // Cargar usuarios al iniciar la página
+    document.addEventListener('DOMContentLoaded', loadUsuarios);
+</script>
