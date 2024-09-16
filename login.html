@@ -165,9 +165,9 @@
 
     // Verificar usuario y contraseña
     if (usuarios[username] && usuarios[username].password === password) {
-        localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
-        localStorage.setItem('loggedInName', usuarios[username].nombre);  // Guardar el nombre completo del contratista
-        window.location.href = "index.html";  // Redirigir al formulario de carga de OT
+localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
+localStorage.setItem('loggedInName', usuarios[username].nombre);  // Guardar el nombre completo del contratista
+window.location.href = "index.html";  // Redirigir al formulario de carga de OT
     } else {
         document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
         document.getElementById('login-error').textContent = 'Usuario o contraseña incorrectos. Inténtelo de nuevo.';
