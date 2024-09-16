@@ -6,8 +6,10 @@
     <title>Pago Contratistas</title>
     <style>
         /* Estilo básico para fuentes y colores */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
@@ -18,7 +20,21 @@
             color: #004aad; /* Color azul Lipigas */
             text-align: center;
             font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            text-align: center;
+            color: #999;
+            font-size: 1.2em;
             margin-bottom: 20px;
+        }
+
+        #logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 120px;
         }
 
         table {
@@ -41,7 +57,7 @@
             font-size: 1.2em;
         }
 
-        td input {
+        td input, td select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
@@ -71,6 +87,18 @@
             padding: 10px;
             border-radius: 8px;
             text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #contratista {
+            margin-bottom: 20px;
         }
 
         /* Estilos responsivos */
@@ -90,7 +118,13 @@
     </style>
 </head>
 <body>
+    <img id="logo" src="logo.png" alt="Logo Empresa"> <!-- Aquí puedes poner el logo de tu empresa -->
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+    <h4>Esta es una página de prueba, no oficial.</h4>
+
+    <!-- Contratista -->
+    <label for="contratista">Nombre del Contratista</label>
+    <input id="contratista" type="text" placeholder="Ingrese el nombre del contratista" />
 
     <table id="otTable">
         <tr>
@@ -102,9 +136,9 @@
     </table>
 
     <div style="text-align: center;">
-        <button onclick="addRow()">Insertar Fila</button>
+        <button onclick="addRow()">Agregar nueva OT</button>
         <button onclick="finalize()">Finalizar</button>
-        <button onclick="exportToCSV()">Exportar Resumen</button>
+        <button onclick="exportToCSV()">Descargar OT cargadas</button>
     </div>
 
     <h3>Resumen</h3>
@@ -116,26 +150,56 @@
         function addRow() {
             const table = document.getElementById('otTable');
             const row = table.insertRow();
-            for (let i = 0; i < 4; i++) {
-                const cell = row.insertCell(i);
-                const input = document.createElement('input');
-                input.type = 'text';
-                cell.appendChild(input);
-            }
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const descCell = row.insertCell(2);
+            const montoCell = row.insertCell(3);
+
+            // Campo para OT
+            const inputOT = document.createElement('input');
+            inputOT.type = 'text';
+            otCell.appendChild(inputOT);
+
+            // Campo desplegable para tipo de OT
+            const selectTipo = document.createElement('select');
+            const opciones = ['Prueba de Hermeticidad', 'Cambio de Medidor', 'Reinstalacion de Medidor', 'Retiro de Medidor', 'Verificacion de Medidor'];
+            opciones.forEach(opcion => {
+                const optionElement = document.createElement('option');
+                optionElement.value = opcion;
+                optionElement.text = opcion;
+                selectTipo.appendChild(optionElement);
+            });
+            tipoCell.appendChild(selectTipo);
+
+            // Campo para descripción
+            const inputDesc = document.createElement('input');
+            inputDesc.type = 'text';
+            descCell.appendChild(inputDesc);
+
+            // Campo para monto con $
+            const inputMonto = document.createElement('input');
+            inputMonto.type = 'number';
+            inputMonto.placeholder = '$0.00';
+            inputMonto.oninput = function() {
+                inputMonto.value = parseFloat(inputMonto.value).toFixed(2); // Limita a dos decimales
+            };
+            montoCell.appendChild(inputMonto);
         }
 
         function finalize() {
             const table = document.getElementById('otTable');
             otData = [];
+            const contratista = document.getElementById('contratista').value;
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value;
                 const tipo = row.cells[1].children[0].value;
                 const descripcion = row.cells[2].children[0].value;
                 const monto = parseFloat(row.cells[3].children[0].value) || 0;
-                otData.push({ ot, tipo, descripcion, monto });
+                otData.push({ contratista, ot, tipo, descripcion, monto });
             }
             displaySummary();
+            table.innerHTML = '<tr><th>OT</th><th>Tipo de OT</th><th>Descripción</th><th>Monto</th></tr>'; // Limpia la tabla
         }
 
         function displaySummary() {
@@ -147,9 +211,9 @@
         }
 
         function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,OT,Tipo de OT,Descripción,Monto\n";
+            let csvContent = "data:text/csv;charset=utf-8,Contratista,OT,Tipo de OT,Descripción,Monto\n";
             otData.forEach(row => {
-                csvContent += `${row.ot},${row.tipo},${row.descripcion},${row.monto}\n`;
+                csvContent += `${row.contratista},${row.ot},${row.tipo},${row.descripcion},${row.monto}\n`;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
