@@ -63,6 +63,16 @@
             border-radius: 5px;
         }
 
+        td input[type="number"]::-webkit-outer-spin-button,
+        td input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        td input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
         button {
             padding: 8px 15px;
             margin: 5px;
@@ -134,6 +144,19 @@
             margin-right: 5px;
         }
 
+        /* Ancho de las columnas */
+        .col-ot {
+            width: 10%;
+        }
+
+        .col-descripcion {
+            width: 40%;
+        }
+
+        .col-monto {
+            width: 10%;
+        }
+
         /* Reducir el interlineado entre filas de OT */
         table tr {
             line-height: 1.2;
@@ -165,16 +188,38 @@
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <input id="contratista" type="text" placeholder="Ingrese el nombre del contratista" />
+        <select id="contratista">
+            <option value="">Seleccione un contratista</option>
+            <option value="ANA CORNEJO">ANA CORNEJO</option>
+            <option value="ANGELICA FUENTES FUENTES">ANGELICA FUENTES FUENTES</option>
+            <option value="DANIEL OJEDA">DANIEL OJEDA</option>
+            <option value="EFRAIN ALVAREZ">EFRAIN ALVAREZ</option>
+            <option value="FERNANDO SOTO">FERNANDO SOTO</option>
+            <option value="FREDDY PALAVICINO">FREDDY PALAVICINO</option>
+            <option value="FUENZALIDA Y FUENZALIDA CIA. LTDA">FUENZALIDA Y FUENZALIDA CIA. LTDA</option>
+            <option value="GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES">GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES</option>
+            <option value="HUGO PAVEZ">HUGO PAVEZ</option>
+            <option value="HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.">HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.</option>
+            <option value="JENNY VEGA">JENNY VEGA</option>
+            <option value="JMG SERVICIOS">JMG SERVICIOS</option>
+            <option value="JUAN FERRADA ESCOBAR">JUAN FERRADA ESCOBAR</option>
+            <option value="JUAN GALLARDO CERDA">JUAN GALLARDO CERDA</option>
+            <option value="KLAIT ANTOFAGASTA">KLAIT ANTOFAGASTA</option>
+            <option value="KLAIT CALAMA">KLAIT CALAMA</option>
+            <option value="MANUEL SUAREZ">MANUEL SUAREZ</option>
+            <option value="MARLENE VALENCIA">MARLENE VALENCIA</option>
+            <option value="VICTOR FERNANDO CRUCES CESPEDES">VICTOR FERNANDO CRUCES CESPEDES</option>
+            <option value="YANINA BECERRA">YANINA BECERRA</option>
+        </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
 
     <table id="otTable">
         <tr>
-            <th>OT</th>
+            <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
-            <th>Descripción</th>
-            <th>Monto</th>
+            <th class="col-descripcion">Descripción</th>
+            <th class="col-monto">Monto</th>
             <th>Acciones</th>
         </tr>
     </table>
@@ -202,7 +247,7 @@
             const montoCell = row.insertCell(3);
             const actionsCell = row.insertCell(4);
 
-            // Campo para OT, solo acepta números enteros
+            // Campo para OT, sin flechas
             const inputOT = document.createElement('input');
             inputOT.type = 'number';
             inputOT.step = "1";  // Solo enteros
@@ -211,7 +256,7 @@
 
             // Campo desplegable para tipo de OT
             const selectTipo = document.createElement('select');
-            const opciones = ['Prueba de Hermeticidad', 'Cambio de Medidor', 'Reinstalacion de Medidor', 'Retiro de Medidor', 'Verificacion de Medidor'];
+            const opciones = ['Retiro de Medidor', 'Reinstalación de Medidor', 'Presupuesto Trabajo en Terreno', 'Cambio de Medidor', 'Verificación de Medidor en Terreno', 'Cambio de Ubicación Medidor', 'Verificación de Lectura', 'Revisión de Merma', 'PH y Análisis de Medidor'];
             opciones.forEach(opcion => {
                 const optionElement = document.createElement('option');
                 optionElement.value = opcion;
@@ -242,9 +287,12 @@
 
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
-            deleteButton.className = 'acciones-btn';
+            deleteButton.className = 'acciones-btn burdeo';
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
+
+            // Mostrar botón "Ver Resumen" después de agregar la primera OT
+            document.getElementById('summaryBtn').classList.remove('hidden');
         }
 
         function deleteRow(row) {
@@ -325,10 +373,10 @@
         function finalize() {
             // Aquí limpiar los datos y comenzar de nuevo
             document.getElementById('contratista').value = '';
-            document.getElementById('otTable').innerHTML = '<tr><th>OT</th><th>Tipo de OT</th><th>Descripción</th><th>Monto</th><th>Acciones</th></tr>';
+            document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th>Acciones</th></tr>';
             document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
             document.getElementById('finalizeBtn').classList.add('hidden');  // Ocultar el botón de finalizar
-            document.getElementById('summaryBtn').classList.remove('hidden');  // Mostrar el botón de resumen
+            document.getElementById('summaryBtn').classList.add('hidden');  // Ocultar el botón de resumen
             otData = [];  // Limpiar los datos
         }
     </script>
