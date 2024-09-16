@@ -444,7 +444,7 @@
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+                       XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             document.getElementById('contratista').value = '';
             document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-cant">Cant</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th class="col-subtotal">Subtotal</th><th>Acciones</th></tr>';
@@ -453,4 +453,46 @@
             document.getElementById('updateSummaryBtn').classList.add('hidden');  
             otData = []; 
         }
-    </
+
+        // Función para cargar los precios desde el archivo JSON
+        let precios = {};
+
+        function loadPrecios() {
+            fetch('https://marioj84.github.io/PagoContratistas/precios.json')
+                .then(response => response.json())
+                .then(data => {
+                    precios = data;
+                    console.log("Precios cargados:", precios);
+                })
+                .catch(error => {
+                    console.error("Error al cargar los precios:", error);
+                });
+        }
+
+        // Función para actualizar los montos según el contratista y el tipo de trabajo seleccionado
+        function updateMontos() {
+            const contratista = localStorage.getItem('loggedInName').toUpperCase().trim();  // Obtener contratista logueado y normalizar
+            const filas = document.querySelectorAll('#otTable tr');
+
+            filas.forEach((fila, index) => {
+                if (index === 0) return;  // Saltar la fila de cabecera
+
+                const tipoTrabajo = fila.cells[1].children[0].value.trim();
+                const montoInput = fila.cells[4].children[0];
+
+                // Verificar si existen precios para el contratista y el tipo de trabajo
+                if (contratista in precios && tipoTrabajo in precios[contratista]) {
+                    montoInput.value = precios[contratista][tipoTrabajo];  // Poner el precio predeterminado
+                    updateSubtotal(fila);  // Recalcular el subtotal
+                } else {
+                    montoInput.value = '0.00';  // Si no hay precio predeterminado, poner 0.00
+                }
+            });
+        }
+
+        // Cargar los precios al cargar la página
+        document.addEventListener('DOMContentLoaded', loadPrecios);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+</body>
+</html>
