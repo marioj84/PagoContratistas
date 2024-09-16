@@ -36,165 +36,25 @@
             width: 240px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
-        }
-
-        th {
-            background-color: #fdd835;
-            color: #004aad;
-        }
-
-        td input, td select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        td input[type="number"] {
-            max-width: 80px;
-        }
-
-        td select {
-            width: auto;
-        }
-
-        button {
-            padding: 8px 15px;
-            margin: 5px;
-            background-color: #004aad;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .burdeo {
-            background-color: #800000;
-        }
-
-        .verde {
-            background-color: #28a745;
-        }
-
-        button:hover {
-            background-color: #003380;
-        }
-
-        .burdeo:hover {
-            background-color: #5a0000;
-        }
-
-        .verde:hover {
-            background-color: #218838;
-        }
-
-        #summary {
+        .welcome-message {
+            text-align: center;
             font-size: 1.2em;
-            background-color: #fdd835;
-            color: #004aad;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
             margin-bottom: 20px;
+            color: #004aad;
         }
 
-        label {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: block;
-            color: #333;
-        }
-
-        #contratista {
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            width: auto;
-        }
-
-        #error-msg {
-            color: red;
-            font-size: 0.9em;
-            display: none;
-            margin-bottom: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #999;
-        }
-
-        /* Ajustes para pantallas más pequeñas */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            table {
-                font-size: 0.8em;
-            }
-
-            th, td {
-                padding: 6px;
-            }
-
-            #logo {
-                width: 180px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.5em;
-            }
-
-            p {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 0.8em;
-                padding: 6px 10px;
-            }
-
-            th, td {
-                padding: 5px;
-                font-size: 0.8em;
-            }
-
-            #logo {
-                width: 120px;
-            }
-        }
+        /* Otros estilos de la página */
     </style>
 </head>
 <body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
-    
+
+    <!-- Mensaje de bienvenida para el usuario logueado -->
+    <div class="welcome-message" id="welcome-message">
+        Bienvenido, <span id="nombre-contratista"></span>!
+    </div>
+
     <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
@@ -456,5 +316,21 @@
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+ <script>
+        // Verificar si el usuario ha iniciado sesión
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const loggedInName = localStorage.getItem('loggedInName');
+
+            // Si no hay un usuario logueado, redirigir a la página de login
+            if (!loggedInUser || !loggedInName) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Si el usuario está logueado, mostrar su nombre
+            document.getElementById('nombre-contratista').textContent = loggedInName;
+        });
+    </script>
 </body>
 </html>
