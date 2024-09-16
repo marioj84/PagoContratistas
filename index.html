@@ -65,7 +65,7 @@
 
         button {
             padding: 8px 15px;
-            margin: 10px;
+            margin: 5px;
             background-color: #004aad;
             color: white;
             border: none;
@@ -163,13 +163,15 @@
     </table>
 
     <div style="text-align: center;">
-        <button onclick="addRow()">Agregar nueva OT</button>
-        <button onclick="finalize()">Finalizar</button>
-        <button id="downloadBtn" class="burdeo hidden" onclick="exportToCSV()">Descargar OT cargadas</button>
+        <button onclick="addRow()">Ver Resumen</button>
     </div>
 
     <h3>Resumen</h3>
     <div id="summary">Total Facturado: $0.00</div>
+
+    <div id="finalizeSection" style="text-align: center;" class="hidden">
+        <button class="burdeo" onclick="finalize()">Finalizar y Guardar</button>
+    </div>
 
     <script>
         let otData = [];
@@ -214,9 +216,14 @@
             inputMonto.min = "0";
             montoCell.appendChild(inputMonto);
 
-            // Botón de eliminar fila, junto al botón de agregar
+            // Botones de agregar y eliminar en la columna de acciones
+            const addButton = document.createElement('button');
+            addButton.innerText = 'Agregar nueva OT';
+            addButton.onclick = addRow;
+            actionsCell.appendChild(addButton);
+
             const deleteButton = document.createElement('button');
-            deleteButton.innerText = 'Eliminar';
+            deleteButton.innerText = 'Eliminar OT';
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
         }
@@ -226,6 +233,22 @@
         }
 
         function finalize() {
+            // Limpiar todos los datos y reiniciar la página
+            otData = [];
+            document.getElementById('otTable').innerHTML = `
+                <tr>
+                    <th>OT</th>
+                    <th>Tipo de OT</th>
+                    <th>Descripción</th>
+                    <th>Monto</th>
+                    <th>Acciones</th>
+                </tr>`;
+            document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
+            document.getElementById('finalizeSection').classList.add('hidden');
+            document.getElementById('downloadBtn').classList.add('hidden');
+        }
+
+        function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
             const contratista = document.getElementById('contratista').value.trim();
@@ -237,77 +260,4 @@
                 document.getElementById('contratista-asterisk').classList.remove('hidden');
                 valid = false;
             } else {
-                document.getElementById('contratista-asterisk').classList.add('hidden');
-            }
-
-            // Validar campos de la tabla
-            for (let i = 1; i < table.rows.length; i++) {
-                const row = table.rows[i];
-                const ot = row.cells[0].children[0].value.trim();
-                const tipo = row.cells[1].children[0].value;
-                const descripcion = row.cells[2].children[0].value.trim();
-                const monto = row.cells[3].children[0].value.trim();
-
-                if (ot === "" || descripcion === "" || monto === "") {
-                    document.getElementById('error-msg').style.display = "block";
-                    const cells = row.cells;
-                    cells[0].children[0].style.border = ot === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
-                    cells[2].children[0].style.border = descripcion === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
-                    cells[3].children[0].style.border = monto === "" ? "2px solid red" : "";  // Marcar en rojo si está vacío
-                    valid = false;
-                    break;
-                } else {
-                    otData.push({ contratista, ot, tipo, descripcion, monto: parseFloat(monto).toFixed(2) });
-                }
-            }
-
-            if (valid) {
-                document.getElementById('error-msg').style.display = "none";
-                displaySummary();
-                document.getElementById('downloadBtn').classList.remove('hidden');  // Mostrar botón de descarga
-            }
-        }
-
-        function displaySummary() {
-            const resumenPorTipo = {};
-            let totalMonto = 0;
-            let totalTrabajos = 0;
-
-            otData.forEach(data => {
-                if (!resumenPorTipo[data.tipo]) {
-                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
-                }
-                resumenPorTipo[data.tipo].cantidad += 1;
-                resumenPorTipo[data.tipo].total += parseFloat(data.monto);
-                totalMonto += parseFloat(data.monto);
-                totalTrabajos += 1;
-            });
-
-            // Generar resumen en formato tabla
-            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
-            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
-
-            for (const tipo in resumenPorTipo) {
-                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
-            }
-            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
-
-            document.getElementById('summary').innerHTML = resumenTabla;
-        }
-
-        function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,Contratista,OT,Tipo de OT,Descripción,Monto\n";
-            otData.forEach(row => {
-                csvContent += `${row.contratista},${row.ot},${row.tipo},${row.descripcion},${row.monto}\n`;
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', 'resumen_ot.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
-</body>
-</html>
+                document.getElementById('contratista-aster
