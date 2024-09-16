@@ -144,13 +144,13 @@
             margin-right: 5px;
         }
 
-        /* Ancho de las columnas */
+        /* Ancho de las columnas ajustado para evitar descuadre */
         .col-ot {
-            width: 10%;
+            width: 8%;
         }
 
         .col-descripcion {
-            width: 40%;
+            width: 35%; /* Reducido para evitar descuadre */
         }
 
         .col-monto {
@@ -232,7 +232,7 @@
     <div id="summary">Total Facturado: $0.00</div>
 
     <div style="text-align: center;">
-        <button id="finalizeBtn" class="burdeo hidden" onclick="finalize()">Finalizar y Guardar</button>
+        <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
     </div>
 
     <script>
@@ -370,8 +370,22 @@
             document.getElementById('summary').innerHTML = resumenTabla;
         }
 
-        function finalize() {
-            // Aquí limpiar los datos y comenzar de nuevo
+        function finalizeAndDownload() {
+            // Generar archivo XLS
+            const xlsContent = [
+                ["Contratista", "OT", "Tipo de OT", "Descripción", "Monto"]
+            ];
+
+            otData.forEach(row => {
+                xlsContent.push([row.contratista, row.ot, row.tipo, row.descripcion, row.monto]);
+            });
+
+            const worksheet = XLSX.utils.aoa_to_sheet(xlsContent);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen_OT");
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            // Limpiar los datos y comenzar de nuevo
             document.getElementById('contratista').value = '';
             document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th>Acciones</th></tr>';
             document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
@@ -380,5 +394,6 @@
             otData = [];  // Limpiar los datos
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 </body>
 </html>
