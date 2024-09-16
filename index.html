@@ -22,13 +22,6 @@
             margin-bottom: 10px;
         }
 
-        h4 {
-            text-align: center;
-            color: #999;
-            font-size: 1em;
-            margin-bottom: 20px;
-        }
-
         p {
             text-align: center;
             font-size: 1.1em;
@@ -36,11 +29,12 @@
             margin-bottom: 20px;
         }
 
+        /* Estilo del logo, doble de tamaño en pantallas grandes */
         #logo {
             position: absolute;
             top: 20px;
             left: 20px;
-            width: 120px;
+            width: 240px; /* Doble tamaño para pantallas grandes */
         }
 
         table {
@@ -148,6 +142,49 @@
             text-align: center;
             font-size: 0.9em;
             color: #999;
+        }
+
+        /* Ajustes para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            #logo {
+                width: 180px; /* Ajuste en tablets */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+
+            th, td {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+
+            #logo {
+                width: 120px; /* Ajuste en celulares */
+            }
         }
     </style>
 </head>
