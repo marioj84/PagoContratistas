@@ -74,6 +74,10 @@
             max-width: 80px;
         }
 
+        td select {
+            width: auto;
+        }
+
         button {
             padding: 8px 15px;
             margin: 5px;
@@ -129,6 +133,10 @@
             font-size: 0.9em;
             display: none;
             margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
         }
 
         footer {
@@ -194,9 +202,6 @@
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
-    <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
-
-    <!-- Tabla para ingresar Órdenes de Trabajo -->
     <table id="otTable">
         <tr>
             <th class="col-ot">OT</th>
@@ -208,11 +213,6 @@
             <th>Acciones</th>
         </tr>
     </table>
-
-    <!-- Botón para agregar la primera OT -->
-    <div style="text-align: center;">
-        <button class="verde" onclick="addRow()">Agregar OT</button>
-    </div>
 
     <div style="text-align: center;">
         <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
@@ -234,7 +234,6 @@
     <script>
         let otData = [];
 
-        // Agregar una nueva fila de OT
         function addRow() {
             const table = document.getElementById('otTable');
             const row = table.insertRow();
@@ -295,7 +294,6 @@
             document.getElementById('summaryBtn').classList.remove('hidden');
         }
 
-        // Actualizar el subtotal cuando cambien Cantidad o Monto
         function updateSubtotal(row) {
             const cantidad = row.cells[2].children[0].value;
             const monto = row.cells[4].children[0].value;
@@ -303,16 +301,14 @@
             row.cells[5].children[0].value = isNaN(subtotal) ? '0.00' : subtotal.toFixed(2);
         }
 
-        // Eliminar una fila de OT
         function deleteRow(row) {
             row.remove(); 
         }
 
-        // Ver Resumen de OT
         function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
-            const contratista = localStorage.getItem('loggedInName'); // Usar el nombre del contratista logueado
+            const contratista = localStorage.getItem('loggedInName'); // Obtenemos el contratista del almacenamiento local
             let valid = true;
 
             for (let i = 1; i < table.rows.length; i++) {
@@ -326,6 +322,10 @@
 
                 if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
                     document.getElementById('error-msg').style.display = "block";
+                    const cells = row.cells;
+                    cells[0].children[0].style.border = ot === "" ? "2px solid red" : "";  
+                    cells[3].children[0].style.border = descripcion === "" ? "2px solid red" : "";  
+                    cells[4].children[0].style.border = monto === "" ? "2px solid red" : "";  
                     valid = false;
                     break;
                 } else {
@@ -409,23 +409,26 @@
             document.getElementById('updateSummaryBtn').classList.add('hidden');  
             otData = []; 
         }
+    </script>
 
-     <script>
-    // Verificar si el usuario ha iniciado sesión
-    document.addEventListener('DOMContentLoaded', function() {
-        const loggedInUser = localStorage.getItem('loggedInUser');
-        const loggedInName = localStorage.getItem('loggedInName');
+    <!-- Script para verificar si el usuario está logueado -->
+    <script>
+        // Verificar si el usuario ha iniciado sesión
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            const loggedInName = localStorage.getItem('loggedInName');
 
-        // Si no hay un usuario logueado, redirigir a la página de login
-        if (!loggedInUser || !loggedInName) {
-            window.location.href = 'login.html';
-            return;
-        }
+            // Si no hay un usuario logueado, redirigir a la página de login
+            if (!loggedInUser || !loggedInName) {
+                window.location.href = 'login.html';
+                return;
+            }
 
-        // Si el usuario está logueado, mostrar su nombre
-        document.getElementById('nombre-contratista').textContent = loggedInName;
-    });
-</script>
+            // Si el usuario está logueado, mostrar su nombre
+            document.getElementById('nombre-contratista').textContent = loggedInName;
+        });
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 </body>
 </html>
