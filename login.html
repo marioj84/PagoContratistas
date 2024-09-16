@@ -153,18 +153,27 @@
 
         // Función para el login
         function login() {
-            const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas
-            const password = document.getElementById('password').value.trim();
+    const username = document.getElementById('username').value.trim().toLowerCase();  // Convertir a minúsculas
+    const password = document.getElementById('password').value.trim();
 
-            // Verificar usuario y contraseña
-            if (usuarios[username] && usuarios[username].password === password) {
-                localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
-                localStorage.setItem('loggedInName', usuarios[username].nombre);  // Guardar el nombre completo del contratista
-                window.location.href = "index.html";  // Redirigir al formulario de carga de OT
-            } else {
-                document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
-            }
-        }
+    // Verificar si los campos están vacíos
+    if (username === '' || password === '') {
+        document.getElementById('login-error').style.display = 'block';
+        document.getElementById('login-error').textContent = 'Por favor, ingrese ambos campos.';
+        return;
+    }
+
+    // Verificar usuario y contraseña
+    if (usuarios[username] && usuarios[username].password === password) {
+        localStorage.setItem('loggedInUser', username);  // Guardar el usuario logueado
+        localStorage.setItem('loggedInName', usuarios[username].nombre);  // Guardar el nombre completo del contratista
+        window.location.href = "index.html";  // Redirigir al formulario de carga de OT
+    } else {
+        document.getElementById('login-error').style.display = 'block';  // Mostrar mensaje de error
+        document.getElementById('login-error').textContent = 'Usuario o contraseña incorrectos. Inténtelo de nuevo.';
+    }
+}
+
 
         // Mostrar u ocultar contraseña
         function togglePassword() {
