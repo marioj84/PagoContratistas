@@ -12,23 +12,31 @@
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #004aad;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
         }
 
         #login-container {
             max-width: 400px;
-            width: 100%;
+            margin: auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
-            text-align: center;
         }
 
         #logo {
@@ -38,33 +46,19 @@
             width: 80px;
         }
 
-        h2 {
-            font-size: 1.8em;
-            color: #004aad;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
         label {
             font-size: 1.1em;
             margin-bottom: 8px;
             display: block;
-            text-align: left;
         }
 
         input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
-            box-sizing: border-box;
         }
 
         .password-wrapper {
@@ -117,57 +111,36 @@
         }
 
         footer {
+            margin-top: 30px;
             text-align: center;
             font-size: 0.9em;
-            color: #666;
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
+            color: #999;
         }
 
-        footer a {
-            color: #004aad;
-            text-decoration: none;
+        .subtitle {
+            text-align: center;
+            font-size: 1em;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
         }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Ajustes para móviles */
         @media (max-width: 768px) {
             #logo {
                 width: 60px;
-            }
-
-            #login-container {
-                max-width: 100%;
-                padding: 15px;
-            }
-
-            h2 {
-                font-size: 1.6em;
-            }
-
-            button {
-                padding: 10px;
-                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
+    <h2>Inicio de Sesión</h2>
+    <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
 
+    <!-- Formulario de inicio de sesión -->
     <div id="login-container">
-        <h2>Inicio de Sesión</h2>
-        <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
-        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-
-        <!-- Formulario de inicio de sesión -->
         <form id="login-form">
             <label for="username">Usuario</label>
             <input type="text" id="username" required placeholder="Ingrese su usuario">
-
             <label for="password">Clave</label>
             <div class="password-wrapper">
                 <input type="password" id="password" required placeholder="Ingrese su clave">
@@ -175,11 +148,10 @@
                     <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
                 </span>
             </div>
-            
             <button type="submit">Ingresar</button>
         </form>
-
         <div id="error-message" class="error"></div>
+        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     </div>
 
     <footer>
