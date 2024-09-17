@@ -171,10 +171,6 @@
             white-space: nowrap;
         }
 
-        #generatedTableContainer {
-            margin-top: 20px;
-        }
-
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -262,8 +258,7 @@
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
 
-    <!-- Contenedor para la tabla detallada generada -->
-    <div id="generatedTableContainer"></div>
+    <div id="tablaResumenDetallado" style="margin-top: 30px;"></div>
 
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
@@ -393,7 +388,7 @@
             row.remove(); 
         }
 
-        // Función para ver el resumen y generar la tabla detallada
+        // Función para ver el resumen
         function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
@@ -453,7 +448,7 @@
                 }
 
                 displaySummary();
-                displayGeneratedTable();
+                displayDetailedTable(); // Nueva tabla detallada
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
             } else {
@@ -487,31 +482,11 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para generar la tabla detallada con las OT ingresadas
-        function displayGeneratedTable() {
-            const tableContainer = document.getElementById('generatedTableContainer');
-            tableContainer.innerHTML = '';
-
-            if (otData.length === 0) {
-                return;
-            }
-
-            const table = document.createElement('table');
-            table.innerHTML = `
-                <tr>
-                    <th>Contratista</th>
-                    <th>OT</th>
-                    <th>Tipo de OT</th>
-                    <th>Cantidad</th>
-                    <th>Descripción</th>
-                    <th>Monto</th>
-                    <th>Subtotal</th>
-                </tr>
-            `;
-
+        // Función para generar la tabla detallada de OTs
+        function displayDetailedTable() {
+            let tablaHTML = `<table border="1" cellpadding="5" cellspacing="0"><tr><th>Contratista</th><th>OT</th><th>Tipo de OT</th><th>Cantidad</th><th>Descripción</th><th>Monto</th><th>Subtotal</th></tr>`;
             otData.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+                tablaHTML += `<tr>
                     <td>${row.contratista}</td>
                     <td>${row.ot}</td>
                     <td>${row.tipo}</td>
@@ -519,15 +494,14 @@
                     <td>${row.descripcion}</td>
                     <td>${row.monto}</td>
                     <td>${row.subtotal}</td>
-                `;
-                table.appendChild(tr);
+                </tr>`;
             });
-
-            tableContainer.appendChild(table);
+            tablaHTML += `</table>`;
+            document.getElementById('tablaResumenDetallado').innerHTML = tablaHTML;
         }
 
-        // Función para enviar los datos de la tabla detallada a Google Sheets
-        function enviarDatosAHojaDeCalculo(otData) {
+        // Función para enviar los datos a la hoja de cálculo
+        function enviarDatosAHojaDeCalculo() {
             const formData = new FormData();
             formData.append('contratista', document.getElementById('contratista').value);
 
@@ -541,7 +515,7 @@
                 formData.append(`OT_${index}_subtotal`, row.subtotal);
             });
 
-            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
+            fetch('https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_URL/exec', {
                 method: 'POST',
                 body: formData
             })
@@ -594,7 +568,7 @@
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             // Enviar los datos a la hoja de cálculo
-            enviarDatosAHojaDeCalculo(otData);
+            enviarDatosAHojaDeCalculo();
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -610,7 +584,6 @@
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
             document.getElementById('summaryBtn').classList.add('hidden');
-            document.getElementById('generatedTableContainer').innerHTML = "";
         }
 
         // Cargar contratistas y trabajos al cargar la página
