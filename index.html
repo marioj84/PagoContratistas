@@ -432,6 +432,19 @@
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
+                // Procesar los datos ingresados para el resumen
+                for (let i = 1; i < table.rows.length; i++) {
+                    const row = table.rows[i];
+                    const ot = row.cells[0].children[0].value.trim();
+                    const tipo = row.cells[1].children[0].value;
+                    const cantidad = row.cells[2].children[0].value;
+                    const descripcion = row.cells[3].children[0].value.trim();
+                    const monto = row.cells[4].children[0].value.trim();
+                    const subtotal = row.cells[5].children[0].value.trim();
+
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+                }
+
                 displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
@@ -463,6 +476,7 @@
             resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
+            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
         // Función para generar y descargar el archivo XLSX
