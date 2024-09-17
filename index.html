@@ -510,6 +510,8 @@ function enviarDatosAHojaDeCalculo(otData) {
 
         // Función para generar y descargar el archivo XLSX
         function finalizeAndDownload() {
+        // Comprobamos los datos de otData
+        console.log('Contenido de otData:', otData);
             const resumenContent = [
                 ["Resumen de Cobros del Mes"],
                 ["Cantidad", "Tipo de OT", "Valor"]
