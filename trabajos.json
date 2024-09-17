@@ -1,0 +1,7 @@
+[
+    { "id": "1", "nombre": "Retiro de Medidor" },
+    { "id": "2", "nombre": "Reinstalación de Medidor" },
+    { "id": "3", "nombre": "Presupuesto Trabajo en Terreno" },
+    { "id": "4", "nombre": "Cambio de Medidor" }
+    // Otros trabajos
+]
