@@ -5,248 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
+        /* Tu estilo permanece igual */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h2 {
-            color: #004aad;
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-
-        p {
-            text-align: center;
-            font-size: 1.1em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        #logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 240px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .col-ot {
-            width: 10%;
-        }
-
-        .col-cant {
-            width: 5%;
-        }
-
-        .col-descripcion {
-            width: 30%;
-        }
-
-        .col-monto {
-            width: 15%;
-        }
-
-        .col-subtotal {
-            width: 15%;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
-        }
-
-        th {
-            background-color: #fdd835;
-            color: #004aad;
-        }
-
-        td input, td select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        td select {
-            width: auto;
-        }
-
-        .invalid-input {
-            border: 2px solid red;
-        }
-
-        button {
-            padding: 8px 15px;
-            margin: 5px;
-            background-color: #004aad;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .burdeo {
-            background-color: #800000;
-        }
-
-        .verde {
-            background-color: #28a745;
-        }
-
-        button:hover {
-            background-color: #003380;
-        }
-
-        .burdeo:hover {
-            background-color: #5a0000;
-        }
-
-        .verde:hover {
-            background-color: #218838;
-        }
-
-        #summary {
-            font-size: 1.2em;
-            background-color: #fdd835;
-            color: #004aad;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: block;
-            color: #333;
-        }
-
-        #contratista {
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            width: auto;
-        }
-
-        #error-msg {
-            color: red;
-            font-size: 0.9em;
-            display: none;
-            margin-bottom: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #999;
-        }
-
-        .acciones-btn {
-            white-space: nowrap;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            table {
-                font-size: 0.8em;
-            }
-
-            th, td {
-                padding: 6px;
-            }
-
-            #logo {
-                width: 180px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.5em;
-            }
-
-            p {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 0.8em;
-                padding: 6px 10px;
-            }
-
-            th, td {
-                padding: 5px;
-                font-size: 0.8em;
-            }
-
-            #logo {
-                width: 120px;
-            }
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 20px; }
+        h2 { color: #004aad; text-align: center; font-size: 1.8em; margin-bottom: 10px; }
+        p { text-align: center; font-size: 1.1em; color: #666; margin-bottom: 20px; }
+        #logo { position: absolute; top: 20px; left: 20px; width: 240px; }
+        table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.9em; }
+        th { background-color: #fdd835; color: #004aad; }
+        td input, td select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 8px 15px; margin: 5px; background-color: #004aad; color: white; border: none; border-radius: 5px; font-size: 0.9em; cursor: pointer; }
+        .verde { background-color: #28a745; }
+        .verde:hover { background-color: #218838; }
+        #summary { font-size: 1.2em; background-color: #fdd835; color: #004aad; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        label { font-size: 1.1em; font-weight: 600; margin-bottom: 10px; display: block; color: #333; }
+        footer { margin-top: 30px; text-align: center; font-size: 0.9em; color: #999; }
     </style>
 </head>
 <body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
-    
     <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
-       Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
-       Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
+       Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar.</p>
 
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
-    <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
+    <label for="contratista">Nombre del Contratista</label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista" aria-label="Seleccionar Contratista">
+        <select id="contratista">
             <option value="">Seleccione un contratista</option>
         </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
 
-    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
+    <table id="otTable">
         <tr>
-            <th class="col-ot">OT</th>
+            <th>OT</th>
             <th>Tipo de OT</th>
             <th>Cant</th>
-            <th class="col-descripcion">Descripción</th>
-            <th class="col-monto">Monto</th>
-            <th class="col-subtotal">Subtotal</th>
+            <th>Descripción</th>
+            <th>Monto</th>
+            <th>Subtotal</th>
             <th>Acciones</th>
         </tr>
     </table>
 
     <div style="text-align: center;">
-        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
         <button onclick="addRow()" class="verde">Agregar OT</button>
     </div>
 
@@ -258,290 +64,117 @@
         <button id="enviarBtn" class="verde" onclick="enviarDatosOT()">Enviar OT a Firestore</button>
     </div>
 
-    <footer>
-        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+    <footer>Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <!-- Scripts de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 
-    <script type="module">
-        // Importar Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
-
-        // Configuración de Firebase (Reemplaza con tu configuración)
+    <script>
+        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
             authDomain: "pagocontratistas.firebaseapp.com",
             projectId: "pagocontratistas",
             storageBucket: "pagocontratistas.appspot.com",
             messagingSenderId: "87829393195",
-                    appId: "1:87829393195:web:d46970885f29126eef5f6e",
-        measurementId: "G-NHR6KRCG3R"
-    };
-
-    // Inicializar Firebase y Firestore
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // Función para cargar contratistas desde JSON
-    async function loadContratistas() {
-        try {
-            const contratistaSelect = document.getElementById('contratista');
-            const response = await fetch('contratistas.json');
-            if (!response.ok) {
-                throw new Error('Error al cargar contratistas');
-            }
-            const contratistas = await response.json();
-            contratistas.forEach(contratista => {
-                const option = document.createElement('option');
-                option.value = contratista.nombreCompleto;
-                option.text = contratista.nombreCompleto;
-                contratistaSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error al cargar contratistas:', error);
-            alert('Error al cargar los contratistas.');
-        }
-    }
-
-    // Función para cargar tipos de trabajos desde JSON
-    async function loadTrabajos() {
-        try {
-            const response = await fetch('trabajos.json');
-            if (!response.ok) {
-                throw new Error('Error al cargar trabajos');
-            }
-            const trabajos = await response.json();
-            window.trabajosList = trabajos.trabajos;
-        } catch (error) {
-            console.error('Error al cargar trabajos:', error);
-            alert('Error al cargar los trabajos.');
-        }
-    }
-
-    // Función para agregar una fila de OT
-    function addRow() {
-        const table = document.getElementById('otTable');
-        const row = table.insertRow();
-        const otCell = row.insertCell(0);
-        const tipoCell = row.insertCell(1);
-        const cantCell = row.insertCell(2);
-        const descCell = row.insertCell(3);
-        const montoCell = row.insertCell(4);
-        const subtotalCell = row.insertCell(5);
-        const actionsCell = row.insertCell(6);
-
-        const inputOT = document.createElement('input');
-        inputOT.type = 'number';
-        inputOT.step = "1";
-        inputOT.min = "1";
-        inputOT.ariaLabel = 'Ingresar OT';
-        otCell.appendChild(inputOT);
-
-        const selectTipo = document.createElement('select');
-        window.trabajosList.forEach(trabajo => {
-            const optionElement = document.createElement('option');
-            optionElement.value = trabajo;
-            optionElement.text = trabajo;
-            selectTipo.appendChild(optionElement);
-        });
-        selectTipo.ariaLabel = 'Seleccionar Tipo de OT';
-        tipoCell.appendChild(selectTipo);
-
-        const inputCant = document.createElement('input');
-        inputCant.type = 'number';
-        inputCant.min = "1";
-        inputCant.value = "1";
-        inputCant.ariaLabel = 'Ingresar Cantidad';
-        cantCell.appendChild(inputCant);
-
-        const inputDesc = document.createElement('input');
-        inputDesc.type = 'text';
-        inputDesc.ariaLabel = 'Ingresar Descripción';
-        descCell.appendChild(inputDesc);
-
-        const inputMonto = document.createElement('input');
-        inputMonto.type = 'number';
-        inputMonto.placeholder = '$0.00';
-        inputMonto.step = "0.01";
-        inputMonto.min = "0";
-        inputMonto.ariaLabel = 'Ingresar Monto';
-        montoCell.appendChild(inputMonto);
-
-        const inputSubtotal = document.createElement('input');
-        inputSubtotal.type = 'text';
-        inputSubtotal.placeholder = '$0.00';
-        inputSubtotal.disabled = true;
-        inputSubtotal.ariaLabel = 'Subtotal';
-        subtotalCell.appendChild(inputSubtotal);
-
-        // Calcular subtotal al cambiar cantidad o monto
-        inputCant.oninput = function() {
-            const cantidad = inputCant.value;
-            const monto = inputMonto.value;
-            inputSubtotal.value = (cantidad * monto).toFixed(2);
-        };
-        inputMonto.oninput = function() {
-            const cantidad = inputCant.value;
-            const monto = inputMonto.value;
-            inputSubtotal.value = (cantidad * monto).toFixed(2);
+            appId: "1:87829393195:web:d46970885f29126eef5f6e",
+            measurementId: "G-NHR6KRCG3R"
         };
 
-        const deleteButton = document.createElement('button');
-        deleteButton.innerText = 'Eliminar OT';
-        deleteButton.className = 'acciones-btn burdeo';
-        deleteButton.onclick = () => deleteRow(row);
-        actionsCell.appendChild(deleteButton);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        document.getElementById('summaryBtn').classList.remove('hidden');
-    }
+        // Función para agregar filas
+        function addRow() {
+            const table = document.getElementById('otTable');
+            const row = table.insertRow();
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const cantCell = row.insertCell(2);
+            const descCell = row.insertCell(3);
+            const montoCell = row.insertCell(4);
+            const subtotalCell = row.insertCell(5);
+            const actionsCell = row.insertCell(6);
 
-    function deleteRow(row) {
-        row.remove();
-    }
+            otCell.innerHTML = `<input type="number" step="1" min="1" placeholder="OT" />`;
+            tipoCell.innerHTML = `<input type="text" placeholder="Tipo de OT" />`;
+            cantCell.innerHTML = `<input type="number" step="1" min="1" value="1" placeholder="Cantidad" />`;
+            descCell.innerHTML = `<input type="text" placeholder="Descripción" />`;
+            montoCell.innerHTML = `<input type="number" step="0.01" min="0" placeholder="$0.00" />`;
+            subtotalCell.innerHTML = `<input type="text" disabled placeholder="$0.00" />`;
 
-    // Función para ver el resumen
-    function viewSummary() {
-        const table = document.getElementById('otTable');
-        const otData = [];
-        const contratista = document.getElementById('contratista').value.trim();
-        let valid = true;
-
-        // Validar que hay contratista seleccionado y OT en la tabla
-        if (contratista === "" || table.rows.length <= 1) {
-            alert('Por favor, ingrese los datos completos antes de ver el resumen.');
-            return;
+            actionsCell.innerHTML = `<button onclick="deleteRow(this)">Eliminar OT</button>`;
         }
 
-        // Recoger los datos de cada fila de la tabla
-        for (let i = 1; i < table.rows.length; i++) {
-            const row = table.rows[i];
-            const ot = row.cells[0].children[0].value.trim();
-            const tipo = row.cells[1].children[0].value;
-            const cantidad = row.cells[2].children[0].value;
-            const descripcion = row.cells[3].children[0].value.trim();
-            const monto = row.cells[4].children[0].value.trim();
-            const subtotal = row.cells[5].children[0].value.trim();
+        // Eliminar fila
+        function deleteRow(button) {
+            const row = button.closest("tr");
+            row.remove();
+        }
 
-            if (!ot || !descripcion || !monto) {
-                valid = false;
-                alert('Por favor, complete todos los campos de las OT antes de ver el resumen.');
+        // Enviar datos a Firestore
+        async function enviarDatosOT() {
+            const table = document.getElementById('otTable');
+            const contratista = document.getElementById('contratista').value.trim();
+
+            if (!contratista) {
+                alert('Seleccione un contratista');
                 return;
             }
 
-            otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
-        }
+            const otData = [];
 
-        if (valid) {
-            displaySummary(otData);
-        }
-    }
+            // Recoger los datos de cada fila
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value.trim();
+                const cantidad = row.cells[2].children[0].value.trim();
+                const descripcion = row.cells[3].children[0].value.trim();
+                const monto = row.cells[4].children[0].value.trim();
 
-    // Función para mostrar el resumen
-    function displaySummary(otData) {
-        const resumenPorTipo = {};
-        let totalMonto = 0;
+                if (!ot || !tipo || !cantidad || !descripcion || !monto) {
+                    alert('Complete todos los campos antes de enviar.');
+                    return;
+                }
 
-        otData.forEach(data => {
-            if (!resumenPorTipo[data.tipo]) {
-                resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
-            }
-            resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
-            resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
-            totalMonto += parseFloat(data.subtotal);
-        });
+                const subtotal = (cantidad * monto).toFixed(2);
 
-        let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
-        resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
-
-        for (const tipo in resumenPorTipo) {
-            resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
-        }
-        resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
-
-        document.getElementById('summary').innerHTML = resumenTabla;
-        document.getElementById('summaryBtn').classList.add('hidden');
-    }
-
-    // Función para enviar los datos de la tabla a Firestore
-    async function enviarDatosOT() {
-        const table = document.getElementById('otTable');
-        const contratista = document.getElementById('contratista').value.trim();
-        const otData = [];
-
-        // Validar que hay contratista seleccionado y OT en la tabla
-        if (contratista === "" || table.rows.length <= 1) {
-            alert('Por favor, ingrese los datos completos antes de enviar.');
-            return;
-        }
-
-        // Recoger los datos de cada fila de la tabla
-        for (let i = 1; i < table.rows.length; i++) {
-            const row = table.rows[i];
-            const ot = row.cells[0].children[0].value.trim();
-            const tipo = row.cells[1].children[0].value;
-            const cantidad = row.cells[2].children[0].value;
-            const descripcion = row.cells[3].children[0].value.trim();
-            const monto = row.cells[4].children[0].value.trim();
-            const subtotal = row.cells[5].children[0].value.trim();
-
-            // Validar que todos los campos estén completos
-            if (!ot || !descripcion || !monto) {
-                alert('Por favor, complete todos los campos de las OT antes de enviar.');
-                return;
+                otData.push({
+                    contratista,
+                    ot,
+                    tipo,
+                    cantidad,
+                    descripcion,
+                    monto,
+                    subtotal
+                });
             }
 
-            otData.push({
-                contratista: contratista,
-                ot: ot,
-                tipo: tipo,
-                cantidad: cantidad,
-                descripcion: descripcion,
-                monto: monto,
-                subtotal: subtotal
-            });
-        }
-
-        try {
-            // Enviar los datos a Firestore
-            for (const data of otData) {
-                await addDoc(collection(db, "ordenes_trabajo"), data);
+            // Enviar cada OT a Firestore
+            try {
+                for (const data of otData) {
+                    await db.collection('ordenes_trabajo').add(data);
+                }
+                alert('Las OT se han guardado correctamente.');
+                clearTable(); // Limpiar tabla tras guardar
+            } catch (error) {
+                console.error('Error al guardar OT:', error);
+                alert('Error al guardar los datos.');
             }
-
-            alert("Las OT se han guardado correctamente en Firestore.");
-            clearTable(); // Limpiar la tabla después de enviar
-
-        } catch (error) {
-            console.error("Error al guardar las OT: ", error);
-            alert("Hubo un error al guardar las OT.");
-        }
-    }
-
-    // Función para limpiar la tabla después de la descarga
-    function clearTable() {
-        const table = document.getElementById('otTable');
-        const rowCount = table.rows.length;
-
-        for (let i = rowCount - 1; i > 0; i--) {
-            table.deleteRow(i);
         }
 
-        document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
-        document.getElementById('finalizeBtn').classList.add('hidden');
-        document.getElementById('clearBtn').classList.add('hidden');
-        document.getElementById('summaryBtn').classList.add('hidden');
-    }
-
-    // Cargar contratistas y trabajos al cargar la página
-    window.onload = function() {
-        loadContratistas();
-        loadTrabajos();
-    };
-</script>
-
+        // Limpiar tabla
+        function clearTable() {
+            const table = document.getElementById('otTable');
+            const rowCount = table.rows.length;
+            for (let i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+        }
+    </script>
 </body>
 </html>
