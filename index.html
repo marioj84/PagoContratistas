@@ -44,7 +44,6 @@
             margin-bottom: 20px;
         }
 
-        /* Anchos de las columnas */
         .col-ot {
             width: 10%;
         }
@@ -220,13 +219,13 @@
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista">
+        <select id="contratista" aria-label="Seleccionar Contratista">
             <option value="">Seleccione un contratista</option>
         </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
 
-    <table id="otTable">
+    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
         <tr>
             <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
@@ -248,6 +247,7 @@
 
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
+        <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
 
     <footer>
@@ -312,6 +312,7 @@
             inputOT.type = 'number';
             inputOT.step = "1";  
             inputOT.min = "1";
+            inputOT.ariaLabel = 'Ingresar OT';
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
@@ -321,16 +322,19 @@
                 optionElement.text = trabajo;
                 selectTipo.appendChild(optionElement);
             });
+            selectTipo.ariaLabel = 'Seleccionar Tipo de OT';
             tipoCell.appendChild(selectTipo);
 
             const inputCant = document.createElement('input');
             inputCant.type = 'number';
             inputCant.min = "1";
             inputCant.value = "1";
+            inputCant.ariaLabel = 'Ingresar Cantidad';
             cantCell.appendChild(inputCant);
 
             const inputDesc = document.createElement('input');
             inputDesc.type = 'text';
+            inputDesc.ariaLabel = 'Ingresar Descripción';
             descCell.appendChild(inputDesc);
 
             const inputMonto = document.createElement('input');
@@ -338,12 +342,14 @@
             inputMonto.placeholder = '$0.00';
             inputMonto.step = "0.01";
             inputMonto.min = "0";
+            inputMonto.ariaLabel = 'Ingresar Monto';
             montoCell.appendChild(inputMonto);
 
             const inputSubtotal = document.createElement('input');
             inputSubtotal.type = 'text';
             inputSubtotal.placeholder = '$0.00';
             inputSubtotal.disabled = true;
+            inputSubtotal.ariaLabel = 'Subtotal';
             subtotalCell.appendChild(inputSubtotal);
 
             // Calcular subtotal al cambiar cantidad o monto
@@ -408,6 +414,7 @@
                 document.getElementById('error-msg').style.display = "none";
                 displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
+                document.getElementById('clearBtn').classList.remove('hidden');
             }
         }
 
@@ -472,6 +479,21 @@
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+        }
+
+        // Función para limpiar la tabla después de la descarga
+        function clearTable() {
+            const table = document.getElementById('otTable');
+            const rowCount = table.rows.length;
+
+            for (let i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+            document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
+            document.getElementById('finalizeBtn').classList.add('hidden');
+            document.getElementById('clearBtn').classList.add('hidden');
+            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
         // Cargar contratistas y trabajos al cargar la página
