@@ -9,7 +9,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 
-  <script>
+  <script type="module">
+    // Importar los métodos de Firebase v9
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+
     // Tu configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
@@ -22,10 +26,27 @@
     };
 
     // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
     
     // Inicializar Firestore
-    const db = firebase.firestore();
+    const db = getFirestore(app);
+
+    // Función para enviar datos al hacer submit
+    window.enviarDatos = async function() {
+      const nombre = document.getElementById('nombre').value;
+
+      try {
+        // Guardar en Firestore
+        const docRef = await addDoc(collection(db, "nombres"), {
+          nombre: nombre
+        });
+        alert("Nombre guardado con ID: " + docRef.id);
+      } catch (e) {
+        alert("Error al guardar el nombre: " + e);
+      }
+
+      return false;  // Evitar que el formulario envíe de forma estándar
+    };
   </script>
 </head>
 <body>
@@ -37,24 +58,5 @@
 
     <input type="submit" value="Enviar">
   </form>
-
-  <script>
-    function enviarDatos() {
-      var nombre = document.getElementById('nombre').value;
-
-      // Guardar en Firestore
-      db.collection("nombres").add({
-        nombre: nombre
-      })
-      .then(function(docRef) {
-        alert("Nombre guardado con ID: " + docRef.id);
-      })
-      .catch(function(error) {
-        alert("Error al guardar el nombre: " + error);
-      });
-
-      return false;  // Esto evita que el formulario se envíe de manera estándar y cambie la URL
-    }
-  </script>
 </body>
 </html>
