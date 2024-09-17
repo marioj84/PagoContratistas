@@ -238,18 +238,33 @@
 
         // Cargar contratistas y trabajos desde JSON
         async function loadOptions() {
-            const contratistaSelect = document.getElementById('contratista');
-            const responseContratistas = await fetch('contratistas.json');
-            const contratistas = await responseContratistas.json();
-            contratistas.forEach(contratista => {
-                const option = document.createElement('option');
-                option.value = contratista.nombre;
-                option.text = contratista.nombre;
-                contratistaSelect.appendChild(option);
-            });
+            try {
+                const contratistaSelect = document.getElementById('contratista');
 
-            const trabajos = await fetch('trabajos.json').then(res => res.json());
-            window.tipoTrabajoOpciones = trabajos.map(trabajo => trabajo.nombre);
+                // Cargar contratistas
+                const responseContratistas = await fetch('contratistas.json');
+                if (!responseContratistas.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                const contratistas = await responseContratistas.json();
+                contratistas.forEach(contratista => {
+                    const option = document.createElement('option');
+                    option.value = contratista.nombre;
+                    option.text = contratista.nombre;
+                    contratistaSelect.appendChild(option);
+                });
+
+                // Cargar trabajos
+                const responseTrabajos = await fetch('trabajos.json');
+                if (!responseTrabajos.ok) {
+                    throw new Error('Error al cargar trabajos');
+                }
+                const trabajos = await responseTrabajos.json();
+                window.tipoTrabajoOpciones = trabajos.map(trabajo => trabajo.nombre);
+            } catch (error) {
+                console.error('Error al cargar opciones:', error);
+                alert('Error al cargar contratistas o trabajos.');
+            }
         }
 
         function addRow() {
@@ -321,117 +336,6 @@
             row.remove(); 
         }
 
-        async function viewSummary() {
-            const table = document.getElementById('otTable');
-            otData = [];
-            const contratista = document.getElementById('contratista').value.trim();
-            let valid = true;
-
-            if (contratista === "") {
-                document.getElementById('error-msg').style.display = "block";
-                document.getElementById('contratista-asterisk').classList.remove('hidden');
-                valid = false;
-            } else {
-                document.getElementById('contratista-asterisk').classList.add('hidden');
-            }
-
-            for (let i = 1; i < table.rows.length; i++) {
-                const row = table.rows[i];
-                const ot = row.cells[0].children[0].value.trim();
-                const tipo = row.cells[1].children[0].value;
-                const cantidad = row.cells[2].children[0].value.trim();
-                const descripcion = row.cells[3].children[0].value.trim();
-                const monto = row.cells[4].children[0].value.trim();
-                const subtotal = row.cells[5].children[0].value.trim();
-
-                if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
-                    document.getElementById('error-msg').style.display = "block";
-                    valid = false;
-                    break;
-                } else {
-                    const fechaCarga = new Date().toLocaleString();
-                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal, fechaCarga });
-                }
-            }
-
-            if (valid) {
-                document.getElementById('error-msg').style.display = "none";
-                displaySummary();
-                document.getElementById('summaryBtn').classList.add('hidden');
-                document.getElementById('updateSummaryBtn').classList.remove('hidden');
-                document.getElementById('finalizeBtn').classList.remove('hidden');
-            }
-        }
-
-        function displaySummary() {
-            const resumenPorTipo = {};
-            let totalMonto = 0;
-
-            otData.forEach(data => {
-                if (!resumenPorTipo[data.tipo]) {
-                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
-                }
-                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
-                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
-                totalMonto += parseFloat(data.subtotal);
-            });
-
-            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
-            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
-
-            for (const tipo in resumenPorTipo) {
-                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
-            }
-            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
-
-            document.getElementById('summary').innerHTML = resumenTabla;
-        }
-
-        function finalizeAndDownload() {
-            const resumenContent = [
-                ["Resumen de Cobros del Mes"],
-                ["Cantidad", "Tipo de OT", "Valor"]
-            ];
-
-            const detalleContent = [
-                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal", "Fecha de Carga"]
-            ];
-
-            let total = 0;
-
-            otData.forEach(row => {
-                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal, row.fechaCarga]);
-                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
-                if (!resumenRow) {
-                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
-                } else {
-                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
-                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
-                }
-                total += parseFloat(row.subtotal);
-            });
-
-            resumenContent.push(["", "Total", total.toFixed(2)]);
-
-            const workbook = XLSX.utils.book_new();
-
-            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
-            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
-
-            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
-            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
-
-            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
-
-            document.getElementById('contratista').value = '';
-            document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th>Cant</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th class="col-subtotal">SubTotal</th><th>Acciones</th></tr>';
-            document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
-            document.getElementById('finalizeBtn').classList.add('hidden');
-            document.getElementById('updateSummaryBtn').classList.add('hidden');
-            otData = [];
-        }
-
-        // Cargar contratistas y trabajos al cargar la página
         window.onload = loadOptions;
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
