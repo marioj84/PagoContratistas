@@ -480,32 +480,33 @@
         }
 
         // Función para enviar los datos a la hoja de cálculo
-        function enviarDatosAHojaDeCalculo(otData) {
-            const formData = new FormData();
-            formData.append('contratista', document.getElementById('contratista').value);
+function enviarDatosAHojaDeCalculo(otData) {
+    const formData = new FormData();
+    formData.append('contratista', document.getElementById('contratista').value);
 
-            // Agregar cada OT al formData
-            otData.forEach((row, index) => {
-                formData.append(`OT_${index}_ot`, row.ot);
-                formData.append(`OT_${index}_tipo`, row.tipo);
-                formData.append(`OT_${index}_cantidad`, row.cantidad);
-                formData.append(`OT_${index}_descripcion`, row.descripcion);
-                formData.append(`OT_${index}_monto`, row.monto);
-                formData.append(`OT_${index}_subtotal`, row.subtotal);
-            });
+    // Agregar cada OT al formData
+    otData.forEach((row, index) => {
+        formData.append(`OT_${index}_ot`, row.ot);
+        formData.append(`OT_${index}_tipo`, row.tipo);
+        formData.append(`OT_${index}_cantidad`, row.cantidad);
+        formData.append(`OT_${index}_descripcion`, row.descripcion);
+        formData.append(`OT_${index}_monto`, row.monto);
+        formData.append(`OT_${index}_subtotal`, row.subtotal);
+    });
 
-            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Datos enviados:', data);
-            })
-            .catch(error => {
-                console.error('Error al enviar datos:', error);
-            });
-        }
+    fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Datos enviados:', data);
+    })
+    .catch(error => {
+        console.error('Error al enviar datos:', error);
+    });
+}
+
 
         // Función para generar y descargar el archivo XLSX
         function finalizeAndDownload() {
