@@ -1,38 +1,13 @@
-[
-        {
-            "codigo": "001",
-            "descripcion": "Retiro de Medidor"
-        },
-        {
-            "codigo": "002",
-            "descripcion": "Reinstalación de Medidor"
-        },
-        {
-            "codigo": "003",
-            "descripcion": "Presupuesto Trabajo en Terreno"
-        },
-        {
-            "codigo": "004",
-            "descripcion": "Cambio de Medidor"
-        },
-        {
-            "codigo": "005",
-            "descripcion": "Verificación de Medidor en Terreno"
-        },
-        {
-            "codigo": "006",
-            "descripcion": "Cambio de Ubicación Medidor"
-        },
-        {
-            "codigo": "007",
-            "descripcion": "Verificación de Lectura"
-        },
-        {
-            "codigo": "008",
-            "descripcion": "Revisión de Merma"
-        },
-        {
-            "codigo": "009",
-            "descripcion": "PH y Análisis de Medidor"
-        }
-    ]
+{
+  "trabajos": [
+    "Retiro de Medidor",
+    "Reinstalación de Medidor",
+    "Presupuesto Trabajo en Terreno",
+    "Cambio de Medidor",
+    "Verificación de Medidor en Terreno",
+    "Cambio de Ubicación Medidor",
+    "Verificación de Lectura",
+    "Revisión de Merma",
+    "PH y Análisis de Medidor"
+  ]
+}
