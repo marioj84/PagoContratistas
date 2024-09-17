@@ -188,16 +188,59 @@
     </footer>
 
     <script>
+        // Cargar los datos del archivo JSON
+        async function cargarContratistas() {
+            try {
+                const response = await fetch('contratistas.json'); // Cargar el archivo JSON
+                if (!response.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                return await response.json(); // Devolver los datos como objeto
+            } catch (error) {
+                console.error('Error al cargar contratistas:', error);
+                return []; // En caso de error, retornar un array vacío
+            }
+        }
+
+        let contratistas = [];
+
+        // Cargar el JSON al iniciar la página
+        window.onload = async function() {
+            contratistas = await cargarContratistas(); // Asignar los datos del JSON
+        };
+
+        // Función de inicio de sesión
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('error-message');
+
+            // Validar credenciales
+            const contratista = contratistas.find(c => c.usuario === username && c.clave === password);
+
+            if (contratista) {
+                // Inicio de sesión exitoso: Redirigir al formulario de pago
+                errorMessage.textContent = ''; // Limpiar mensaje de error
+                window.location.href = 'https://marioj84.github.io/PagoContratistas/'; // Redirigir al formulario
+            } else {
+                // Credenciales incorrectas
+                errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
+            }
+        });
+
+        // Función para mostrar/ocultar la contraseña
         function togglePasswordVisibility() {
             const passwordField = document.getElementById('password');
             const passwordToggleIcon = document.querySelector('.password-toggle img');
 
             if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png';
+                passwordField.type = 'text'; // Mostrar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
             } else {
-                passwordField.type = 'password';
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png';
+                passwordField.type = 'password'; // Ocultar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
             }
         }
     </script>
