@@ -479,43 +479,77 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para generar y descargar el archivo XLSX
-        function finalizeAndDownload() {
-            const resumenContent = [
-                ["Resumen de Cobros del Mes"],
-                ["Cantidad", "Tipo de OT", "Valor"]
-            ];
+        // Función para enviar los datos a la hoja de cálculo
+function enviarDatosAHojaDeCalculo(otData) {
+    const formData = new FormData();
+    formData.append('contratista', document.getElementById('contratista').value);
 
-            const detalleContent = [
-                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
-            ];
+    // Agregar cada OT al formData
+    otData.forEach((row, index) => {
+        formData.append(`OT_${index}_ot`, row.ot);
+        formData.append(`OT_${index}_tipo`, row.tipo);
+        formData.append(`OT_${index}_cantidad`, row.cantidad);
+        formData.append(`OT_${index}_descripcion`, row.descripcion);
+        formData.append(`OT_${index}_monto`, row.monto);
+        formData.append(`OT_${index}_subtotal`, row.subtotal);
+    });
 
-            let total = 0;
+    fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Datos enviados:', data);
+        alert('Datos enviados correctamente.');
+    })
+    .catch(error => {
+        console.error('Error al enviar datos:', error);
+        alert('Error al enviar los datos.');
+    });
+}
 
-            otData.forEach(row => {
-                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
-                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
-                if (!resumenRow) {
-                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
-                } else {
-                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
-                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
-                }
-                total += parseFloat(row.subtotal);
-            });
+// Función para generar y descargar el archivo XLSX y enviar datos a la hoja de cálculo
+function finalizeAndDownload() {
+    const resumenContent = [
+        ["Resumen de Cobros del Mes"],
+        ["Cantidad", "Tipo de OT", "Valor"]
+    ];
 
-            resumenContent.push(["", "Total", total.toFixed(2)]);
+    const detalleContent = [
+        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+    ];
 
-            const workbook = XLSX.utils.book_new();
+    let total = 0;
 
-            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
-            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
-
-            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
-            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
-
-            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+    otData.forEach(row => {
+        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+        const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+        if (!resumenRow) {
+            resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+        } else {
+            resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
+            resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
         }
+        total += parseFloat(row.subtotal);
+    });
+
+    resumenContent.push(["", "Total", total.toFixed(2)]);
+
+    const workbook = XLSX.utils.book_new();
+
+    const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+    const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+    XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+    XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+    XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+    // Enviar los datos a la hoja de cálculo
+    enviarDatosAHojaDeCalculo(otData);
+}
+
 
         // Función para limpiar la tabla después de la descarga
         function clearTable() {
