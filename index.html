@@ -240,7 +240,7 @@
             try {
                 const contratistaSelect = document.getElementById('contratista');
                 
-                const response = await fetch('contratistas.json'); // Ajustar la ruta
+                const response = await fetch('contratistas.json');
                 if (!response.ok) {
                     throw new Error('Error al cargar contratistas');
                 }
@@ -260,7 +260,7 @@
         // Función para cargar tipos de trabajos desde JSON
         async function loadTrabajos() {
             try {
-                const response = await fetch('trabajos.json'); // Ajustar la ruta
+                const response = await fetch('trabajos.json');
                 if (!response.ok) {
                     throw new Error('Error al cargar trabajos');
                 }
