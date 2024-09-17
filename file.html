@@ -14,7 +14,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
-    // Configuración de tu app Firebase
+    // Configuración de Firebase (Reemplaza con tu configuración)
     const firebaseConfig = {
       apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
       authDomain: "pagocontratistas.firebaseapp.com",
@@ -33,29 +33,39 @@
 
     // Función para enviar datos al hacer submit
     window.enviarDatos = async function(event) {
-      event.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+      event.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
       const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const cedula = document.getElementById('cedula').value;
 
       try {
         // Guardar en Firestore
-        const docRef = await addDoc(collection(db, "nombres"), {
-          nombre: nombre
+        const docRef = await addDoc(collection(db, "usuarios"), {
+          nombre: nombre,
+          apellido: apellido,
+          cedula: cedula
         });
-        alert("Nombre guardado con ID: " + docRef.id);
+        alert("Datos guardados con ID: " + docRef.id);
       } catch (e) {
-        alert("Error al guardar el nombre: " + e);
+        alert("Error al guardar los datos: " + e);
       }
     };
   </script>
 </head>
 <body>
-  <h2>Formulario: Ingresa tu Nombre</h2>
+  <h2>Formulario: Ingresa tus datos</h2>
   
   <!-- Formulario -->
   <form id="formularioNombre" onsubmit="enviarDatos(event);">
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required><br>
+
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" name="apellido" required><br>
+
+    <label for="cedula">Cédula:</label>
+    <input type="text" id="cedula" name="cedula" required><br>
 
     <input type="submit" value="Enviar">
   </form>
