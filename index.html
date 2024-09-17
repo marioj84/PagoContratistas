@@ -9,7 +9,7 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4';
+            background-color: #f4f4f4;
             color: #333;
             margin: 0;
             padding: 20px;
@@ -44,35 +44,33 @@
             margin-bottom: 20px;
         }
 
-    /* Otras reglas de estilo */
+        /* Anchos de las columnas */
+        .col-ot {
+            width: 10%;
+        }
 
-    /* Ajusta los anchos de las columnas según tus necesidades */
-    .col-ot {
-        width: 10%; /* Ancho ajustado para la columna OT */
-    }
+        .col-cant {
+            width: 5%;
+        }
 
-    .col-cant {
-        width: 5%; /* Ancho ajustado para la columna Cant */
-    }
+        .col-descripcion {
+            width: 30%;
+        }
 
-    .col-descripcion {
-        width: 30%; /* Ancho ajustado para la columna Descripción */
-    }
+        .col-monto {
+            width: 15%;
+        }
 
-    .col-monto {
-        width: 15%; /* Ancho ajustado para la columna Monto */
-    }
+        .col-subtotal {
+            width: 15%;
+        }
 
-    .col-subtotal {
-        width: 15%; /* Ancho ajustado para la columna Subtotal */
-    }
-
-    th, td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        font-size: 0.9em;
-    }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
 
         th {
             background-color: #fdd835;
@@ -290,7 +288,7 @@
                     throw new Error('Error al cargar trabajos');
                 }
                 const trabajos = await response.json();
-                window.trabajosList = trabajos.trabajos; // Correcto acceso al array de trabajos
+                window.trabajosList = trabajos.trabajos;
             } catch (error) {
                 console.error('Error al cargar trabajos:', error);
                 alert('Error al cargar los trabajos.');
