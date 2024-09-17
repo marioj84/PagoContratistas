@@ -1,3 +1,4 @@
+<!-- Parte 1: Integración con Firebase -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,17 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        /* Tu estilo permanece igual */
+        /* Todo el estilo de tu formulario permanece sin cambios */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body { font-family: 'Poppins', sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 20px; }
         h2 { color: #004aad; text-align: center; font-size: 1.8em; margin-bottom: 10px; }
         p { text-align: center; font-size: 1.1em; color: #666; margin-bottom: 20px; }
-        #logo { position: absolute; top: 20px; left: 20px; width: 240px; }
         table { width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.9em; }
         th { background-color: #fdd835; color: #004aad; }
         td input, td select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 8px 15px; margin: 5px; background-color: #004aad; color: white; border: none; border-radius: 5px; font-size: 0.9em; cursor: pointer; }
+        button { padding: 8px 15px; margin: 5px; background-color: #004aad; color: white; border: none; border-radius: 5px; font-size: 0.9em; cursor: pointer; transition: background-color 0.3s ease; }
         .verde { background-color: #28a745; }
         .verde:hover { background-color: #218838; }
         #summary { font-size: 1.2em; background-color: #fdd835; color: #004aad; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
@@ -24,30 +24,58 @@
     </style>
 </head>
 <body>
+    <!-- Parte del cuerpo de tu formulario -->
+
+    <!-- Inicialización de Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+            authDomain: "pagocontratistas.firebaseapp.com",
+            projectId: "pagocontratistas",
+            storageBucket: "pagocontratistas.appspot.com",
+            messagingSenderId: "87829393195",
+            appId: "1:87829393195:web:d46970885f29126eef5f6e",
+            measurementId: "G-NHR6KRCG3R"
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+    </script>
+</body>
+</html>
+<!-- Parte 2: Funcionalidad del formulario -->
+<body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+    
     <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar.</p>
 
+    <!-- Error de validación -->
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista</label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista">
+        <select id="contratista" aria-label="Seleccionar Contratista">
             <option value="">Seleccione un contratista</option>
         </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
 
-    <table id="otTable">
+    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
         <tr>
-            <th>OT</th>
+            <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
             <th>Cant</th>
-            <th>Descripción</th>
-            <th>Monto</th>
-            <th>Subtotal</th>
+            <th class="col-descripcion">Descripción</th>
+            <th class="col-monto">Monto</th>
+            <th class="col-subtotal">Subtotal</th>
             <th>Acciones</th>
         </tr>
     </table>
@@ -59,35 +87,8 @@
     <h3>Resumen</h3>
     <div id="summary">Total Facturado: $0.00</div>
 
-    <!-- Botón para enviar datos a Firestore -->
-    <div style="text-align: center;">
-        <button id="enviarBtn" class="verde" onclick="enviarDatosOT()">Enviar OT a Firestore</button>
-    </div>
-
-    <footer>Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
-        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-    </footer>
-
-    <!-- Scripts de Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
-
     <script>
-        // Inicializar Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
-            authDomain: "pagocontratistas.firebaseapp.com",
-            projectId: "pagocontratistas",
-            storageBucket: "pagocontratistas.appspot.com",
-            messagingSenderId: "87829393195",
-            appId: "1:87829393195:web:d46970885f29126eef5f6e",
-            measurementId: "G-NHR6KRCG3R"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Función para agregar filas
+        // Agregar una fila al formulario
         function addRow() {
             const table = document.getElementById('otTable');
             const row = table.insertRow();
@@ -106,75 +107,24 @@
             montoCell.innerHTML = `<input type="number" step="0.01" min="0" placeholder="$0.00" />`;
             subtotalCell.innerHTML = `<input type="text" disabled placeholder="$0.00" />`;
 
+            // Cálculo del subtotal al cambiar cantidad o monto
+            cantCell.oninput = function() { updateSubtotal(cantCell, montoCell, subtotalCell); };
+            montoCell.oninput = function() { updateSubtotal(cantCell, montoCell, subtotalCell); };
+
+            // Botón de eliminar fila
             actionsCell.innerHTML = `<button onclick="deleteRow(this)">Eliminar OT</button>`;
         }
 
-        // Eliminar fila
+        function updateSubtotal(cantCell, montoCell, subtotalCell) {
+            const cantidad = parseFloat(cantCell.children[0].value);
+            const monto = parseFloat(montoCell.children[0].value);
+            const subtotal = cantidad * monto || 0;
+            subtotalCell.children[0].value = subtotal.toFixed(2);
+        }
+
         function deleteRow(button) {
-            const row = button.closest("tr");
+            const row = button.closest('tr');
             row.remove();
-        }
-
-        // Enviar datos a Firestore
-        async function enviarDatosOT() {
-            const table = document.getElementById('otTable');
-            const contratista = document.getElementById('contratista').value.trim();
-
-            if (!contratista) {
-                alert('Seleccione un contratista');
-                return;
-            }
-
-            const otData = [];
-
-            // Recoger los datos de cada fila
-            for (let i = 1; i < table.rows.length; i++) {
-                const row = table.rows[i];
-                const ot = row.cells[0].children[0].value.trim();
-                const tipo = row.cells[1].children[0].value.trim();
-                const cantidad = row.cells[2].children[0].value.trim();
-                const descripcion = row.cells[3].children[0].value.trim();
-                const monto = row.cells[4].children[0].value.trim();
-
-                if (!ot || !tipo || !cantidad || !descripcion || !monto) {
-                    alert('Complete todos los campos antes de enviar.');
-                    return;
-                }
-
-                const subtotal = (cantidad * monto).toFixed(2);
-
-                otData.push({
-                    contratista,
-                    ot,
-                    tipo,
-                    cantidad,
-                    descripcion,
-                    monto,
-                    subtotal
-                });
-            }
-
-            // Enviar cada OT a Firestore
-            try {
-                for (const data of otData) {
-                    await db.collection('ordenes_trabajo').add(data);
-                }
-                alert('Las OT se han guardado correctamente.');
-                clearTable(); // Limpiar tabla tras guardar
-            } catch (error) {
-                console.error('Error al guardar OT:', error);
-                alert('Error al guardar los datos.');
-            }
-        }
-
-        // Limpiar tabla
-        function clearTable() {
-            const table = document.getElementById('otTable');
-            const rowCount = table.rows.length;
-            for (let i = rowCount - 1; i > 0; i--) {
-                table.deleteRow(i);
-            }
         }
     </script>
 </body>
-</html>
