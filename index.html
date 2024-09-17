@@ -87,6 +87,10 @@
             width: auto;
         }
 
+        .invalid-input {
+            border: 2px solid red;
+        }
+
         button {
             padding: 8px 15px;
             margin: 5px;
@@ -161,6 +165,10 @@
             text-align: center;
             font-size: 0.9em;
             color: #999;
+        }
+
+        .acciones-btn {
+            white-space: nowrap;
         }
 
         @media (max-width: 768px) {
@@ -367,6 +375,7 @@
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
             deleteButton.className = 'acciones-btn burdeo';
+            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
 
@@ -384,29 +393,40 @@
             const contratista = document.getElementById('contratista').value.trim();
             let valid = true;
 
-            if (contratista === "") {
-                document.getElementById('error-msg').style.display = "block";
-                document.getElementById('contratista-asterisk').classList.remove('hidden');
-                valid = false;
-            } else {
-                document.getElementById('contratista-asterisk').classList.add('hidden');
+            // Limpiar la clase invalid-input antes de hacer la validación
+            document.getElementById('contratista').classList.remove('invalid-input');
+            for (let i = 1; i < table.rows.length; i++) {
+                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
+                }
             }
 
+            // Validar contratista
+            if (contratista === "") {
+                document.getElementById('contratista').classList.add('invalid-input');
+                valid = false;
+            }
+
+            // Validar cada fila de la tabla
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
-                const tipo = row.cells[1].children[0].value;
-                const cantidad = row.cells[2].children[0].value;
                 const descripcion = row.cells[3].children[0].value.trim();
                 const monto = row.cells[4].children[0].value.trim();
-                const subtotal = row.cells[5].children[0].value.trim();
 
-                if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
-                    document.getElementById('error-msg').style.display = "block";
+                if (ot === "") {
+                    row.cells[0].children[0].classList.add('invalid-input');
                     valid = false;
-                    break;
-                } else {
-                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+                }
+
+                if (descripcion === "") {
+                    row.cells[3].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (monto === "") {
+                    row.cells[4].children[0].classList.add('invalid-input');
+                    valid = false;
                 }
             }
 
@@ -415,6 +435,8 @@
                 displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('error-msg').style.display = "block";
             }
         }
 
