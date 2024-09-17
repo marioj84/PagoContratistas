@@ -31,6 +31,8 @@
           'Content-Type': 'application/json'
         },
         'body': JSON.stringify(data) // Enviamos los datos como JSON
+        'mode': 'no-cors'  // Añadir este modo para evitar problemas de CORS
+
       };
 
       fetch(url, options)
