@@ -50,6 +50,17 @@
             font-size: 0.9em;
             color: #666;
         }
+
+        #enviarDatos {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -72,6 +83,8 @@
             <!-- Aquí se llenarán dinámicamente los datos -->
         </tbody>
     </table>
+
+    <button id="enviarDatos">Enviar Datos al Drive</button>
 
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
@@ -104,8 +117,41 @@
             });
         }
 
+        // Función para enviar los datos al Google Sheets
+        function enviarDatosAHojaDeCalculo() {
+            const formData = new FormData();
+
+            // Agregar cada fila de la tabla al formData
+            datos.forEach((row, index) => {
+                formData.append(`OT_${index}_contratista`, row.contratista);
+                formData.append(`OT_${index}_ot`, row.ot);
+                formData.append(`OT_${index}_tipo`, row.tipo);
+                formData.append(`OT_${index}_cantidad`, row.cantidad);
+                formData.append(`OT_${index}_descripcion`, row.descripcion);
+                formData.append(`OT_${index}_monto`, row.monto);
+                formData.append(`OT_${index}_subtotal`, row.subtotal);
+            });
+
+            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Datos enviados:', data);
+                alert('Datos enviados correctamente.');
+            })
+            .catch(error => {
+                console.error('Error al enviar datos:', error);
+                alert('Error al enviar los datos.');
+            });
+        }
+
         // Cargar los datos cuando la página se cargue
         window.onload = cargarDatos;
+
+        // Asociar el botón para enviar los datos
+        document.getElementById("enviarDatos").addEventListener("click", enviarDatosAHojaDeCalculo);
     </script>
 </body>
 </html>
