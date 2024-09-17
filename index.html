@@ -5,7 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        /* Estilos similares */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #004aad;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        #logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 240px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .col-ot {
+            width: 10%;
+        }
+
+        .col-cant {
+            width: 5%;
+        }
+
+        .col-descripcion {
+            width: 30%;
+        }
+
+        .col-monto {
+            width: 15%;
+        }
+
+        .col-subtotal {
+            width: 15%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        th {
+            background-color: #fdd835;
+            color: #004aad;
+        }
+
+        td input, td select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        td select {
+            width: auto;
+        }
+
+        .invalid-input {
+            border: 2px solid red;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .burdeo {
+            background-color: #800000;
+        }
+
+        .verde {
+            background-color: #28a745;
+        }
+
+        button:hover {
+            background-color: #003380;
+        }
+
+        .burdeo:hover {
+            background-color: #5a0000;
+        }
+
+        .verde:hover {
+            background-color: #218838;
+        }
+
+        #summary {
+            font-size: 1.2em;
+            background-color: #fdd835;
+            color: #004aad;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        #contratista {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: auto;
+        }
+
+        #error-msg {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        .acciones-btn {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            #logo {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+
+            th, td {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+
+            #logo {
+                width: 120px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -17,6 +223,15 @@
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
+
+    <!-- Contratista -->
+    <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <select id="contratista" aria-label="Seleccionar Contratista">
+            <option value="">Seleccione un contratista</option>
+        </select>
+        <button onclick="addRow()">Cargar OT</button>
+    </div>
 
     <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
         <tr>
@@ -35,6 +250,9 @@
         <button onclick="addRow()" class="verde">Agregar OT</button>
     </div>
 
+    <h3>Resumen</h3>
+    <div id="summary">Total Facturado: $0.00</div>
+
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
@@ -48,6 +266,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script>
         let otData = [];
+
+        // Función para cargar contratistas desde JSON
+        async function loadContratistas() {
+            try {
+                const contratistaSelect = document.getElementById('contratista');
+                
+                const response = await fetch('contratistas.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                const contratistas = await response.json();
+                contratistas.forEach(contratista => {
+                    const option = document.createElement('option');
+                    option.value = contratista.nombreCompleto;
+                    option.text = contratista.nombreCompleto;
+                    contratistaSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar contratistas:', error);
+                alert('Error al cargar los contratistas.');
+            }
+        }
 
         // Función para agregar una fila de OT
         function addRow() {
@@ -69,8 +309,8 @@
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
-            const trabajosList = ["Instalación", "Mantenimiento", "Reparación"];
-            trabajosList.forEach(trabajo => {
+            const trabajos = ['Tipo 1', 'Tipo 2', 'Tipo 3']; // Opciones para OT
+            trabajos.forEach(trabajo => {
                 const optionElement = document.createElement('option');
                 optionElement.value = trabajo;
                 optionElement.text = trabajo;
@@ -121,7 +361,6 @@
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
             deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.style.whiteSpace = "nowrap";
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
 
@@ -136,31 +375,58 @@
         function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
+            const contratista = document.getElementById('contratista').value.trim();
             let valid = true;
+
+            document.getElementById('contratista').classList.remove('invalid-input');
+            for (let i = 1; i < table.rows.length; i++) {
+                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
+                }
+            }
+
+            if (contratista === "") {
+                document.getElementById('contratista').classList.add('invalid-input');
+                valid = false;
+            }
 
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
-                const tipo = row.cells[1].children[0].value;
-                const cantidad = row.cells[2].children[0].value;
                 const descripcion = row.cells[3].children[0].value.trim();
                 const monto = row.cells[4].children[0].value.trim();
-                const subtotal = row.cells[5].children[0].value.trim();
 
-                if (ot === "" || descripcion === "" || monto === "") {
+                if (ot === "") {
                     row.cells[0].children[0].classList.add('invalid-input');
                     valid = false;
                 }
 
-                if (valid) {
-                    otData.push({ ot, tipo, cantidad, descripcion, monto, subtotal });
+                if (descripcion === "") {
+                    row.cells[3].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (monto === "") {
+                    row.cells[4].children[0].classList.add('invalid-input');
+                    valid = false;
                 }
             }
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
-                // Aquí solo se envía el OTData (solo OT)
-                enviarSoloOT(otData);
+                for (let i = 1; i < table.rows.length; i++) {
+                    const row = table.rows[i];
+                    const ot = row.cells[0].children[0].value.trim();
+                    const tipo = row.cells[1].children[0].value;
+                    const cantidad = row.cells[2].children[0].value;
+                    const descripcion = row.cells[3].children[0].value.trim();
+                    const monto = row.cells[4].children[0].value.trim();
+                    const subtotal = row.cells[5].children[0].value.trim();
+
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+                }
+
+                displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
             } else {
@@ -168,9 +434,10 @@
             }
         }
 
-        // Función para enviar solo las OT a la hoja de cálculo
-        function enviarSoloOT(otData) {
+        // Función para enviar datos a la hoja de cálculo
+        function enviarDatosAHojaDeCalculo(otData) {
             const formData = new FormData();
+            formData.append('contratista', document.getElementById('contratista').value);
 
             otData.forEach((row, index) => {
                 formData.append(`OT_${index}_ot`, row.ot);
@@ -187,15 +454,71 @@
             })
             .then(response => response.text())
             .then(data => {
-                console.log('Datos OT enviados:', data);
+                console.log('Datos enviados:', data);
             })
             .catch(error => {
-                console.error('Error al enviar datos OT:', error);
+                console.error('Error al enviar datos:', error);
             });
         }
 
+        // Función para generar y descargar el archivo XLSX
+        function finalizeAndDownload() {
+            const resumenContent = [
+                ["Resumen de Cobros del Mes"],
+                ["Cantidad", "Tipo de OT", "Valor"]
+            ];
+
+            const detalleContent = [
+                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+            ];
+
+            let total = 0;
+
+            otData.forEach(row => {
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+                if (!resumenRow) {
+                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+                } else {
+                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+                }
+                total += parseFloat(row.subtotal);
+            });
+
+            resumenContent.push(["", "Total", total.toFixed(2)]);
+
+            const workbook = XLSX.utils.book_new();
+
+            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            enviarDatosAHojaDeCalculo(otData);
+        }
+
+        // Función para limpiar la tabla después de la descarga
+        function clearTable() {
+            const table = document.getElementById('otTable');
+            const rowCount = table.rows.length;
+
+            for (let i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+            document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
+            document.getElementById('finalizeBtn').classList.add('hidden');
+            document.getElementById('clearBtn').classList.add('hidden');
+            document.getElementById('summaryBtn').classList.add('hidden');
+        }
+
         window.onload = function() {
-            // Cargar los trabajos (se simplifica aquí)
+            loadContratistas();
+            loadTrabajos();
         };
     </script>
 </body>
