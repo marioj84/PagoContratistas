@@ -117,19 +117,21 @@
             });
         }
 
-        // Función para enviar los datos al Google Sheets
+        // Función para recuperar los datos de la tabla visible en pantalla y enviarlos a Google Sheets
         function enviarDatosAHojaDeCalculo() {
             const formData = new FormData();
+            const tablaBody = document.getElementById("tabla-body").getElementsByTagName("tr");
 
-            // Agregar cada fila de la tabla al formData
-            datos.forEach((row, index) => {
-                formData.append(`OT_${index}_contratista`, row.contratista);
-                formData.append(`OT_${index}_ot`, row.ot);
-                formData.append(`OT_${index}_tipo`, row.tipo);
-                formData.append(`OT_${index}_cantidad`, row.cantidad);
-                formData.append(`OT_${index}_descripcion`, row.descripcion);
-                formData.append(`OT_${index}_monto`, row.monto);
-                formData.append(`OT_${index}_subtotal`, row.subtotal);
+            // Recorrer las filas de la tabla y obtener los datos dinámicamente
+            Array.from(tablaBody).forEach((row, index) => {
+                const celdas = row.getElementsByTagName("td");
+                formData.append(`OT_${index}_contratista`, celdas[0].innerText);
+                formData.append(`OT_${index}_ot`, celdas[1].innerText);
+                formData.append(`OT_${index}_tipo`, celdas[2].innerText);
+                formData.append(`OT_${index}_cantidad`, celdas[3].innerText);
+                formData.append(`OT_${index}_descripcion`, celdas[4].innerText);
+                formData.append(`OT_${index}_monto`, celdas[5].innerText);
+                formData.append(`OT_${index}_subtotal`, celdas[6].innerText);
             });
 
             fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
