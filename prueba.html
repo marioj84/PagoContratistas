@@ -1,16 +1,16 @@
 <form id="formularioContratistas" onsubmit="enviarDatos(); return false;">
   <label for="nombre">Nombre:</label>
-  <input type="text" id="nombre" name="nombre"><br>
-  
+  <input type="text" id="nombre" name="nombre" required><br>
+
   <label for="ordenTrabajo">Orden de Trabajo:</label>
-  <input type="text" id="ordenTrabajo" name="ordenTrabajo"><br>
-  
+  <input type="text" id="ordenTrabajo" name="ordenTrabajo" required><br>
+
   <label for="monto">Monto:</label>
-  <input type="text" id="monto" name="monto"><br>
-  
+  <input type="number" id="monto" name="monto" required><br>
+
   <label for="tipoTrabajo">Tipo de Trabajo:</label>
-  <input type="text" id="tipoTrabajo" name="tipoTrabajo"><br>
-  
+  <input type="text" id="tipoTrabajo" name="tipoTrabajo" required><br>
+
   <input type="submit" value="Enviar">
 </form>
 
@@ -21,7 +21,7 @@
     var monto = document.getElementById('monto').value;
     var tipoTrabajo = document.getElementById('tipoTrabajo').value;
 
-    var url = "https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec"; // Coloca aquí la URL del Google Apps Script
+    var url = "https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec";
 
     var data = {
       'nombre': nombre,
@@ -41,10 +41,10 @@
     fetch(url, options)
       .then(response => response.text())
       .then(data => {
-        alert(data);
+        alert('Datos guardados exitosamente: ' + data);
       })
       .catch(error => {
-        alert('Error al enviar datos: ' + error);
+        alert('Error al enviar los datos: ' + error);
       });
   }
 </script>
