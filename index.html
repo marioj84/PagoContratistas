@@ -289,6 +289,21 @@
             }
         }
 
+        // Función para cargar tipos de trabajos desde JSON
+        async function loadTrabajos() {
+            try {
+                const response = await fetch('trabajos.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar trabajos');
+                }
+                const trabajos = await response.json();
+                window.trabajosList = trabajos.trabajos;
+            } catch (error) {
+                console.error('Error al cargar trabajos:', error);
+                alert('Error al cargar los trabajos.');
+            }
+        }
+
         // Función para agregar una fila de OT
         function addRow() {
             const table = document.getElementById('otTable');
@@ -309,8 +324,7 @@
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
-            const trabajos = ['Tipo 1', 'Tipo 2', 'Tipo 3']; // Opciones para OT
-            trabajos.forEach(trabajo => {
+            window.trabajosList.forEach(trabajo => {
                 const optionElement = document.createElement('option');
                 optionElement.value = trabajo;
                 optionElement.text = trabajo;
@@ -361,6 +375,7 @@
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
             deleteButton.className = 'acciones-btn burdeo';
+            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
 
@@ -378,6 +393,7 @@
             const contratista = document.getElementById('contratista').value.trim();
             let valid = true;
 
+            // Limpiar la clase invalid-input antes de hacer la validación
             document.getElementById('contratista').classList.remove('invalid-input');
             for (let i = 1; i < table.rows.length; i++) {
                 for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
@@ -385,11 +401,13 @@
                 }
             }
 
+            // Validar contratista
             if (contratista === "") {
                 document.getElementById('contratista').classList.add('invalid-input');
                 valid = false;
             }
 
+            // Validar cada fila de la tabla
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
@@ -414,6 +432,7 @@
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
+                // Procesar los datos ingresados para el resumen
                 for (let i = 1; i < table.rows.length; i++) {
                     const row = table.rows[i];
                     const ot = row.cells[0].children[0].value.trim();
@@ -434,31 +453,30 @@
             }
         }
 
-        // Función para enviar datos a la hoja de cálculo
-        function enviarDatosAHojaDeCalculo(otData) {
-            const formData = new FormData();
-            formData.append('contratista', document.getElementById('contratista').value);
+        // Función para mostrar el resumen
+        function displaySummary() {
+            const resumenPorTipo = {};
+            let totalMonto = 0;
 
-            otData.forEach((row, index) => {
-                formData.append(`OT_${index}_ot`, row.ot);
-                formData.append(`OT_${index}_tipo`, row.tipo);
-                formData.append(`OT_${index}_cantidad`, row.cantidad);
-                formData.append(`OT_${index}_descripcion`, row.descripcion);
-                formData.append(`OT_${index}_monto`, row.monto);
-                formData.append(`OT_${index}_subtotal`, row.subtotal);
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
+                totalMonto += parseFloat(data.subtotal);
             });
 
-            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Datos enviados:', data);
-            })
-            .catch(error => {
-                console.error('Error al enviar datos:', error);
-            });
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
         // Función para generar y descargar el archivo XLSX
@@ -497,8 +515,6 @@
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
-
-            enviarDatosAHojaDeCalculo(otData);
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -516,6 +532,7 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
+        // Cargar contratistas y trabajos al cargar la página
         window.onload = function() {
             loadContratistas();
             loadTrabajos();
