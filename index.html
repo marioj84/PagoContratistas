@@ -44,6 +44,7 @@
             margin-bottom: 20px;
         }
 
+        /* Anchos de las columnas */
         .col-ot {
             width: 10%;
         }
@@ -85,10 +86,6 @@
 
         td select {
             width: auto;
-        }
-
-        .invalid-input {
-            border: 2px solid red;
         }
 
         button {
@@ -167,10 +164,6 @@
             color: #999;
         }
 
-        .acciones-btn {
-            white-space: nowrap;
-        }
-
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -227,13 +220,13 @@
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista" aria-label="Seleccionar Contratista">
+        <select id="contratista">
             <option value="">Seleccione un contratista</option>
         </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
 
-    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
+    <table id="otTable">
         <tr>
             <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
@@ -247,7 +240,7 @@
 
     <div style="text-align: center;">
         <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
-        <button onclick="addRow()" class="verde">Agregar OT</button>
+        <button id="updateSummaryBtn" class="verde hidden" onclick="viewSummary()">Actualizar Resumen</button>
     </div>
 
     <h3>Resumen</h3>
@@ -255,7 +248,6 @@
 
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
-        <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
 
     <footer>
@@ -320,7 +312,6 @@
             inputOT.type = 'number';
             inputOT.step = "1";  
             inputOT.min = "1";
-            inputOT.ariaLabel = 'Ingresar OT';
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
@@ -330,19 +321,16 @@
                 optionElement.text = trabajo;
                 selectTipo.appendChild(optionElement);
             });
-            selectTipo.ariaLabel = 'Seleccionar Tipo de OT';
             tipoCell.appendChild(selectTipo);
 
             const inputCant = document.createElement('input');
             inputCant.type = 'number';
             inputCant.min = "1";
             inputCant.value = "1";
-            inputCant.ariaLabel = 'Ingresar Cantidad';
             cantCell.appendChild(inputCant);
 
             const inputDesc = document.createElement('input');
             inputDesc.type = 'text';
-            inputDesc.ariaLabel = 'Ingresar Descripción';
             descCell.appendChild(inputDesc);
 
             const inputMonto = document.createElement('input');
@@ -350,14 +338,12 @@
             inputMonto.placeholder = '$0.00';
             inputMonto.step = "0.01";
             inputMonto.min = "0";
-            inputMonto.ariaLabel = 'Ingresar Monto';
             montoCell.appendChild(inputMonto);
 
             const inputSubtotal = document.createElement('input');
             inputSubtotal.type = 'text';
             inputSubtotal.placeholder = '$0.00';
             inputSubtotal.disabled = true;
-            inputSubtotal.ariaLabel = 'Subtotal';
             subtotalCell.appendChild(inputSubtotal);
 
             // Calcular subtotal al cambiar cantidad o monto
@@ -375,7 +361,6 @@
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
             deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
 
@@ -393,63 +378,36 @@
             const contratista = document.getElementById('contratista').value.trim();
             let valid = true;
 
-            // Limpiar la clase invalid-input antes de hacer la validación
-            document.getElementById('contratista').classList.remove('invalid-input');
-            for (let i = 1; i < table.rows.length; i++) {
-                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
-                }
-            }
-
-            // Validar contratista
             if (contratista === "") {
-                document.getElementById('contratista').classList.add('invalid-input');
+                document.getElementById('error-msg').style.display = "block";
+                document.getElementById('contratista-asterisk').classList.remove('hidden');
                 valid = false;
+            } else {
+                document.getElementById('contratista-asterisk').classList.add('hidden');
             }
 
-            // Validar cada fila de la tabla
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value;
+                const cantidad = row.cells[2].children[0].value;
                 const descripcion = row.cells[3].children[0].value.trim();
                 const monto = row.cells[4].children[0].value.trim();
+                const subtotal = row.cells[5].children[0].value.trim();
 
-                if (ot === "") {
-                    row.cells[0].children[0].classList.add('invalid-input');
+                if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
+                    document.getElementById('error-msg').style.display = "block";
                     valid = false;
-                }
-
-                if (descripcion === "") {
-                    row.cells[3].children[0].classList.add('invalid-input');
-                    valid = false;
-                }
-
-                if (monto === "") {
-                    row.cells[4].children[0].classList.add('invalid-input');
-                    valid = false;
+                    break;
+                } else {
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
                 }
             }
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
-                // Procesar los datos ingresados para el resumen
-                for (let i = 1; i < table.rows.length; i++) {
-                    const row = table.rows[i];
-                    const ot = row.cells[0].children[0].value.trim();
-                    const tipo = row.cells[1].children[0].value;
-                    const cantidad = row.cells[2].children[0].value;
-                    const descripcion = row.cells[3].children[0].value.trim();
-                    const monto = row.cells[4].children[0].value.trim();
-                    const subtotal = row.cells[5].children[0].value.trim();
-
-                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
-                }
-
                 displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
-                document.getElementById('clearBtn').classList.remove('hidden');
-            } else {
-                document.getElementById('error-msg').style.display = "block";
             }
         }
 
@@ -476,7 +434,6 @@
             resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
-            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
         // Función para generar y descargar el archivo XLSX
@@ -515,21 +472,6 @@
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
-        }
-
-        // Función para limpiar la tabla después de la descarga
-        function clearTable() {
-            const table = document.getElementById('otTable');
-            const rowCount = table.rows.length;
-
-            for (let i = rowCount - 1; i > 0; i--) {
-                table.deleteRow(i);
-            }
-
-            document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
-            document.getElementById('finalizeBtn').classList.add('hidden');
-            document.getElementById('clearBtn').classList.add('hidden');
-            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
         // Cargar contratistas y trabajos al cargar la página
