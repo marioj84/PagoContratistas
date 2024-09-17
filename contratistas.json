@@ -1,7 +1,11 @@
 [
-    { "id": "1", "nombre": "ANA CORNEJO" },
-    { "id": "2", "nombre": "ANGELICA FUENTES FUENTES" },
-    { "id": "3", "nombre": "DANIEL OJEDA" },
-    { "id": "4", "nombre": "EFRAIN ALVAREZ" }
-    // Otros contratistas
+    {
+        "nombre": "ANA CORNEJO"
+    },
+    {
+        "nombre": "ANGELICA FUENTES FUENTES"
+    },
+    {
+        "nombre": "DANIEL OJEDA"
+    }
 ]
