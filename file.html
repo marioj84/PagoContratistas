@@ -222,6 +222,17 @@
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
+    <!-- Verificación de sesión -->
+    <script>
+        // Verificar si la sesión está activa
+        const sesionIniciada = localStorage.getItem('sesionIniciada');
+
+        if (sesionIniciada !== 'true') {
+            // Si no hay sesión iniciada, redirigir al login
+            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+        }
+    </script>
+
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
@@ -268,6 +279,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
     <script>
         // Tu configuración de Firebase
@@ -286,6 +298,43 @@
         const db = firebase.firestore(app);
 
         let otData = [];
+
+        // Función para cargar contratistas desde JSON
+        async function loadContratistas() {
+            try {
+                const contratistaSelect = document.getElementById('contratista');
+                
+                const response = await fetch('contratistas.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                const contratistas = await response.json();
+                contratistas.forEach(contratista => {
+                    const option = document.createElement('option');
+                    option.value = contratista.nombreCompleto;
+                    option.text = contratista.nombreCompleto;
+                    contratistaSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar contratistas:', error);
+                alert('Error al cargar los contratistas.');
+            }
+        }
+
+        // Función para cargar tipos de trabajos desde JSON
+        async function loadTrabajos() {
+            try {
+                const response = await fetch('trabajos.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar trabajos');
+                }
+                const trabajos = await response.json();
+                window.trabajosList = trabajos.trabajos;
+            } catch (error) {
+                console.error('Error al cargar trabajos:', error);
+                alert('Error al cargar los trabajos.');
+            }
+        }
 
         // Función para agregar una fila de OT
         function addRow() {
@@ -371,8 +420,95 @@
 
         // Función para ver el resumen
         function viewSummary() {
-            // Validación y generación de resumen, igual que antes
-            document.getElementById('finalizeBtn').classList.remove('hidden');
+            const table = document.getElementById('otTable');
+            otData = [];
+            const contratista = document.getElementById('contratista').value.trim();
+            let valid = true;
+
+            // Limpiar la clase invalid-input antes de hacer la validación
+            document.getElementById('contratista').classList.remove('invalid-input');
+            for (let i = 1; i < table.rows.length; i++) {
+                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
+                }
+            }
+
+            // Validar contratista
+            if (contratista === "") {
+                document.getElementById('contratista').classList.add('invalid-input');
+                valid = false;
+            }
+
+            // Validar cada fila de la tabla
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const descripcion = row.cells[3].children[0].value.trim();
+                const monto = row.cells[4].children[0].value.trim();
+
+                if (ot === "") {
+                    row.cells[0].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (descripcion === "") {
+                    row.cells[3].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (monto === "") {
+                    row.cells[4].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+            }
+
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                // Procesar los datos ingresados para el resumen
+                for (let i = 1; i < table.rows.length; i++) {
+                    const row = table.rows[i];
+                    const ot = row.cells[0].children[0].value.trim();
+                    const tipo = row.cells[1].children[0].value;
+                    const cantidad = row.cells[2].children[0].value;
+                    const descripcion = row.cells[3].children[0].value.trim();
+                    const monto = row.cells[4].children[0].value.trim();
+                    const subtotal = row.cells[5].children[0].value.trim();
+
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+                }
+
+                displaySummary();
+                document.getElementById('finalizeBtn').classList.remove('hidden');
+                document.getElementById('clearBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('error-msg').style.display = "block";
+            }
+        }
+
+        // Función para mostrar el resumen
+        function displaySummary() {
+            const resumenPorTipo = {};
+            let totalMonto = 0;
+
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
+                totalMonto += parseFloat(data.subtotal);
+            });
+
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
         // Función para enviar los datos a Firestore
@@ -403,12 +539,71 @@
             }
         }
 
-        // Cerrar sesión
+        // Función para generar y descargar el archivo XLSX
+        function finalizeAndDownload() {
+            const resumenContent = [
+                ["Resumen de Cobros del Mes"],
+                ["Cantidad", "Tipo de OT", "Valor"]
+            ];
+
+            const detalleContent = [
+                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+            ];
+
+            let total = 0;
+
+            otData.forEach(row => {
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+                if (!resumenRow) {
+                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+                } else {
+                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+                }
+                total += parseFloat(row.subtotal);
+            });
+
+            resumenContent.push(["", "Total", total.toFixed(2)]);
+
+            const workbook = XLSX.utils.book_new();
+
+            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+        }
+
+        // Función para limpiar la tabla después de la descarga
+        function clearTable() {
+            const table = document.getElementById('otTable');
+            const rowCount = table.rows.length;
+
+            for (let i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+            document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
+            document.getElementById('finalizeBtn').classList.add('hidden');
+            document.getElementById('clearBtn').classList.add('hidden');
+            document.getElementById('summaryBtn').classList.add('hidden');
+        }
+
+        // Función para cerrar sesión
         function cerrarSesion() {
             localStorage.removeItem('sesionIniciada');
+            localStorage.removeItem('usuario');
             window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
         }
-    </script>
 
+        // Cargar contratistas y trabajos al cargar la página
+        window.onload = function() {
+            loadContratistas();
+            loadTrabajos();
+        };
+    </script>
 </body>
 </html>
