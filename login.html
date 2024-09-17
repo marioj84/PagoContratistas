@@ -17,6 +17,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
 
         #login-container {
@@ -26,17 +27,24 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: center;
+        }
+
+        #logo {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            width: 80px;
         }
 
         h2 {
-            text-align: center;
             font-size: 1.8em;
             color: #004aad;
             margin-bottom: 10px;
         }
 
         .subtitle {
-            text-align: center;
             font-size: 1.1em;
             color: #333;
             margin-bottom: 20px;
@@ -46,6 +54,7 @@
             font-size: 1.1em;
             margin-bottom: 8px;
             display: block;
+            text-align: left;
         }
 
         input {
@@ -55,6 +64,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
+            box-sizing: border-box;
         }
 
         .password-wrapper {
@@ -92,7 +102,7 @@
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
-            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
@@ -110,6 +120,9 @@
             text-align: center;
             font-size: 0.9em;
             color: #666;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
         }
 
         footer a {
@@ -123,8 +136,8 @@
 
         /* Ajustes para móviles */
         @media (max-width: 768px) {
-            body {
-                padding: 20px;
+            #logo {
+                width: 60px;
             }
 
             #login-container {
@@ -148,6 +161,7 @@
     <div id="login-container">
         <h2>Inicio de Sesión</h2>
         <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
+        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
 
         <!-- Formulario de inicio de sesión -->
         <form id="login-form">
