@@ -1,0 +1,50 @@
+<form id="formularioContratistas" onsubmit="enviarDatos(); return false;">
+  <label for="nombre">Nombre:</label>
+  <input type="text" id="nombre" name="nombre"><br>
+  
+  <label for="ordenTrabajo">Orden de Trabajo:</label>
+  <input type="text" id="ordenTrabajo" name="ordenTrabajo"><br>
+  
+  <label for="monto">Monto:</label>
+  <input type="text" id="monto" name="monto"><br>
+  
+  <label for="tipoTrabajo">Tipo de Trabajo:</label>
+  <input type="text" id="tipoTrabajo" name="tipoTrabajo"><br>
+  
+  <input type="submit" value="Enviar">
+</form>
+
+<script>
+  function enviarDatos() {
+    var nombre = document.getElementById('nombre').value;
+    var ordenTrabajo = document.getElementById('ordenTrabajo').value;
+    var monto = document.getElementById('monto').value;
+    var tipoTrabajo = document.getElementById('tipoTrabajo').value;
+
+    var url = "URL_DEL_SCRIPT"; // Coloca aquí la URL del Google Apps Script
+
+    var data = {
+      'nombre': nombre,
+      'ordenTrabajo': ordenTrabajo,
+      'monto': monto,
+      'tipoTrabajo': tipoTrabajo
+    };
+
+    var options = {
+      'method': 'POST',
+      'headers': {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      'body': new URLSearchParams(data)
+    };
+
+    fetch(url, options)
+      .then(response => response.text())
+      .then(data => {
+        alert(data);
+      })
+      .catch(error => {
+        alert('Error al enviar datos: ' + error);
+      });
+  }
+</script>
