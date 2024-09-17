@@ -209,8 +209,10 @@
         <tr>
             <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
+            <th>Cant</th>
             <th class="col-descripcion">Descripción</th>
             <th class="col-monto">Monto</th>
+            <th class="col-subtotal">Subtotal</th>
             <th>Acciones</th>
         </tr>
     </table>
@@ -278,9 +280,11 @@
             const row = table.insertRow();
             const otCell = row.insertCell(0);
             const tipoCell = row.insertCell(1);
-            const descCell = row.insertCell(2);
-            const montoCell = row.insertCell(3);
-            const actionsCell = row.insertCell(4);
+            const cantCell = row.insertCell(2);
+            const descCell = row.insertCell(3);
+            const montoCell = row.insertCell(4);
+            const subtotalCell = row.insertCell(5);
+            const actionsCell = row.insertCell(6);
 
             const inputOT = document.createElement('input');
             inputOT.type = 'number';
@@ -291,11 +295,17 @@
             const selectTipo = document.createElement('select');
             window.trabajosList.forEach(trabajo => {
                 const optionElement = document.createElement('option');
-                optionElement.value = trabajo.descripcion;
-                optionElement.text = trabajo.descripcion;
+                optionElement.value = trabajo;
+                optionElement.text = trabajo;
                 selectTipo.appendChild(optionElement);
             });
             tipoCell.appendChild(selectTipo);
+
+            const inputCant = document.createElement('input');
+            inputCant.type = 'number';
+            inputCant.min = "1";
+            inputCant.value = "1";
+            cantCell.appendChild(inputCant);
 
             const inputDesc = document.createElement('input');
             inputDesc.type = 'text';
@@ -307,6 +317,24 @@
             inputMonto.step = "0.01";
             inputMonto.min = "0";
             montoCell.appendChild(inputMonto);
+
+            const inputSubtotal = document.createElement('input');
+            inputSubtotal.type = 'text';
+            inputSubtotal.placeholder = '$0.00';
+            inputSubtotal.disabled = true;
+            subtotalCell.appendChild(inputSubtotal);
+
+            // Calcular subtotal al cambiar cantidad o monto
+            inputCant.oninput = function() {
+                const cantidad = inputCant.value;
+                const monto = inputMonto.value;
+                inputSubtotal.value = (cantidad * monto).toFixed(2);
+            };
+            inputMonto.oninput = function() {
+                const cantidad = inputCant.value;
+                const monto = inputMonto.value;
+                inputSubtotal.value = (cantidad * monto).toFixed(2);
+            };
 
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
@@ -321,11 +349,126 @@
             row.remove(); 
         }
 
+        function viewSummary() {
+            const table = document.getElementById('otTable');
+            otData = [];
+            const contratista = document.getElementById('contratista').value.trim();
+            let valid = true;
+
+            if (contratista === "") {
+                document.getElementById('error-msg').style.display = "block";
+                document.getElementById('contratista-asterisk').classList.remove('hidden');
+                valid = false;
+            } else {
+                document.getElementById('contratista-asterisk').classList.add('hidden');
+            }
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value;
+                const cant = row.cells[2].children[0].value.trim();
+                const descripcion = row.cells[3].children[0].value.trim();
+                const monto = row.cells[4].children[0].value.trim();
+                const subtotal = row.cells[5].children[0].value.trim();
+
+                if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
+                    document.getElementById('error-msg').style.display = "block";
+                    const cells = row.cells;
+                    cells[0].children[0].style.border = ot === "" ? "2px solid red" : "";  
+                    cells[3].children[0].style.border = descripcion === "" ? "2px solid red" : "";  
+                    cells[4].children[0].style.border = monto === "" ? "2px solid red" : "";  
+                    valid = false;
+                    break;
+                } else {
+                    const fechaCarga = new Date().toLocaleString();
+                    otData.push({ contratista, ot, tipo, cant, descripcion, monto: parseFloat(monto).toFixed(2), subtotal: parseFloat(subtotal).toFixed(2), fechaCarga });
+                }
+            }
+
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                displaySummary();
+                document.getElementById('summaryBtn').classList.add('hidden'); 
+                document.getElementById('updateSummaryBtn').classList.remove('hidden'); 
+                document.getElementById('finalizeBtn').classList.remove('hidden'); 
+            }
+        }
+
+        function displaySummary() {
+            const resumenPorTipo = {};
+            let totalMonto = 0;
+
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cant);
+                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
+                totalMonto += parseFloat(data.subtotal);
+            });
+
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+        }
+
+        function finalizeAndDownload() {
+            const resumenContent = [
+                ["Resumen de Cobros del Mes"],
+                ["Cantidad", "Tipo de OT", "Valor"]
+            ];
+
+            const detalleContent = [
+                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal", "Fecha de Carga"]
+            ];
+
+            let total = 0;
+
+            otData.forEach(row => {
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.cant, row.descripcion, row.monto, row.subtotal, row.fechaCarga]);
+                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+                if (!resumenRow) {
+                    resumenContent.push([row.cant, row.tipo, row.subtotal]);
+                } else {
+                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cant);
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+                }
+                total += parseFloat(row.subtotal);
+            });
+
+            resumenContent.push(["", "Total", total.toFixed(2)]);
+
+            const workbook = XLSX.utils.book_new();
+
+            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            document.getElementById('contratista').value = '';
+            document.getElementById('otTable').innerHTML = '<tr><th class="col-ot">OT</th><th>Tipo de OT</th><th>Cant</th><th class="col-descripcion">Descripción</th><th class="col-monto">Monto</th><th class="col-subtotal">Subtotal</th><th>Acciones</th></tr>';
+            document.getElementById('summary').innerHTML = 'Total Facturado: $0.00';
+            document.getElementById('finalizeBtn').classList.add('hidden');  
+            document.getElementById('updateSummaryBtn').classList.add('hidden');  
+            otData = []; 
+        }
+
         // Llamar funciones para cargar datos al cargar la página
         window.onload = function() {
             loadContratistas();
             loadTrabajos();
         };
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 </body>
 </html>
