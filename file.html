@@ -10,7 +10,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 
   <script>
-    // Tu configuración de Firebase (usa la que te proporcionaron)
+    // Tu configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
       authDomain: "pagocontratistas.firebaseapp.com",
@@ -22,7 +22,7 @@
     };
 
     // Inicializar Firebase
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     
     // Inicializar Firestore
     const db = firebase.firestore();
