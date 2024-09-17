@@ -19,21 +19,9 @@
     function enviarDatos() {
       var nombre = document.getElementById('nombre').value;
 
-      var url = "https://script.google.com/macros/s/AKfycbwP6mctBdk-6r_kMjZg3dp6qpV3f0wT8yzcj3Rk6L31K27CSG2dCFn3UVT4ku9lue0xHQ/exec"; // Reemplaza con la URL del Google Apps Script
+      var url = "URL_DEL_SCRIPT?nombre=" + encodeURIComponent(nombre); // Usamos GET para enviar datos
 
-      var data = {
-        'nombre': nombre
-      };
-
-      var options = {
-        'method': 'POST',
-        'headers': {
-          'Content-Type': 'application/json'
-        },
-        'body': JSON.stringify(data)
-      };
-
-      fetch(url, options)
+      fetch(url)
         .then(response => response.text())
         .then(data => {
           alert('Datos guardados exitosamente: ' + data);
