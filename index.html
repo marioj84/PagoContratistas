@@ -370,6 +370,70 @@
             row.remove(); 
         }
 
+        // Función para ver el resumen
+        function viewSummary() {
+            const table = document.getElementById('otTable');
+            otData = [];
+            const contratista = document.getElementById('contratista').value.trim();
+            let valid = true;
+
+            if (contratista === "") {
+                document.getElementById('error-msg').style.display = "block";
+                document.getElementById('contratista-asterisk').classList.remove('hidden');
+                valid = false;
+            } else {
+                document.getElementById('contratista-asterisk').classList.add('hidden');
+            }
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value;
+                const cantidad = row.cells[2].children[0].value;
+                const descripcion = row.cells[3].children[0].value.trim();
+                const monto = row.cells[4].children[0].value.trim();
+                const subtotal = row.cells[5].children[0].value.trim();
+
+                if (ot === "" || descripcion === "" || monto === "" || subtotal === "") {
+                    document.getElementById('error-msg').style.display = "block";
+                    valid = false;
+                    break;
+                } else {
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+                }
+            }
+
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                displaySummary();
+            }
+        }
+
+        // Función para mostrar el resumen
+        function displaySummary() {
+            const resumenPorTipo = {};
+            let totalMonto = 0;
+
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
+                totalMonto += parseFloat(data.subtotal);
+            });
+
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+        }
+
         // Cargar contratistas y trabajos al cargar la página
         window.onload = function() {
             loadContratistas();
