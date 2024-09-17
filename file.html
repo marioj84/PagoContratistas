@@ -1,73 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario con Firebase</title>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
-
-  <script type="module">
-    // Importar Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
-
-    // Configuración de Firebase (Reemplaza con tu configuración)
-    const firebaseConfig = {
-      apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
-      authDomain: "pagocontratistas.firebaseapp.com",
-      projectId: "pagocontratistas",
-      storageBucket: "pagocontratistas.appspot.com",
-      messagingSenderId: "87829393195",
-      appId: "1:87829393195:web:d46970885f29126eef5f6e",
-      measurementId: "G-NHR6KRCG3R"
-    };
-
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    
-    // Inicializar Firestore
-    const db = getFirestore(app);
-
-    // Función para enviar datos al hacer submit
-    window.enviarDatos = async function(event) {
-      event.preventDefault(); // Evitar el comportamiento por defecto del formulario
-
-      const nombre = document.getElementById('nombre').value;
-      const apellido = document.getElementById('apellido').value;
-      const cedula = document.getElementById('cedula').value;
-
-      try {
-        // Guardar en Firestore
-        const docRef = await addDoc(collection(db, "usuarios"), {
-          nombre: nombre,
-          apellido: apellido,
-          cedula: cedula
-        });
-        alert("Datos guardados con ID: " + docRef.id);
-      } catch (e) {
-        alert("Error al guardar los datos: " + e);
-      }
-    };
-  </script>
+    <!-- Mantén aquí tu estilo y otras configuraciones -->
 </head>
 <body>
-  <h2>Formulario: Ingresa tus datos</h2>
-  
-  <!-- Formulario -->
-  <form id="formularioNombre" onsubmit="enviarDatos(event);">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required><br>
+    <!-- Mantén el cuerpo de tu tabla y los otros elementos -->
 
-    <label for="apellido">Apellido:</label>
-    <input type="text" id="apellido" name="apellido" required><br>
+    <!-- Botón para enviar datos a Firestore -->
+    <div style="text-align: center;">
+        <button id="enviarBtn" class="verde" onclick="enviarDatosOT()">Enviar OT a Firestore</button>
+    </div>
 
-    <label for="cedula">Cédula:</label>
-    <input type="text" id="cedula" name="cedula" required><br>
+    <footer>
+        <!-- Tu footer -->
+    </footer>
 
-    <input type="submit" value="Enviar">
-  </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+
+    <script type="module">
+        // Importar Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+
+        // Configuración de Firebase (reemplaza con tu configuración)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+            authDomain: "pagocontratistas.firebaseapp.com",
+            projectId: "pagocontratistas",
+            storageBucket: "pagocontratistas.appspot.com",
+            messagingSenderId: "87829393195",
+            appId: "1:87829393195:web:d46970885f29126eef5f6e",
+            measurementId: "G-NHR6KRCG3R"
+        };
+
+        // Inicializar Firebase y Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Función para cargar contratistas desde JSON
+        // Mantén las funciones que ya tienes como loadContratistas() y loadTrabajos()
+
+        // Función para enviar datos de la tabla a Firestore
+        async function enviarDatosOT() {
+            const table = document.getElementById('otTable');
+            const contratista = document.getElementById('contratista').value.trim();
+            const otData = [];
+
+            // Validar que hay contratista seleccionado y OT en la tabla
+            if (contratista === "" || table.rows.length <= 1) {
+                alert('Por favor, ingrese los datos completos antes de enviar.');
+                return;
+            }
+
+            // Recoger los datos de cada fila de la tabla
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const tipo = row.cells[1].children[0].value;
+                const cantidad = row.cells[2].children[0].value;
+                const descripcion = row.cells[3].children[0].value.trim();
+                const monto = row.cells[4].children[0].value.trim();
+                const subtotal = row.cells[5].children[0].value.trim();
+
+                // Validar que todos los campos estén completos
+                if (!ot || !descripcion || !monto) {
+                    alert('Por favor, complete todos los campos de las OT antes de enviar.');
+                    return;
+                }
+
+                otData.push({
+                    contratista: contratista,
+                    ot: ot,
+                    tipo: tipo,
+                    cantidad: cantidad,
+                    descripcion: descripcion,
+                    monto: monto,
+                    subtotal: subtotal
+                });
+            }
+
+            try {
+                // Enviar los datos a Firestore
+                for (const data of otData) {
+                    await addDoc(collection(db, "ordenes_trabajo"), data);
+                }
+
+                alert("Las OT se han guardado correctamente en Firestore.");
+                clearTable(); // Limpiar la tabla después de enviar
+
+            } catch (error) {
+                console.error("Error al guardar las OT: ", error);
+                alert("Hubo un error al guardar las OT.");
+            }
+        }
+
+        // Mantén las otras funciones que ya tienes, como viewSummary(), addRow(), etc.
+
+    </script>
 </body>
 </html>
