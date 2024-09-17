@@ -14,8 +14,9 @@
             margin: 0;
             padding: 0;
             display: flex;
-            min-height: 100vh;
             flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .main-container {
@@ -25,6 +26,9 @@
             align-items: center;
             padding: 20px;
             width: 100%;
+            max-width: 1200px; /* Limitar ancho máximo en pantallas grandes */
+            margin: auto;
+            box-sizing: border-box;
         }
 
         #login-container {
@@ -135,13 +139,16 @@
 
         .image-container {
             flex-grow: 1;
-            height: 100vh;
+            height: 100%;
             background-image: url('https://lipigas.maps.arcgis.com/sharing/rest/content/items/d106c87e298b4532b46b11ede98c6929/data');
             background-size: cover;
             background-position: center;
             filter: blur(5px);
+            display: block;
+            max-width: 600px; /* Limitar ancho en pantallas grandes */
         }
 
+        /* Ajustes para pantallas pequeñas */
         @media (max-width: 768px) {
             #logo {
                 width: 60px;
@@ -149,11 +156,24 @@
 
             .main-container {
                 flex-direction: column;
+                align-items: center;
             }
 
             .image-container {
-                display: none;
+                display: none; /* Ocultar imagen en dispositivos móviles */
             }
+
+            #login-container {
+                max-width: 90%;
+            }
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8em;
+            color: #666;
+            padding: 10px;
+            background-color: #f4f4f4;
         }
     </style>
 </head>
