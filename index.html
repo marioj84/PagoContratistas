@@ -515,7 +515,7 @@
                 formData.append(`OT_${index}_subtotal`, row.subtotal);
             });
 
-            fetch('https://script.google.com/macros/s/YOUR_GOOGLE_SCRIPT_URL/exec', {
+                fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
                 method: 'POST',
                 body: formData
             })
