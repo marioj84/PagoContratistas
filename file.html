@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario Nombre</title>
+</head>
+<body>
+  <h2>Formulario: Ingresa tu Nombre</h2>
+  
+  <form id="formularioNombre" onsubmit="enviarDatos(); return false;">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br>
+
+    <input type="submit" value="Enviar">
+  </form>
+
+  <script>
+    function enviarDatos() {
+      var nombre = document.getElementById('nombre').value;
+
+      var url = "https://script.google.com/macros/s/AKfycbwP6mctBdk-6r_kMjZg3dp6qpV3f0wT8yzcj3Rk6L31K27CSG2dCFn3UVT4ku9lue0xHQ/exec"; // Reemplaza con la URL del Google Apps Script
+
+      var data = {
+        'nombre': nombre
+      };
+
+      var options = {
+        'method': 'POST',
+        'headers': {
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify(data)
+      };
+
+      fetch(url, options)
+        .then(response => response.text())
+        .then(data => {
+          alert('Datos guardados exitosamente: ' + data);
+        })
+        .catch(error => {
+          alert('Error al enviar los datos: ' + error);
+        });
+    }
+  </script>
+</body>
+</html>
