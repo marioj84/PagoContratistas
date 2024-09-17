@@ -222,17 +222,6 @@
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
-    <!-- Verificación de sesión -->
-    <script>
-        // Verificar si la sesión está activa
-        const sesionIniciada = localStorage.getItem('sesionIniciada');
-
-        if (sesionIniciada !== 'true') {
-            // Si no hay sesión iniciada, redirigir al login
-            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-        }
-    </script>
-
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
@@ -267,7 +256,6 @@
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
-        <button onclick="cerrarSesion()" class="burdeo">Cerrar Sesión</button>
     </div>
 
     <footer>
@@ -491,6 +479,34 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
+        // Función para enviar los datos a la hoja de cálculo
+        function enviarDatosAHojaDeCalculo(otData) {
+            const formData = new FormData();
+            formData.append('contratista', document.getElementById('contratista').value);
+
+            // Agregar cada OT al formData
+            otData.forEach((row, index) => {
+                formData.append(`OT_${index}_ot`, row.ot);
+                formData.append(`OT_${index}_tipo`, row.tipo);
+                formData.append(`OT_${index}_cantidad`, row.cantidad);
+                formData.append(`OT_${index}_descripcion`, row.descripcion);
+                formData.append(`OT_${index}_monto`, row.monto);
+                formData.append(`OT_${index}_subtotal`, row.subtotal);
+            });
+
+            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Datos enviados:', data);
+            })
+            .catch(error => {
+                console.error('Error al enviar datos:', error);
+            });
+        }
+
         // Función para generar y descargar el archivo XLSX
         function finalizeAndDownload() {
             const resumenContent = [
@@ -527,6 +543,9 @@
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            // Enviar los datos a la hoja de cálculo
+            enviarDatosAHojaDeCalculo(otData);
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -542,13 +561,6 @@
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
             document.getElementById('summaryBtn').classList.add('hidden');
-        }
-
-        // Función para cerrar sesión
-        function cerrarSesion() {
-            localStorage.removeItem('sesionIniciada');
-            localStorage.removeItem('usuario');
-            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
         }
 
         // Cargar contratistas y trabajos al cargar la página
