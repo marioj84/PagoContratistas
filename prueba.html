@@ -30,9 +30,8 @@
         'headers': {
           'Content-Type': 'application/json'
         },
-        'body': JSON.stringify(data) // Enviamos los datos como JSON
+        'body': JSON.stringify(data), // Coma agregada aquí
         'mode': 'no-cors'  // Añadir este modo para evitar problemas de CORS
-
       };
 
       fetch(url, options)
