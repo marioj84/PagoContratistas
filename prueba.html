@@ -1,19 +1,63 @@
-function doPost(e) {
-  var ss = SpreadsheetApp.openById('1EMBSiXZ0OdcJwET_4DqF8UK8lVXnIoj_OeC-jI52zek'); // Asegúrate de reemplazar por el ID correcto
-  var sheet = ss.getSheetByName('Hoja1'); // Asegúrate de que el nombre de la hoja sea correcto
-
-  // Registrar en el log los datos recibidos para depuración
-  Logger.log(e.parameters);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario Contratistas</title>
+</head>
+<body>
+  <h2>Formulario de Contratistas</h2>
   
-  // Obtener los datos enviados desde el formulario web
-  var data = e.parameter;
+  <form id="formularioContratistas" onsubmit="enviarDatos(); return false;">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br>
 
-  // Obtener la fecha actual
-  var fechaActual = new Date();
-  
-  // Insertar los datos en la hoja de cálculo
-  sheet.appendRow([data.nombre, data.ordenTrabajo, data.monto, data.tipoTrabajo, fechaActual]);
+    <label for="ordenTrabajo">Orden de Trabajo:</label>
+    <input type="text" id="ordenTrabajo" name="ordenTrabajo" required><br>
 
-  // Enviar respuesta
-  return ContentService.createTextOutput('Datos guardados exitosamente');
-}
+    <label for="monto">Monto:</label>
+    <input type="number" id="monto" name="monto" required><br>
+
+    <label for="tipoTrabajo">Tipo de Trabajo:</label>
+    <input type="text" id="tipoTrabajo" name="tipoTrabajo" required><br>
+
+    <input type="submit" value="Enviar">
+  </form>
+
+  <script>
+    function enviarDatos() {
+      var nombre = document.getElementById('nombre').value;
+      var ordenTrabajo = document.getElementById('ordenTrabajo').value;
+      var monto = document.getElementById('monto').value;
+      var tipoTrabajo = document.getElementById('tipoTrabajo').value;
+
+      var url = "https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec";
+
+      var data = {
+        'nombre': nombre,
+        'ordenTrabajo': ordenTrabajo,
+        'monto': monto,
+        'tipoTrabajo': tipoTrabajo
+      };
+
+      var options = {
+        'method': 'POST',
+        'headers': {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        'body': new URLSearchParams(data)
+      };
+
+      fetch(url, options)
+        .then(response => response.text())
+        .then(data => {
+          alert('Datos guardados exitosamente: ' + data);
+        })
+        .catch(error => {
+          alert('Error al enviar los datos: ' + error);
+        });
+    }
+  </script>
+</body>
+</html>
+``
