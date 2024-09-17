@@ -193,7 +193,11 @@
             const contratista = contratistas.find(c => c.usuario === username && c.clave === password);
 
             if (contratista) {
-                // Inicio de sesión exitoso: Redirigir al formulario de pago
+                // Inicio de sesión exitoso: Guardar el estado de sesión en localStorage
+                localStorage.setItem('sesionIniciada', 'true');
+                localStorage.setItem('usuario', contratista.nombreCompleto); // Puedes almacenar más datos si lo necesitas
+
+                // Redirigir al formulario de pago
                 errorMessage.textContent = ''; // Limpiar mensaje de error
                 window.location.href = 'https://marioj84.github.io/PagoContratistas/'; // Redirigir al formulario
             } else {
