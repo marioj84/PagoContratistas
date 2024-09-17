@@ -10,7 +10,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 
   <script type="module">
-    // Importar Firebase SDKs
+    // Importar Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
@@ -32,7 +32,9 @@
     const db = getFirestore(app);
 
     // Función para enviar datos al hacer submit
-    window.enviarDatos = async function() {
+    window.enviarDatos = async function(event) {
+      event.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
       const nombre = document.getElementById('nombre').value;
 
       try {
@@ -44,15 +46,14 @@
       } catch (e) {
         alert("Error al guardar el nombre: " + e);
       }
-
-      return false;  // Evitar que el formulario envíe de forma estándar
     };
   </script>
 </head>
 <body>
   <h2>Formulario: Ingresa tu Nombre</h2>
   
-  <form id="formularioNombre" onsubmit="return enviarDatos();">
+  <!-- Formulario -->
+  <form id="formularioNombre" onsubmit="enviarDatos(event);">
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required><br>
 
