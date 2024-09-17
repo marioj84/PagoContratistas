@@ -171,6 +171,10 @@
             white-space: nowrap;
         }
 
+        #generatedTableContainer {
+            margin-top: 20px;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -253,12 +257,13 @@
     <h3>Resumen</h3>
     <div id="summary">Total Facturado: $0.00</div>
 
-    <div id="generatedTableContainer"></div>
-
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
+
+    <!-- Contenedor para la tabla detallada generada -->
+    <div id="generatedTableContainer"></div>
 
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
@@ -388,7 +393,7 @@
             row.remove(); 
         }
 
-        // Función para ver el resumen
+        // Función para ver el resumen y generar la tabla detallada
         function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
@@ -482,24 +487,31 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para mostrar la tabla generada
+        // Función para generar la tabla detallada con las OT ingresadas
         function displayGeneratedTable() {
-            let generatedTable = `
-            <h3>Tabla Detallada Generada</h3>
-            <table border="1" style="border-collapse: collapse;">
-            <tr>
-                <th>Contratista</th>
-                <th>OT</th>
-                <th>Tipo de OT</th>
-                <th>Cantidad</th>
-                <th>Descripción</th>
-                <th>Monto</th>
-                <th>Subtotal</th>
-            </tr>`;
+            const tableContainer = document.getElementById('generatedTableContainer');
+            tableContainer.innerHTML = '';
+
+            if (otData.length === 0) {
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <tr>
+                    <th>Contratista</th>
+                    <th>OT</th>
+                    <th>Tipo de OT</th>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                    <th>Monto</th>
+                    <th>Subtotal</th>
+                </tr>
+            `;
 
             otData.forEach(row => {
-                generatedTable += `
-                <tr>
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
                     <td>${row.contratista}</td>
                     <td>${row.ot}</td>
                     <td>${row.tipo}</td>
@@ -507,15 +519,14 @@
                     <td>${row.descripcion}</td>
                     <td>${row.monto}</td>
                     <td>${row.subtotal}</td>
-                </tr>`;
+                `;
+                table.appendChild(tr);
             });
 
-            generatedTable += `</table>`;
-
-            document.getElementById('generatedTableContainer').innerHTML = generatedTable;
+            tableContainer.appendChild(table);
         }
 
-        // Función para enviar los datos a la hoja de cálculo
+        // Función para enviar los datos de la tabla detallada a Google Sheets
         function enviarDatosAHojaDeCalculo(otData) {
             const formData = new FormData();
             formData.append('contratista', document.getElementById('contratista').value);
