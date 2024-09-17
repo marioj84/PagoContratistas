@@ -258,8 +258,6 @@
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
 
-    <div id="tablaResumenDetallado" style="margin-top: 30px;"></div>
-
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
@@ -448,7 +446,6 @@
                 }
 
                 displaySummary();
-                displayDetailedTable(); // Nueva tabla detallada
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
             } else {
@@ -482,55 +479,7 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para generar la tabla detallada de OTs
-        function displayDetailedTable() {
-            let tablaHTML = `<table border="1" cellpadding="5" cellspacing="0"><tr><th>Contratista</th><th>OT</th><th>Tipo de OT</th><th>Cantidad</th><th>Descripción</th><th>Monto</th><th>Subtotal</th></tr>`;
-            otData.forEach(row => {
-                tablaHTML += `<tr>
-                    <td>${row.contratista}</td>
-                    <td>${row.ot}</td>
-                    <td>${row.tipo}</td>
-                    <td>${row.cantidad}</td>
-                    <td>${row.descripcion}</td>
-                    <td>${row.monto}</td>
-                    <td>${row.subtotal}</td>
-                </tr>`;
-            });
-            tablaHTML += `</table>`;
-            document.getElementById('tablaResumenDetallado').innerHTML = tablaHTML;
-        }
-
-        // Función para enviar los datos a la hoja de cálculo
-        function enviarDatosAHojaDeCalculo() {
-            const formData = new FormData();
-            formData.append('contratista', document.getElementById('contratista').value);
-
-            // Agregar cada OT al formData
-            otData.forEach((row, index) => {
-                formData.append(`OT_${index}_ot`, row.ot);
-                formData.append(`OT_${index}_tipo`, row.tipo);
-                formData.append(`OT_${index}_cantidad`, row.cantidad);
-                formData.append(`OT_${index}_descripcion`, row.descripcion);
-                formData.append(`OT_${index}_monto`, row.monto);
-                formData.append(`OT_${index}_subtotal`, row.subtotal);
-            });
-
-                fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Datos enviados:', data);
-                alert('Datos enviados correctamente.');
-            })
-            .catch(error => {
-                console.error('Error al enviar datos:', error);
-                alert('Error al enviar los datos.');
-            });
-        }
-
-        // Función para generar y descargar el archivo XLSX y enviar datos a la hoja de cálculo
+        // Función para generar y descargar el archivo XLSX
         function finalizeAndDownload() {
             const resumenContent = [
                 ["Resumen de Cobros del Mes"],
@@ -566,9 +515,6 @@
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
-
-            // Enviar los datos a la hoja de cálculo
-            enviarDatosAHojaDeCalculo();
         }
 
         // Función para limpiar la tabla después de la descarga
