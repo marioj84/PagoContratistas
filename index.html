@@ -9,7 +9,7 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4';
+            background-color: #f4f4f4;
             color: #333;
             margin: 0;
             padding: 20px;
@@ -56,15 +56,23 @@
             color: #004aad;
         }
 
+        /* Ajuste de anchos para las columnas */
+        .col-ot input {
+            width: 130px; /* Ajuste para 10 cifras */
+        }
+
+        .col-cant input {
+            width: 60px; /* Ajuste para 3 cifras */
+        }
+
+        .col-descripcion input {
+            width: 300px; /* Ajuste al doble del tamaño original */
+        }
+
         td input, td select {
-            width: 100%;
             padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-
-        td select {
-            width: auto;
         }
 
         button {
@@ -209,7 +217,7 @@
         <tr>
             <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
-            <th>Cant</th>
+            <th class="col-cant">Cant</th>
             <th class="col-descripcion">Descripción</th>
             <th class="col-monto">Monto</th>
             <th class="col-subtotal">Subtotal</th>
@@ -267,7 +275,7 @@
                     throw new Error('Error al cargar trabajos');
                 }
                 const trabajos = await response.json();
-                window.trabajosList = trabajos.trabajos; // Correcto acceso al array de trabajos
+                window.trabajosList = trabajos.trabajos;
             } catch (error) {
                 console.error('Error al cargar trabajos:', error);
                 alert('Error al cargar los trabajos.');
@@ -288,15 +296,16 @@
 
             const inputOT = document.createElement('input');
             inputOT.type = 'number';
-            inputOT.step = "1";  
             inputOT.min = "1";
+            inputOT.maxLength = "10";
+            inputOT.className = 'col-ot';
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
-            window.trabajosList.forEach(trabajo => {
+            trabajosList.forEach(trabajo => {
                 const optionElement = document.createElement('option');
-                optionElement.value = trabajo;
-                optionElement.text = trabajo;
+                optionElement.value = trabajo.tipo;
+                optionElement.text = trabajo.tipo;
                 selectTipo.appendChild(optionElement);
             });
             tipoCell.appendChild(selectTipo);
@@ -305,10 +314,12 @@
             inputCant.type = 'number';
             inputCant.min = "1";
             inputCant.value = "1";
+            inputCant.className = 'col-cant';
             cantCell.appendChild(inputCant);
 
             const inputDesc = document.createElement('input');
             inputDesc.type = 'text';
+            inputDesc.className = 'col-descripcion';
             descCell.appendChild(inputDesc);
 
             const inputMonto = document.createElement('input');
