@@ -3,23 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario Contratistas</title>
+  <title>Formulario Nombre</title>
 </head>
 <body>
-  <h2>Formulario de Contratistas</h2>
+  <h2>Formulario: Ingresa tu Nombre</h2>
   
-  <form id="formularioContratistas" onsubmit="enviarDatos(); return false;">
+  <form id="formularioNombre" onsubmit="enviarDatos(); return false;">
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required><br>
-
-    <label for="ordenTrabajo">Orden de Trabajo:</label>
-    <input type="text" id="ordenTrabajo" name="ordenTrabajo" required><br>
-
-    <label for="monto">Monto:</label>
-    <input type="number" id="monto" name="monto" required><br>
-
-    <label for="tipoTrabajo">Tipo de Trabajo:</label>
-    <input type="text" id="tipoTrabajo" name="tipoTrabajo" required><br>
 
     <input type="submit" value="Enviar">
   </form>
@@ -27,17 +18,11 @@
   <script>
     function enviarDatos() {
       var nombre = document.getElementById('nombre').value;
-      var ordenTrabajo = document.getElementById('ordenTrabajo').value;
-      var monto = document.getElementById('monto').value;
-      var tipoTrabajo = document.getElementById('tipoTrabajo').value;
 
-      var url = "https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec";
+      var url = "https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec"; // URL del script
 
       var data = {
-        'nombre': nombre,
-        'ordenTrabajo': ordenTrabajo,
-        'monto': monto,
-        'tipoTrabajo': tipoTrabajo
+        'nombre': nombre
       };
 
       var options = {
@@ -60,4 +45,3 @@
   </script>
 </body>
 </html>
-``
