@@ -117,7 +117,7 @@
             });
         }
 
-        // Función para recuperar los datos de la tabla visible en pantalla y enviarlos a Google Sheets
+        // Función para enviar los datos al Google Sheets
         function enviarDatosAHojaDeCalculo() {
             const formData = new FormData();
             const tablaBody = document.getElementById("tabla-body").getElementsByTagName("tr");
@@ -125,13 +125,15 @@
             // Recorrer las filas de la tabla y obtener los datos dinámicamente
             Array.from(tablaBody).forEach((row, index) => {
                 const celdas = row.getElementsByTagName("td");
-                formData.append(`OT_${index}_contratista`, celdas[0].innerText);
-                formData.append(`OT_${index}_ot`, celdas[1].innerText);
-                formData.append(`OT_${index}_tipo`, celdas[2].innerText);
-                formData.append(`OT_${index}_cantidad`, celdas[3].innerText);
-                formData.append(`OT_${index}_descripcion`, celdas[4].innerText);
-                formData.append(`OT_${index}_monto`, celdas[5].innerText);
-                formData.append(`OT_${index}_subtotal`, celdas[6].innerText);
+                if (celdas.length === 7) {  // Asegurar que todas las columnas existen
+                    formData.append(`OT_${index}_contratista`, celdas[0].innerText.trim());
+                    formData.append(`OT_${index}_ot`, celdas[1].innerText.trim());
+                    formData.append(`OT_${index}_tipo`, celdas[2].innerText.trim());
+                    formData.append(`OT_${index}_cantidad`, celdas[3].innerText.trim());
+                    formData.append(`OT_${index}_descripcion`, celdas[4].innerText.trim());
+                    formData.append(`OT_${index}_monto`, celdas[5].innerText.trim());
+                    formData.append(`OT_${index}_subtotal`, celdas[6].innerText.trim());
+                }
             });
 
             fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
