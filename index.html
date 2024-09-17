@@ -258,6 +258,9 @@
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
 
+    <!-- Contenedor para la tabla generada -->
+    <div id="generatedTableContainer" style="margin-top: 20px;"></div>
+
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
@@ -446,6 +449,7 @@
                 }
 
                 displaySummary();
+                generateTable(otData); // Llamar a la función para generar la tabla dinámica
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
             } else {
@@ -453,103 +457,125 @@
             }
         }
 
-        // Función para mostrar el resumen
-        function displaySummary() {
-            const resumenPorTipo = {};
-            let totalMonto = 0;
+        // Función para generar la tabla dinámica debajo de los botones
+        function generateTable(data) {
+            const container = document.getElementById('generatedTableContainer');
+            
+            // Limpiar la tabla anterior si existe
+            container.innerHTML = '';
 
-            otData.forEach(data => {
-                if (!resumenPorTipo[data.tipo]) {
-                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
-                }
-                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
-                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
-                totalMonto += parseFloat(data.subtotal);
+            if (data.length === 0) return;
+
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.style.backgroundColor = '#fff';
+            table.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+
+            // Crear encabezado de la tabla
+            const headerRow = document.createElement('tr');
+            const headers = ['Contratista', 'OT', 'Tipo de OT', 'Cantidad', 'Descripción', 'Monto', 'Subtotal'];
+            
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                th.style.borderBottom = '1px solid #ddd';
+                th.style.padding = '8px';
+                th.style.backgroundColor = '#fdd835';
+                th.style.color = '#004aad';
+                headerRow.appendChild(th);
             });
 
-            let resumenTabla = <strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>;
-            resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>;
+            table.appendChild(headerRow);
 
-            for (const tipo in resumenPorTipo) {
-                resumenTabla += <tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>;
-            }
-            resumenTabla += </table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>;
+            // Crear filas con los datos
+            data.forEach(rowData => {
+                const row = document.createElement('tr');
 
-            document.getElementById('summary').innerHTML = resumenTabla;
-            document.getElementById('summaryBtn').classList.add('hidden');
+                Object.values(rowData).forEach(cellData => {
+                    const td = document.createElement('td');
+                    td.textContent = cellData;
+                    td.style.borderBottom = '1px solid #ddd';
+                    td.style.padding = '8px';
+                    row.appendChild(td);
+                });
+
+                table.appendChild(row);
+            });
+
+            container.appendChild(table); // Añadir la tabla generada al contenedor
         }
 
         // Función para enviar los datos a la hoja de cálculo
-function enviarDatosAHojaDeCalculo(otData) {
-    const formData = new FormData();
-    formData.append('contratista', document.getElementById('contratista').value);
+        function enviarDatosAHojaDeCalculo(otData) {
+            const formData = new FormData();
+            formData.append('contratista', document.getElementById('contratista').value);
 
-    // Agregar cada OT al formData
-    otData.forEach((row, index) => {
-        formData.append(OT_${index}_ot, row.ot);
-        formData.append(OT_${index}_tipo, row.tipo);
-        formData.append(OT_${index}_cantidad, row.cantidad);
-        formData.append(OT_${index}_descripcion, row.descripcion);
-        formData.append(OT_${index}_monto, row.monto);
-        formData.append(OT_${index}_subtotal, row.subtotal);
-    });
+            // Agregar cada OT al formData
+            otData.forEach((row, index) => {
+                formData.append(`OT_${index}_ot`, row.ot);
+                formData.append(`OT_${index}_tipo`, row.tipo);
+                formData.append(`OT_${index}_cantidad`, row.cantidad);
+                formData.append(`OT_${index}_descripcion`, row.descripcion);
+                formData.append(`OT_${index}_monto`, row.monto);
+                formData.append(`OT_${index}_subtotal`, row.subtotal);
+            });
 
-    fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Datos enviados:', data);
-        alert('Datos enviados correctamente.');
-    })
-    .catch(error => {
-        console.error('Error al enviar datos:', error);
-        alert('Error al enviar los datos.');
-    });
-}
-
-// Función para generar y descargar el archivo XLSX y enviar datos a la hoja de cálculo
-function finalizeAndDownload() {
-    const resumenContent = [
-        ["Resumen de Cobros del Mes"],
-        ["Cantidad", "Tipo de OT", "Valor"]
-    ];
-
-    const detalleContent = [
-        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
-    ];
-
-    let total = 0;
-
-    otData.forEach(row => {
-        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
-        const resumenRow = resumenContent.find(res => res[1] === row.tipo);
-        if (!resumenRow) {
-            resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
-        } else {
-            resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
-            resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Datos enviados:', data);
+                alert('Datos enviados correctamente.');
+            })
+            .catch(error => {
+                console.error('Error al enviar datos:', error);
+                alert('Error al enviar los datos.');
+            });
         }
-        total += parseFloat(row.subtotal);
-    });
 
-    resumenContent.push(["", "Total", total.toFixed(2)]);
+        // Función para generar y descargar el archivo XLSX y enviar datos a la hoja de cálculo
+        function finalizeAndDownload() {
+            const resumenContent = [
+                ["Resumen de Cobros del Mes"],
+                ["Cantidad", "Tipo de OT", "Valor"]
+            ];
 
-    const workbook = XLSX.utils.book_new();
+            const detalleContent = [
+                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+            ];
 
-    const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
-    const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+            let total = 0;
 
-    XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
-    XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+            otData.forEach(row => {
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+                if (!resumenRow) {
+                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+                } else {
+                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+                }
+                total += parseFloat(row.subtotal);
+            });
 
-    XLSX.writeFile(workbook, Resumen_OT_${Date.now()}.xlsx);
+            resumenContent.push(["", "Total", total.toFixed(2)]);
 
-    // Enviar los datos a la hoja de cálculo
-    enviarDatosAHojaDeCalculo(otData);
-}
+            const workbook = XLSX.utils.book_new();
 
+            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            // Enviar los datos a la hoja de cálculo
+            enviarDatosAHojaDeCalculo(otData);
+        }
 
         // Función para limpiar la tabla después de la descarga
         function clearTable() {
@@ -564,6 +590,7 @@ function finalizeAndDownload() {
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
             document.getElementById('summaryBtn').classList.add('hidden');
+            document.getElementById('generatedTableContainer').innerHTML = ''; // Limpiar la tabla dinámica
         }
 
         // Cargar contratistas y trabajos al cargar la página
