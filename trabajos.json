@@ -1,5 +1,4 @@
-{
-    "trabajos": [
+[
         {
             "codigo": "001",
             "descripcion": "Retiro de Medidor"
@@ -37,4 +36,3 @@
             "descripcion": "PH y Análisis de Medidor"
         }
     ]
-}
