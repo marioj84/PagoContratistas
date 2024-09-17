@@ -57,6 +57,7 @@
         }
 
         td input, td select {
+            width: 100%;
             padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -64,23 +65,6 @@
 
         td select {
             width: auto;
-        }
-
-        .col-ot {
-            width: 100px; /* Aproximadamente 10 caracteres */
-        }
-
-        .col-cant {
-            width: 60px; /* Para 3 cifras */
-            text-align: center;
-        }
-
-        .col-descripcion {
-            width: 50%; /* Se duplica el ancho de la columna Descripción */
-        }
-
-        .col-monto, .col-subtotal {
-            width: 120px;
         }
 
         button {
@@ -225,7 +209,7 @@
         <tr>
             <th class="col-ot">OT</th>
             <th>Tipo de OT</th>
-            <th class="col-cant">Cant</th>
+            <th>Cant</th>
             <th class="col-descripcion">Descripción</th>
             <th class="col-monto">Monto</th>
             <th class="col-subtotal">Subtotal</th>
@@ -283,7 +267,7 @@
                     throw new Error('Error al cargar trabajos');
                 }
                 const trabajos = await response.json();
-                window.trabajosList = trabajos.trabajos; 
+                window.trabajosList = trabajos.trabajos; // Correcto acceso al array de trabajos
             } catch (error) {
                 console.error('Error al cargar trabajos:', error);
                 alert('Error al cargar los trabajos.');
@@ -304,23 +288,22 @@
 
             const inputOT = document.createElement('input');
             inputOT.type = 'number';
+            inputOT.step = "1";  
             inputOT.min = "1";
-            inputOT.max = "9999999999"; // Para 10 caracteres
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
-            trabajosList.forEach(trabajo => {
-                const option = document.createElement('option');
-                option.value = trabajo.tipo;
-                option.text = trabajo.tipo;
-                selectTipo.appendChild(option);
+            window.trabajosList.forEach(trabajo => {
+                const optionElement = document.createElement('option');
+                optionElement.value = trabajo;
+                optionElement.text = trabajo;
+                selectTipo.appendChild(optionElement);
             });
             tipoCell.appendChild(selectTipo);
 
             const inputCant = document.createElement('input');
             inputCant.type = 'number';
             inputCant.min = "1";
-            inputCant.max = "999"; // Para 3 cifras
             inputCant.value = "1";
             cantCell.appendChild(inputCant);
 
@@ -341,6 +324,7 @@
             inputSubtotal.disabled = true;
             subtotalCell.appendChild(inputSubtotal);
 
+            // Calcular subtotal al cambiar cantidad o monto
             inputCant.oninput = function() {
                 const cantidad = inputCant.value;
                 const monto = inputMonto.value;
