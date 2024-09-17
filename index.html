@@ -253,13 +253,12 @@
     <h3>Resumen</h3>
     <div id="summary">Total Facturado: $0.00</div>
 
+    <div id="generatedTableContainer"></div> <!-- Contenedor para la tabla dinámica -->
+
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
-
-    <!-- Contenedor para la tabla generada -->
-    <div id="generatedTableContainer" style="margin-top: 20px;"></div>
 
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
@@ -275,7 +274,7 @@
             try {
                 const contratistaSelect = document.getElementById('contratista');
                 
-                const response = await fetch('contratistas.json');
+                const response = await fetch('contratistas.json'); // Asegúrate de que este archivo exista y esté correctamente estructurado
                 if (!response.ok) {
                     throw new Error('Error al cargar contratistas');
                 }
@@ -295,7 +294,7 @@
         // Función para cargar tipos de trabajos desde JSON
         async function loadTrabajos() {
             try {
-                const response = await fetch('trabajos.json');
+                const response = await fetch('trabajos.json'); // Asegúrate de que este archivo exista y esté correctamente estructurado
                 if (!response.ok) {
                     throw new Error('Error al cargar trabajos');
                 }
@@ -378,7 +377,7 @@
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
             deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
+            deleteButton.style.whiteSpace = "nowrap";
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
 
@@ -389,7 +388,7 @@
             row.remove(); 
         }
 
-        // Función para ver el resumen
+        // Función para ver el resumen y generar tabla debajo
         function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
@@ -449,7 +448,7 @@
                 }
 
                 displaySummary();
-                generateTable(otData); // Llamar a la función para generar la tabla dinámica
+                generateTable(); // Llamada para generar tabla debajo
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
             } else {
@@ -457,83 +456,63 @@
             }
         }
 
-        // Función para generar la tabla dinámica debajo de los botones
-        function generateTable(data) {
-            const container = document.getElementById('generatedTableContainer');
-            
-            // Limpiar la tabla anterior si existe
-            container.innerHTML = '';
+        // Función para mostrar el resumen
+        function displaySummary() {
+            const resumenPorTipo = {};
+            let totalMonto = 0;
 
-            if (data.length === 0) return;
-
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.borderCollapse = 'collapse';
-            table.style.backgroundColor = '#fff';
-            table.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-
-            // Crear encabezado de la tabla
-            const headerRow = document.createElement('tr');
-            const headers = ['Contratista', 'OT', 'Tipo de OT', 'Cantidad', 'Descripción', 'Monto', 'Subtotal'];
-            
-            headers.forEach(headerText => {
-                const th = document.createElement('th');
-                th.textContent = headerText;
-                th.style.borderBottom = '1px solid #ddd';
-                th.style.padding = '8px';
-                th.style.backgroundColor = '#fdd835';
-                th.style.color = '#004aad';
-                headerRow.appendChild(th);
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
+                totalMonto += parseFloat(data.subtotal);
             });
 
-            table.appendChild(headerRow);
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
 
-            // Crear filas con los datos
-            data.forEach(rowData => {
-                const row = document.createElement('tr');
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
-                Object.values(rowData).forEach(cellData => {
-                    const td = document.createElement('td');
-                    td.textContent = cellData;
-                    td.style.borderBottom = '1px solid #ddd';
-                    td.style.padding = '8px';
-                    row.appendChild(td);
-                });
-
-                table.appendChild(row);
-            });
-
-            container.appendChild(table); // Añadir la tabla generada al contenedor
+            document.getElementById('summary').innerHTML = resumenTabla;
+            document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para enviar los datos a la hoja de cálculo
-        function enviarDatosAHojaDeCalculo(otData) {
-            const formData = new FormData();
-            formData.append('contratista', document.getElementById('contratista').value);
-
-            // Agregar cada OT al formData
-            otData.forEach((row, index) => {
-                formData.append(`OT_${index}_ot`, row.ot);
-                formData.append(`OT_${index}_tipo`, row.tipo);
-                formData.append(`OT_${index}_cantidad`, row.cantidad);
-                formData.append(`OT_${index}_descripcion`, row.descripcion);
-                formData.append(`OT_${index}_monto`, row.monto);
-                formData.append(`OT_${index}_subtotal`, row.subtotal);
+        // Función para generar la tabla debajo de los botones
+        function generateTable() {
+            let tableHTML = `
+                <h3>Tabla Detallada</h3>
+                <table border="1" style="width: 100%; margin-top: 20px;">
+                    <tr>
+                        <th>Contratista</th>
+                        <th>OT</th>
+                        <th>Tipo de OT</th>
+                        <th>Cantidad</th>
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                        <th>Subtotal</th>
+                    </tr>`;
+            
+            otData.forEach(row => {
+                tableHTML += `
+                    <tr>
+                        <td>${row.contratista}</td>
+                        <td>${row.ot}</td>
+                        <td>${row.tipo}</td>
+                        <td>${row.cantidad}</td>
+                        <td>${row.descripcion}</td>
+                        <td>${row.monto}</td>
+                        <td>${row.subtotal}</td>
+                    </tr>`;
             });
 
-            fetch('https://script.google.com/macros/s/AKfycbwzId-iOv12oyEGUkPmqvbbf5lKVzFjrkGdmmKQhUxZ5yc15hMcdiZkIFpERvrlseZLPA/exec', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Datos enviados:', data);
-                alert('Datos enviados correctamente.');
-            })
-            .catch(error => {
-                console.error('Error al enviar datos:', error);
-                alert('Error al enviar los datos.');
-            });
+            tableHTML += `</table>`;
+
+            document.getElementById('generatedTableContainer').innerHTML = tableHTML;
         }
 
         // Función para generar y descargar el archivo XLSX y enviar datos a la hoja de cálculo
@@ -573,8 +552,7 @@
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
-            // Enviar los datos a la hoja de cálculo
-            enviarDatosAHojaDeCalculo(otData);
+            // Aquí iría la lógica para enviar los datos a Google Sheets si es necesario.
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -590,7 +568,7 @@
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
             document.getElementById('summaryBtn').classList.add('hidden');
-            document.getElementById('generatedTableContainer').innerHTML = ''; // Limpiar la tabla dinámica
+            document.getElementById('generatedTableContainer').innerHTML = ""; // Limpiar tabla generada
         }
 
         // Cargar contratistas y trabajos al cargar la página
