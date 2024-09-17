@@ -3,7 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario Nombre</title>
+  <title>Formulario con Firebase</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+
+  <script>
+    // Tu configuración de Firebase (usa la que te proporcionaron)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+      authDomain: "pagocontratistas.firebaseapp.com",
+      projectId: "pagocontratistas",
+      storageBucket: "pagocontratistas.appspot.com",
+      messagingSenderId: "87829393195",
+      appId: "1:87829393195:web:49d8001bd917a227ef5f6e",
+      measurementId: "G-G4EXPVJNM5"
+    };
+
+    // Inicializar Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    
+    // Inicializar Firestore
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
   <h2>Formulario: Ingresa tu Nombre</h2>
@@ -19,28 +42,16 @@
     function enviarDatos() {
       var nombre = document.getElementById('nombre').value;
 
-      var url = "URL_DEL_SCRIPT"; // Reemplaza con la URL correcta del Google Apps Script
-
-      var data = {
-        'nombre': nombre
-      };
-
-      var options = {
-        'method': 'POST',
-        'headers': {
-          'Content-Type': 'application/json'
-        },
-        'body': JSON.stringify(data),
-        'mode': 'no-cors'  // Añadir modo no-cors para evitar problemas de CORS
-      };
-
-      fetch(url, options)
-        .then(response => {
-          alert('Datos enviados, verifica la hoja de cálculo');
-        })
-        .catch(error => {
-          alert('Error al enviar los datos: ' + error);
-        });
+      // Guardar en Firestore
+      db.collection("nombres").add({
+        nombre: nombre
+      })
+      .then(function(docRef) {
+        alert("Nombre guardado con ID: " + docRef.id);
+      })
+      .catch(function(error) {
+        alert("Error al guardar el nombre: " + error);
+      });
     }
   </script>
 </body>
