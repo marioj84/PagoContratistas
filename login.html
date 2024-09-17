@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión - Pago Contratistas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #004aad;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        #login-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #004aad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h2>Inicio de Sesión</h2>
+
+    <!-- Formulario de inicio de sesión -->
+    <div id="login-container">
+        <form id="login-form">
+            <label for="username">Usuario</label>
+            <input type="text" id="username" required placeholder="Ingrese su usuario">
+            <label for="password">Clave</label>
+            <input type="password" id="password" required placeholder="Ingrese su clave">
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="error-message" class="error"></div>
+    </div>
+
+    <footer>
+        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+    </footer>
+
+    <script>
+        // Cargar los datos del archivo JSON
+        async function cargarContratistas() {
+            try {
+                const response = await fetch('contratistas.json'); // Cargar el archivo JSON
+                if (!response.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                return await response.json(); // Devolver los datos como objeto
+            } catch (error) {
+                console.error('Error al cargar contratistas:', error);
+                return []; // En caso de error, retornar un array vacío
+            }
+        }
+
+        let contratistas = [];
+
+        // Cargar el JSON al iniciar la página
+        window.onload = async function() {
+            contratistas = await cargarContratistas(); // Asignar los datos del JSON
+        };
+
+        // Función de inicio de sesión
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('error-message');
+
+            // Validar credenciales
+            const contratista = contratistas.find(c => c.usuario === username && c.clave === password);
+
+            if (contratista) {
+                // Inicio de sesión exitoso: Redirigir al formulario de pago
+                errorMessage.textContent = ''; // Limpiar mensaje de error
+                window.location.href = 'https://marioj84.github.io/PagoContratistas/'; // Redirigir al formulario
+            } else {
+                // Credenciales incorrectas
+                errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
+            }
+        });
+    </script>
+</body>
+</html>
