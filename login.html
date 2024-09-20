@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión - Pago Contratistas</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <!-- Font Awesome para Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,7 +18,7 @@
             --input-background: #f9f9f9;
             --error-color: #e74c3c;
             --success-color: #2ecc71;
-            --font-family: 'Roboto', sans-serif;
+            --font-family: 'Poppins', sans-serif;
         }
 
         * {
@@ -34,6 +34,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative;
         }
 
         .login-container {
@@ -54,17 +55,25 @@
 
         #logo {
             position: absolute;
-            top: -50px;
+            top: -80px; /* Duplicamos el tamaño del logo */
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 200px; /* Tamaño duplicado */
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: var(--primary-color);
             font-weight: 700;
+        }
+
+        .portal-text {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 1em;
+            font-weight: 500;
         }
 
         .subtitle {
@@ -105,7 +114,7 @@
 
         .password-toggle {
             position: absolute;
-            top: 50%;
+            top: 50%; /* Alineado verticalmente al centro */
             right: 15px;
             transform: translateY(-50%);
             cursor: pointer;
@@ -168,14 +177,32 @@
             text-decoration: underline;
         }
 
+        .additional-contact {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 0.85em;
+            color: #777;
+        }
+
+        .additional-contact a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .additional-contact a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;
             }
 
             #logo {
-                width: 80px;
-                top: -40px;
+                width: 160px; /* Tamaño ajustado para móviles */
+                top: -60px;
             }
         }
     </style>
@@ -184,7 +211,8 @@
     <div class="login-container">
         <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
         <h2>Bienvenido</h2>
-        <p class="subtitle">Inicia sesión para acceder a tus órdenes de trabajo</p>
+        <p class="portal-text">Portal de ingreso de cobros mensuales.</p>
+        <p class="subtitle">Inicia sesión para acceder a ingresar tus cobros del mes.</p>
 
         <!-- Formulario de inicio de sesión -->
         <form id="login-form">
@@ -208,6 +236,10 @@
         <div class="contact-text">
             Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+        </div>
+
+        <div class="additional-contact">
+            Área de Redes y Granel
         </div>
     </div>
 
