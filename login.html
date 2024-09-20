@@ -53,12 +53,13 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Logo Ajustado */
         #logo {
             position: absolute;
-            top: -80px; /* Duplicamos el tamaño del logo */
+            top: -70px; /* Posicionado dentro del contenedor */
             left: 50%;
             transform: translateX(-50%);
-            width: 200px; /* Tamaño duplicado */
+            width: 140px; /* Tamaño reducido al 70% */
         }
 
         h2 {
@@ -80,7 +81,7 @@
             text-align: center;
             margin-bottom: 30px;
             color: #555;
-            font-size: 0.95em;
+            font-size: 0.6em; /* Tamaño reducido al 60% */
         }
 
         label {
@@ -94,7 +95,7 @@
         input[type="password"] {
             width: 100%;
             padding: 12px 40px 12px 15px;
-            margin-bottom: 20px;
+            margin-bottom: 10px; /* Reducido para espacio adicional del link */
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: var(--input-background);
@@ -110,6 +111,7 @@
 
         .password-wrapper {
             position: relative;
+            margin-bottom: 10px; /* Espacio para el link */
         }
 
         .password-toggle {
@@ -124,6 +126,22 @@
 
         .password-toggle:hover {
             color: var(--primary-color);
+        }
+
+        /* Estilo del Link de Recuperación */
+        .recover-link {
+            display: block;
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 0.85em; /* Tamaño pequeño */
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .recover-link:hover {
+            text-decoration: underline;
+            color: #357ABD;
         }
 
         button {
@@ -180,8 +198,8 @@
         .additional-contact {
             position: absolute;
             bottom: 20px;
-            left: 20px;
-            font-size: 0.85em;
+            right: 20px; /* Alineado a la derecha */
+            font-size: 0.6em; /* Tamaño reducido al 60% */
             color: #777;
         }
 
@@ -201,7 +219,7 @@
             }
 
             #logo {
-                width: 160px; /* Tamaño ajustado para móviles */
+                width: 105px; /* Ajuste para móviles */
                 top: -60px;
             }
         }
@@ -209,6 +227,7 @@
 </head>
 <body>
     <div class="login-container">
+        <!-- Logo dentro del contenedor blanco -->
         <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
         <h2>Bienvenido</h2>
         <p class="portal-text">Portal de ingreso de cobros mensuales.</p>
@@ -226,6 +245,9 @@
                     <i class="fa-solid fa-eye" id="toggle-icon"></i>
                 </span>
             </div>
+
+            <!-- Link para recuperar clave de acceso -->
+            <a href="mailto:mjaimes@lipigas.cl?subject=Recuperación de Clave de Acceso&body=Estimado/a Mario Jaimes,%0D%0A%0D%0AHe olvidado mi clave de acceso y necesito recuperarla.%0D%0APor favor, ayúdame con este proceso.%0D%0A%0D%0AGracias." class="recover-link">¿Olvidaste tu clave de acceso?</a>
 
             <button type="submit">Ingresar</button>
         </form>
