@@ -212,6 +212,20 @@
             contratistas = await cargarContratistas(); // Asignar los datos del JSON
         };
 
+        // Función para mostrar/ocultar la contraseña
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const passwordToggleIcon = document.querySelector('.password-toggle img');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text'; // Mostrar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
+            } else {
+                passwordField.type = 'password'; // Ocultar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
+            }
+        }
+
         // Función de inicio de sesión
         document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -230,26 +244,12 @@
 
                 // Redirigir al formulario de pago
                 errorMessage.textContent = ''; // Limpiar mensaje de error
-                window.location.href = 'https://marioj84.github.io/PagoContratistas/'; // Redirigir al formulario
+                window.location.href = 'https://marioj84.github.io/PagoContratistas/index.htm'; // Redirigir al formulario
             } else {
                 // Credenciales incorrectas
                 errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
             }
         });
-
-        // Función para mostrar/ocultar la contraseña
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('password');
-            const passwordToggleIcon = document.querySelector('.password-toggle img');
-
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text'; // Mostrar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
-            } else {
-                passwordField.type = 'password'; // Ocultar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
-            }
-        }
     </script>
 </body>
 </html>
