@@ -4,488 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión - Pago Contratistas</title>
-    <!-- Google Fonts - Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome para Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Variables de Color para Light y Dark Mode */
-        :root {
-            --primary-color: #4A90E2;
-            --secondary-color: #50E3C2;
-            --background-color: #f0f4f8;
-            --card-background: #ffffff;
-            --input-background: #f9f9f9;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-            --font-family: 'Poppins', sans-serif;
-            --text-color: #333333;
-            --link-color: #4A90E2;
-            --tooltip-background: #333333;
-            --tooltip-text: #ffffff;
-        }
-
-        [data-theme="dark"] {
-            --primary-color: #4A90E2;
-            --secondary-color: #50E3C2;
-            --background-color: #1e1e1e;
-            --card-background: #2c2c2c;
-            --input-background: #3a3a3a;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-            --text-color: #f0f0f0;
-            --link-color: #50E3C2;
-            --tooltip-background: #f0f0f0;
-            --tooltip-text: #333333;
-        }
-
-        * {
-            box-sizing: border-box;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
             margin: 0;
             padding: 0;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
         }
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
+        .main-container {
             display: flex;
+            flex-grow: 1;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            position: relative;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            color: var(--text-color);
+            padding: 20px;
         }
 
-        .login-container {
-            background-color: var(--card-background);
-            padding: 40px 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
+        #login-container {
             max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
-            animation: fadeIn 1s ease-in-out;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Flex Container para Logo y Bienvenido */
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        /* Logo Ajustado */
         #logo {
-            width: 140px; /* Tamaño reducido al 70% */
-            margin-right: 15px;
-            transition: width 0.3s ease;
-        }
-
-        h2 {
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: 1.5em;
-            display: flex;
-            align-items: center;
-        }
-
-        .portal-text {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #555;
-            font-size: 1em; /* Tamaño aumentado en un 40% */
-            font-weight: 500;
-            animation: slideIn 1s ease-in-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .subtitle {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #555;
-            font-size: 0.84em; /* Aumento del 40% de 0.6em */
-            animation: fadeIn 1s ease-in-out;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            width: 80px;
         }
 
         label {
-            display: block;
+            font-size: 1.1em;
             margin-bottom: 8px;
-            color: var(--text-color);
-            font-weight: 500;
-            position: relative;
+            display: block;
         }
 
-        input[type="text"],
-        input[type="password"] {
+        input {
             width: 100%;
-            padding: 12px 40px 12px 15px;
-            margin-bottom: 10px; /* Reducido para espacio adicional del link */
-            border: 1px solid #ddd;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: var(--input-background);
-            transition: border-color 0.3s ease, background-color 0.3s ease;
             font-size: 1em;
-            color: var(--text-color);
-        }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            border-color: var(--primary-color);
-            outline: none;
+            box-sizing: border-box;
         }
 
         .password-wrapper {
             position: relative;
-            margin-bottom: 10px; /* Espacio para el link */
+        }
+
+        .password-wrapper input {
+            padding-right: 40px;
         }
 
         .password-toggle {
             position: absolute;
-            top: 50%; /* Alineado verticalmente al centro */
-            right: 15px;
+            right: 10px;
+            top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #999;
-            transition: color 0.3s ease;
         }
 
-        .password-toggle:hover {
-            color: var(--primary-color);
+        .password-toggle img {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
         }
 
-        /* Estilo del Link de Recuperación */
-        .recover-link {
-            display: block;
-            text-align: right;
-            margin-bottom: 20px;
-            font-size: 0.85em; /* Tamaño pequeño */
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .recover-link:hover {
-            text-decoration: underline;
-            color: #357ABD;
+        .password-toggle img:hover {
+            opacity: 1;
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background-color: var(--primary-color);
-            color: #fff;
+            background-color: #004aad;
+            color: white;
             border: none;
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #357ABD;
-            transform: translateY(-2px);
-        }
-
-        /* Icono en el Botón de Ingreso */
-        button .fa-sign-in-alt {
-            margin-right: 8px;
+            background-color: #003380;
         }
 
         .error {
-            color: var(--error-color);
+            color: red;
             font-size: 0.9em;
-            margin-bottom: 15px;
             text-align: center;
-            display: none;
-        }
-
-        .success {
-            color: var(--success-color);
-            font-size: 0.9em;
-            margin-bottom: 15px;
-            text-align: center;
-            display: none;
+            margin-top: 10px;
         }
 
         .contact-text {
             text-align: center;
-            font-size: 0.85em;
-            color: #777;
-            margin-top: 20px;
-            animation: fadeIn 1.5s ease-in-out;
+            font-size: 0.9em;
+            color: #666;
+            padding: 20px 0;
         }
 
         .contact-text a {
-            color: var(--link-color);
+            color: #004aad;
             text-decoration: none;
-            font-weight: 500;
         }
 
         .contact-text a:hover {
             text-decoration: underline;
         }
 
-        .additional-contact {
-            position: absolute;
-            bottom: 20px;
-            right: 20px; /* Alineado a la derecha */
-            font-size: 0.6em; /* Tamaño reducido al 60% */
-            color: #777;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-
-        .additional-contact a {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .additional-contact a:hover {
-            text-decoration: underline;
-        }
-
-        /* Toggle Switch para Modo Oscuro */
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .theme-toggle input {
-            display: none;
-        }
-
-        .theme-toggle .slider {
-            width: 50px;
-            height: 25px;
-            background-color: #ccc;
-            border-radius: 25px;
-            position: relative;
-            transition: background-color 0.3s ease;
-        }
-
-        .theme-toggle .slider::before {
-            content: "";
-            position: absolute;
-            width: 21px;
-            height: 21px;
-            background-color: #fff;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s ease;
-        }
-
-        .theme-toggle input:checked + .slider {
-            background-color: var(--secondary-color);
-        }
-
-        .theme-toggle input:checked + .slider::before {
-            transform: translateX(25px);
-        }
-
-        /* Indicador de Carga (Spinner) */
-        .spinner {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid var(--primary-color); /* Blue */
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Tooltip Estilo */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 180px;
-            background-color: var(--tooltip-background);
-            color: var(--tooltip-text);
+        .subtitle {
             text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%; /* Posición arriba del elemento */
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.8em;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Checkbox de Recordar Sesión */
-        .remember-me {
-            display: flex;
-            align-items: center;
+            font-size: 1em;
+            color: #333;
+            margin-top: 0;
             margin-bottom: 20px;
-            font-size: 0.9em;
         }
 
-        .remember-me input {
-            margin-right: 8px;
-            width: 16px;
-            height: 16px;
+        .image-container {
+            flex-grow: 1;
+            height: 100%;
+            background-image: url('/mnt/data/image.png'); /* Ruta de la imagen que has proporcionado */
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px); /* Efecto difuminado */
         }
 
-        /* Responsividad Mejorada */
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 30px 20px;
-            }
-
+        @media (max-width: 768px) {
             #logo {
-                width: 105px; /* Ajuste para móviles */
-                margin-right: 10px;
+                width: 60px;
             }
 
-            h2 {
-                font-size: 1.3em;
+            .main-container {
+                flex-direction: column;
             }
 
-            .portal-text {
-                font-size: 0.84em; /* Ajuste proporcional */
-            }
-
-            .subtitle {
-                font-size: 0.84em;
-            }
-
-            .recover-link {
-                font-size: 0.8em;
-            }
-
-            .additional-contact {
-                font-size: 0.6em;
+            .image-container {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Toggle Switch para Modo Oscuro -->
-    <div class="theme-toggle">
-        <label>
-            <input type="checkbox" id="theme-switch">
-            <div class="slider"></div>
-        </label>
-    </div>
+    <div class="main-container">
+        <div id="login-container">
+            <h2>Inicio de Sesión</h2>
+            <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
 
-    <div class="login-container">
-        <!-- Flex Container para Logo y Bienvenido -->
-        <div class="header">
+            <!-- Formulario de inicio de sesión -->
+            <form id="login-form">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" required placeholder="Ingrese su usuario">
+                <label for="clave">Clave</label>
+                <div class="password-wrapper">
+                    <input type="password" id="clave" required placeholder="Ingrese su clave">
+                    <span class="password-toggle" onclick="togglePasswordVisibility()">
+                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
+                    </span>
+                </div>
+                <button type="submit">Ingresar</button>
+            </form>
+            <div id="error-message" class="error"></div>
             <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-            <h2>Bienvenido</h2>
         </div>
 
-        <p class="portal-text">Portal de ingreso de cobros mensuales.</p>
-        <p class="subtitle" id="dynamic-subtitle">Inicia sesión para acceder a ingresar tus cobros del mes.</p>
+        <!-- Imagen difuminada -->
+        <div class="image-container"></div>
+    </div>
 
-        <!-- Formulario de inicio de sesión -->
-        <form id="login-form">
-            <label for="usuario" class="tooltip">Usuario
-                <span class="tooltiptext">Ingrese su nombre de usuario asignado.</span>
-            </label>
-            <input type="text" id="usuario" name="usuario" required placeholder="Ingrese su usuario">
-
-            <label for="clave" class="tooltip">Clave
-                <span class="tooltiptext">Ingrese su clave de acceso segura.</span>
-            </label>
-            <div class="password-wrapper">
-                <input type="password" id="clave" name="clave" required placeholder="Ingrese su clave">
-                <span class="password-toggle" onclick="togglePasswordVisibility()">
-                    <i class="fa-solid fa-eye" id="toggle-icon"></i>
-                </span>
-            </div>
-
-            <!-- Link para recuperar clave de acceso -->
-            <a href="mailto:mjaimes@lipigas.cl?subject=Recuperación%20de%20Clave%20de%20Acceso&body=Estimado%20Mario%20Jaimes,%0D%0A%0D%0AHe%20olvidado%20mi%20clave%20de%20acceso%20y%20necesito%20recuperarla.%0D%0APor%20favor,%20ayúdame%20con%20este%20proceso.%0D%0A%0D%0AGracias." class="recover-link">¿Olvidaste tu clave de acceso?</a>
-
-            <!-- Checkbox Recordar Sesión -->
-            <div class="remember-me">
-                <input type="checkbox" id="remember-me">
-                <label for="remember-me">Recordar sesión</label>
-            </div>
-
-            <button type="submit">
-                <i class="fa-solid fa-sign-in-alt"></i> Ingresar
-                <div class="spinner" id="spinner"></div>
-            </button>
-        </form>
-
-        <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
-        <div id="success-message" class="success">¡Inicio de sesión exitoso!</div>
-
+    <footer>
         <div class="contact-text">
             Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
         </div>
-
-        <div class="additional-contact">
-            Área de Redes y Granel
-        </div>
-    </div>
+    </footer>
 
     <script>
         // Función para mostrar/ocultar la contraseña
         function togglePasswordVisibility() {
             const passwordField = document.getElementById('clave');
-            const toggleIcon = document.getElementById('toggle-icon');
+            const passwordToggleIcon = document.querySelector('.password-toggle img');
 
             if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
+                passwordField.type = 'text'; // Mostrar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
             } else {
-                passwordField.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+                passwordField.type = 'password'; // Ocultar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
             }
         }
-
-        // Función para cambiar el tema (Light/Dark)
-        const themeSwitch = document.getElementById('theme-switch');
-        themeSwitch.addEventListener('change', function() {
-            if (this.checked) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        });
 
         // Función de inicio de sesión
         document.getElementById('login-form').addEventListener('submit', async function(event) {
@@ -494,29 +212,6 @@
             const usuario = document.getElementById('usuario').value.trim();
             const clave = document.getElementById('clave').value.trim();
             const errorMessage = document.getElementById('error-message');
-            const successMessage = document.getElementById('success-message');
-            const spinner = document.getElementById('spinner');
-            const rememberMe = document.getElementById('remember-me').checked;
-
-            // Mostrar spinner
-            spinner.style.display = 'block';
-
-            // Validaciones en Tiempo Real
-            if (usuario.length < 3) {
-                errorMessage.textContent = 'El usuario debe tener al menos 3 caracteres.';
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
-                spinner.style.display = 'none';
-                return;
-            }
-
-            if (clave.length < 5) {
-                errorMessage.textContent = 'La clave debe tener al menos 5 caracteres.';
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
-                spinner.style.display = 'none';
-                return;
-            }
 
             try {
                 const response = await fetch('contratistas.json');
@@ -529,50 +224,21 @@
                 const contratista = contratistas.find(c => c.usuario === usuario && c.clave === clave);
 
                 if (contratista) {
-                    // Inicio de sesión exitoso: Guardar el estado de sesión en localStorage o sessionStorage
-                    if (rememberMe) {
-                        localStorage.setItem('sesionIniciada', 'true');
-                        localStorage.setItem('usuario', contratista.nombreCompleto);
-                    } else {
-                        sessionStorage.setItem('sesionIniciada', 'true');
-                        sessionStorage.setItem('usuario', contratista.nombreCompleto);
-                    }
+                    // Inicio de sesión exitoso: Guardar el estado de sesión en localStorage
+                    localStorage.setItem('sesionIniciada', 'true');
+                    localStorage.setItem('usuario', contratista.nombreCompleto);
 
-                    // Mostrar mensaje de éxito
-                    successMessage.style.display = 'block';
-                    errorMessage.style.display = 'none';
-
-                    // Mostrar indicador de carga por un breve período
-                    setTimeout(() => {
-                        spinner.style.display = 'none';
-                        window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html';
-                    }, 1500);
+                    // Redirigir al formulario de pago
+                    errorMessage.textContent = ''; // Limpiar mensaje de error
+                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.htm'; // Redirigir al formulario
                 } else {
                     // Credenciales incorrectas
-                    errorMessage.style.display = 'block';
-                    successMessage.style.display = 'none';
-                    spinner.style.display = 'none';
+                    errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
                 }
             } catch (error) {
                 console.error('Error durante el inicio de sesión:', error);
                 errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
-                spinner.style.display = 'none';
             }
-        });
-
-        // Mensaje de Bienvenida Personalizado Integrado en el Subtítulo
-        window.addEventListener('load', () => {
-            const saludo = (() => {
-                const hora = new Date().getHours();
-                if (hora < 12) return '¡Buenos días!';
-                if (hora < 18) return '¡Buenas tardes!';
-                return '¡Buenas noches!';
-            })();
-
-            const subtitle = document.getElementById('dynamic-subtitle');
-            subtitle.textContent = `${saludo}, Inicia sesión para acceder a ingresar tus cobros del mes.`;
         });
     </script>
 </body>
