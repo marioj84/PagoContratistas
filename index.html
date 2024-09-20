@@ -307,7 +307,7 @@
 
         // Tu configuración de Firebase
         const firebaseConfig = {
-    apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
   authDomain: "pagocontratistas.firebaseapp.com",
   projectId: "pagocontratistas",
   storageBucket: "pagocontratistas.appspot.com",
@@ -328,9 +328,17 @@
                 const docs = await Promise.all(promises);
                 console.log("Documentos escritos con IDs: ", docs.map(doc => doc.id));
                 alert("Datos guardados exitosamente en Firestore.");
+
+                // Mostrar mensaje de éxito
+                document.getElementById('success-msg').style.display = "block";
+                document.getElementById('error-msg').style.display = "none";
             } catch (e) {
                 console.error("Error al agregar documentos: ", e);
                 alert("Error al guardar los datos en Firestore.");
+
+                // Mostrar mensaje de error
+                document.getElementById('error-msg').style.display = "block";
+                document.getElementById('success-msg').style.display = "none";
             }
         };
     </script>
@@ -354,6 +362,17 @@
                     option.text = contratista.nombreCompleto;
                     contratistaSelect.appendChild(option);
                 });
+
+                // Obtener el usuario autenticado desde localStorage
+                const usuarioAutenticado = localStorage.getItem('usuario');
+
+                if (usuarioAutenticado) {
+                    // Establecer el valor seleccionado en el select
+                    contratistaSelect.value = usuarioAutenticado;
+
+                    // Opcional: Deshabilitar el select para evitar cambios
+                    contratistaSelect.disabled = true;
+                }
             } catch (error) {
                 console.error('Error al cargar contratistas:', error);
                 alert('Error al cargar los contratistas.');
