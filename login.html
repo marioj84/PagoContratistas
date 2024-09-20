@@ -7,22 +7,38 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         
-        /* Variables para Modo Claro y Oscuro (Opcional) */
+        /* Variables para Modo Claro y Oscuro */
         :root {
-            --background-color: #f4f4f4;
-            --container-bg: #ffffff;
+            --background-gradient: linear-gradient(135deg, #ece9e6, #ffffff);
+            --background-color: #ffffff;
             --text-color: #333333;
             --primary-color: #004aad;
             --secondary-color: #003380;
             --error-color: #e74c3c;
             --input-background: #ffffff;
-            --link-color: #004aad;
+            --input-border: #ccc;
+            --icon-color: #999999;
             --footer-text-color: #666666;
+            --link-color: #004aad;
+        }
+
+        [data-theme="dark"] {
+            --background-gradient: linear-gradient(135deg, #2c3e50, #4ca1af);
+            --background-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --error-color: #e74c3c;
+            --input-background: #34495e;
+            --input-border: #7f8c8d;
+            --icon-color: #bdc3c7;
+            --footer-text-color: #95a5a6;
+            --link-color: #3498db;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
+            background: var(--background-gradient);
             color: var(--text-color);
             margin: 0;
             padding: 0;
@@ -31,6 +47,51 @@
             flex-direction: column;
             justify-content: center; /* Centrar verticalmente */
             align-items: center; /* Centrar horizontalmente */
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Toggle Switch para Modo Oscuro */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle .slider {
+            width: 50px;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 25px;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle .slider::before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle input:checked + .slider {
+            background-color: var(--secondary-color);
+        }
+
+        .theme-toggle input:checked + .slider::before {
+            transform: translateX(25px);
         }
 
         .main-container {
@@ -45,11 +106,12 @@
             max-width: 400px;
             width: 100%;
             padding: 30px;
-            background-color: var(--container-bg);
+            background-color: var(--background-color);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         /* Header con Logo y Título */
@@ -63,61 +125,82 @@
             width: 100px; /* Tamaño más grande */
             height: auto;
             margin-right: 15px;
+            transition: width 0.3s ease;
         }
 
         .header h2 {
             font-size: 1.5em;
             margin: 0;
+            transition: font-size 0.3s ease;
         }
 
         label {
             font-size: 1.1em;
             margin-bottom: 8px;
             display: block;
+            position: relative;
         }
 
-        input {
+        /* Iconos dentro de los campos de entrada */
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--icon-color);
+            pointer-events: none;
+            font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
+            padding: 12px 40px 12px 40px; /* Espacio para el icono */
+            margin-bottom: 20px; /* Ajustado para optimizar el espaciado */
+            border: 1px solid var(--input-border);
             border-radius: 5px;
             font-size: 1em;
             box-sizing: border-box;
             background-color: var(--input-background);
             color: var(--text-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
 
-        input:focus {
+        input[type="text"]:focus,
+        input[type="password"]:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
             outline: none;
+        }
+
+        /* Sombra en Campos de Entrada */
+        .shadow-input {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .password-wrapper {
             position: relative;
         }
 
-        .password-wrapper input {
-            padding-right: 40px;
-        }
-
         .password-toggle {
             position: absolute;
-            right: 10px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         .password-toggle img {
             width: 20px;
             height: 20px;
             opacity: 0.7;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .password-toggle img:hover {
             opacity: 1;
+            transform: scale(1.1); /* Animación de hover */
         }
 
         button {
@@ -129,11 +212,19 @@
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
             background-color: var(--secondary-color);
+            transform: scale(1.02); /* Efecto de pulso */
+        }
+
+        /* Animación de pulso */
+        button:active {
+            transform: scale(0.98);
         }
 
         .error {
@@ -142,6 +233,7 @@
             text-align: center;
             margin-top: 10px;
             display: none; /* Oculto por defecto */
+            transition: opacity 0.3s ease;
         }
 
         .contact-text {
@@ -149,15 +241,18 @@
             font-size: 0.9em;
             color: var(--footer-text-color);
             padding: 20px 0;
+            margin-top: 20px;
         }
 
         .contact-text a {
             color: var(--link-color);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
 
         .contact-text a:hover {
             text-decoration: underline;
+            color: var(--secondary-color);
         }
 
         .subtitle {
@@ -185,6 +280,14 @@
     </style>
 </head>
 <body>
+    <!-- Toggle Switch para Modo Oscuro -->
+    <div class="theme-toggle">
+        <label>
+            <input type="checkbox" id="theme-switch">
+            <div class="slider"></div>
+        </label>
+    </div>
+
     <div class="main-container">
         <div id="login-container">
             <div class="header">
@@ -196,14 +299,26 @@
             <!-- Formulario de inicio de sesión -->
             <form id="login-form">
                 <label for="usuario">Usuario</label>
-                <input type="text" id="usuario" required placeholder="Ingrese su usuario">
+                <div style="position: relative;">
+                    <span class="input-icon">
+                        <!-- Icono de usuario (puedes cambiar el enlace del icono si lo deseas) -->
+                        <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Usuario" width="20" height="20">
+                    </span>
+                    <input type="text" id="usuario" required placeholder="Ingrese su usuario" class="shadow-input">
+                </div>
+
                 <label for="clave">Clave</label>
                 <div class="password-wrapper">
-                    <input type="password" id="clave" required placeholder="Ingrese su clave">
+                    <span class="input-icon">
+                        <!-- Icono de clave (puedes cambiar el enlace del icono si lo deseas) -->
+                        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Clave" width="20" height="20">
+                    </span>
+                    <input type="password" id="clave" required placeholder="Ingrese su clave" class="shadow-input">
                     <span class="password-toggle" onclick="togglePasswordVisibility()">
                         <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
                     </span>
                 </div>
+
                 <button type="submit">Ingresar</button>
             </form>
             <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
@@ -233,6 +348,16 @@
                 passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
             }
         }
+
+        // Función para cambiar el tema (Light/Dark)
+        const themeSwitch = document.getElementById('theme-switch');
+        themeSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        });
 
         // Función de inicio de sesión
         document.getElementById('login-form').addEventListener('submit', async function(event) {
@@ -269,6 +394,21 @@
                 console.error('Error durante el inicio de sesión:', error);
                 errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
                 errorMessage.style.display = 'block';
+            }
+        });
+
+        // Habilitar el envío del formulario al presionar la tecla Enter
+        document.getElementById('clave').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('login-form').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        document.getElementById('usuario').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById('login-form').dispatchEvent(new Event('submit'));
             }
         });
     </script>
