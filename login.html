@@ -3,205 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueb 1 - Inicio de Sesión - Pago Contratistas</title>
+    <title>Inicio de Sesión - Pago Contratistas</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+        /* Variables de Color */
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --background-color: #f0f4f8;
+            --card-background: #ffffff;
+            --input-background: #f9f9f9;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
         }
 
-        .main-container {
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
             display: flex;
-            flex-grow: 1;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            height: 100vh;
         }
 
-        #login-container {
-            max-width: 400px;
+        .login-container {
+            background-color: var(--card-background);
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             width: 100%;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
             position: relative;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #logo {
             position: absolute;
-            top: 10px;
-            right: 20px;
-            width: 80px;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+            font-size: 0.95em;
         }
 
         label {
-            font-size: 1.1em;
-            margin-bottom: 8px;
             display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
         }
 
-        input {
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
+            padding: 12px 40px 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
             border-radius: 5px;
+            background-color: var(--input-background);
+            transition: border-color 0.3s ease;
             font-size: 1em;
-            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
 
         .password-wrapper {
             position: relative;
         }
 
-        .password-wrapper input {
-            padding-right: 40px;
-        }
-
         .password-toggle {
             position: absolute;
-            right: 10px;
             top: 50%;
+            right: 15px;
             transform: translateY(-50%);
             cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
         }
 
-        .password-toggle img {
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-        }
-
-        .password-toggle img:hover {
-            opacity: 1;
+        .password-toggle:hover {
+            color: var(--primary-color);
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background-color: #004aad;
-            color: white;
+            background-color: var(--primary-color);
+            color: #fff;
             border: none;
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
         }
 
         button:hover {
-            background-color: #003380;
+            background-color: #357ABD;
+            transform: translateY(-2px);
         }
 
         .error {
-            color: red;
+            color: var(--error-color);
             font-size: 0.9em;
+            margin-bottom: 15px;
             text-align: center;
-            margin-top: 10px;
+            display: none;
+        }
+
+        .success {
+            color: var(--success-color);
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
         }
 
         .contact-text {
             text-align: center;
-            font-size: 0.9em;
-            color: #666;
-            padding: 20px 0;
+            font-size: 0.85em;
+            color: #777;
+            margin-top: 20px;
         }
 
         .contact-text a {
-            color: #004aad;
+            color: var(--primary-color);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .contact-text a:hover {
             text-decoration: underline;
         }
 
-        .subtitle {
-            text-align: center;
-            font-size: 1em;
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
 
-        .image-container {
-            flex-grow: 1;
-            height: 100%;
-            background-image: url('/mnt/data/image.png'); /* Ruta de la imagen que has proporcionado */
-            background-size: cover;
-            background-position: center;
-            filter: blur(5px); /* Efecto difuminado */
-        }
-
-        @media (max-width: 768px) {
             #logo {
-                width: 60px;
-            }
-
-            .main-container {
-                flex-direction: column;
-            }
-
-            .image-container {
-                display: none;
+                width: 80px;
+                top: -40px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div id="login-container">
-            <h2>Inicio de Sesión</h2>
-            <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
+    <div class="login-container">
+        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+        <h2>Bienvenido</h2>
+        <p class="subtitle">Inicia sesión para acceder a tus órdenes de trabajo</p>
 
-            <!-- Formulario de inicio de sesión -->
-            <form id="login-form">
-                <label for="usuario">Usuario</label>
-                <input type="text" id="usuario" required placeholder="Ingrese su usuario">
-                <label for="clave">Clave</label>
-                <div class="password-wrapper">
-                    <input type="password" id="clave" required placeholder="Ingrese su clave">
-                    <span class="password-toggle" onclick="togglePasswordVisibility()">
-                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
-                    </span>
-                </div>
-                <button type="submit">Ingresar</button>
-            </form>
-            <div id="error-message" class="error"></div>
-            <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-        </div>
+        <!-- Formulario de inicio de sesión -->
+        <form id="login-form">
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" name="usuario" required placeholder="Ingrese su usuario">
 
-        <!-- Imagen difuminada -->
-        <div class="image-container"></div>
-    </div>
+            <label for="clave">Clave</label>
+            <div class="password-wrapper">
+                <input type="password" id="clave" name="clave" required placeholder="Ingrese su clave">
+                <span class="password-toggle" onclick="togglePasswordVisibility()">
+                    <i class="fa-solid fa-eye" id="toggle-icon"></i>
+                </span>
+            </div>
 
-    <footer>
+            <button type="submit">Ingresar</button>
+        </form>
+
+        <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
+        <div id="success-message" class="success">¡Inicio de sesión exitoso!</div>
+
         <div class="contact-text">
             Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
         </div>
-    </footer>
+    </div>
 
     <script>
         // Función para mostrar/ocultar la contraseña
         function togglePasswordVisibility() {
             const passwordField = document.getElementById('clave');
-            const passwordToggleIcon = document.querySelector('.password-toggle img');
+            const toggleIcon = document.getElementById('toggle-icon');
 
             if (passwordField.type === 'password') {
-                passwordField.type = 'text'; // Mostrar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
             } else {
-                passwordField.type = 'password'; // Ocultar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
             }
         }
 
@@ -212,6 +235,7 @@
             const usuario = document.getElementById('usuario').value.trim();
             const clave = document.getElementById('clave').value.trim();
             const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
 
             try {
                 const response = await fetch('contratistas.json');
@@ -228,16 +252,24 @@
                     localStorage.setItem('sesionIniciada', 'true');
                     localStorage.setItem('usuario', contratista.nombreCompleto);
 
-                    // Redirigir al formulario de pago
-                    errorMessage.textContent = ''; // Limpiar mensaje de error
-                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html'; // Redirigir al formulario
+                    // Mostrar mensaje de éxito
+                    successMessage.style.display = 'block';
+                    errorMessage.style.display = 'none';
+
+                    // Redirigir al formulario de pago después de una breve pausa
+                    setTimeout(() => {
+                        window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html';
+                    }, 1500);
                 } else {
                     // Credenciales incorrectas
-                    errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
+                    errorMessage.style.display = 'block';
+                    successMessage.style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error durante el inicio de sesión:', error);
                 errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
             }
         });
     </script>
