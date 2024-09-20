@@ -7,40 +7,67 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         
+        /* Variables para Modo Claro y Oscuro (Opcional) */
+        :root {
+            --background-color: #f4f4f4;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #004aad;
+            --secondary-color: #003380;
+            --error-color: #e74c3c;
+            --input-background: #ffffff;
+            --link-color: #004aad;
+            --footer-text-color: #666666;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: var(--background-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
             display: flex;
             min-height: 100vh;
             flex-direction: column;
+            justify-content: center; /* Centrar verticalmente */
+            align-items: center; /* Centrar horizontalmente */
         }
 
         .main-container {
             display: flex;
-            flex-grow: 1;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            width: 100%;
         }
 
         #login-container {
             max-width: 400px;
             width: 100%;
-            padding: 20px;
-            background-color: #fff;
+            padding: 30px;
+            background-color: var(--container-bg);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
+            box-sizing: border-box;
         }
 
-        #logo {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            width: 80px;
+        /* Header con Logo y Título */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            width: 100px; /* Tamaño más grande */
+            height: auto;
+            margin-right: 15px;
+        }
+
+        .header h2 {
+            font-size: 1.5em;
+            margin: 0;
         }
 
         label {
@@ -57,6 +84,13 @@
             border-radius: 5px;
             font-size: 1em;
             box-sizing: border-box;
+            background-color: var(--input-background);
+            color: var(--text-color);
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
 
         .password-wrapper {
@@ -79,6 +113,7 @@
             width: 20px;
             height: 20px;
             opacity: 0.7;
+            transition: opacity 0.3s ease;
         }
 
         .password-toggle img:hover {
@@ -88,7 +123,7 @@
         button {
             width: 100%;
             padding: 12px;
-            background-color: #004aad;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 5px;
@@ -98,25 +133,26 @@
         }
 
         button:hover {
-            background-color: #003380;
+            background-color: var(--secondary-color);
         }
 
         .error {
-            color: red;
+            color: var(--error-color);
             font-size: 0.9em;
             text-align: center;
             margin-top: 10px;
+            display: none; /* Oculto por defecto */
         }
 
         .contact-text {
             text-align: center;
             font-size: 0.9em;
-            color: #666;
+            color: var(--footer-text-color);
             padding: 20px 0;
         }
 
         .contact-text a {
-            color: #004aad;
+            color: var(--link-color);
             text-decoration: none;
         }
 
@@ -132,26 +168,18 @@
             margin-bottom: 20px;
         }
 
-        .image-container {
-            flex-grow: 1;
-            height: 100%;
-            background-image: url('/mnt/data/image.png'); /* Ruta de la imagen que has proporcionado */
-            background-size: cover;
-            background-position: center;
-            filter: blur(5px); /* Efecto difuminado */
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            #logo {
-                width: 60px;
+            .header img {
+                width: 80px; /* Tamaño más pequeño en móviles */
             }
 
-            .main-container {
-                flex-direction: column;
+            .header h2 {
+                font-size: 1.3em;
             }
 
-            .image-container {
-                display: none;
+            #login-container {
+                padding: 20px;
             }
         }
     </style>
@@ -159,8 +187,11 @@
 <body>
     <div class="main-container">
         <div id="login-container">
-            <h2>Inicio de Sesión</h2>
-            <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
+            <div class="header">
+                <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+                <h2>Inicio de Sesión</h2>
+            </div>
+            <p class="subtitle">Bienvenido a portal de ingreso de cobros mensuales, Técnicos LIPIGAS.</p>
 
             <!-- Formulario de inicio de sesión -->
             <form id="login-form">
@@ -175,18 +206,16 @@
                 </div>
                 <button type="submit">Ingresar</button>
             </form>
-            <div id="error-message" class="error"></div>
-            <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+            <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
         </div>
-
-        <!-- Imagen difuminada -->
-        <div class="image-container"></div>
     </div>
 
     <footer>
         <div class="contact-text">
             Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+            <br>
+            Área de redes y Granel
         </div>
     </footer>
 
@@ -230,14 +259,16 @@
 
                     // Redirigir al formulario de pago
                     errorMessage.textContent = ''; // Limpiar mensaje de error
-                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html'; // Redirigir al formulario
+                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html'; // Redirigir al formulario 
                 } else {
                     // Credenciales incorrectas
                     errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
+                    errorMessage.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error durante el inicio de sesión:', error);
                 errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
+                errorMessage.style.display = 'block';
             }
         });
     </script>
