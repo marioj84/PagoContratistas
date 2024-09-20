@@ -150,6 +150,9 @@
             color: var(--icon-color);
             pointer-events: none;
             font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         input[type="text"],
@@ -237,11 +240,12 @@
         }
 
         .contact-text {
-            text-align: center;
+            text-align: right; /* Alineado a la derecha */
             font-size: 0.9em;
             color: var(--footer-text-color);
             padding: 20px 0;
             margin-top: 20px;
+            font-weight: bold; /* Negrita */
         }
 
         .contact-text a {
@@ -276,6 +280,10 @@
             #login-container {
                 padding: 20px;
             }
+
+            .contact-text {
+                text-align: center; /* Centrar en móviles */
+            }
         }
     </style>
 </head>
@@ -301,7 +309,7 @@
                 <label for="usuario">Usuario</label>
                 <div style="position: relative;">
                     <span class="input-icon">
-                        <!-- Icono de usuario (puedes cambiar el enlace del icono si lo deseas) -->
+                        <!-- Icono de usuario -->
                         <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Usuario" width="20" height="20">
                     </span>
                     <input type="text" id="usuario" required placeholder="Ingrese su usuario" class="shadow-input">
@@ -310,7 +318,7 @@
                 <label for="clave">Clave</label>
                 <div class="password-wrapper">
                     <span class="input-icon">
-                        <!-- Icono de clave (puedes cambiar el enlace del icono si lo deseas) -->
+                        <!-- Icono de clave -->
                         <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Clave" width="20" height="20">
                     </span>
                     <input type="password" id="clave" required placeholder="Ingrese su clave" class="shadow-input">
@@ -330,7 +338,7 @@
             Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
             <br>
-            Área de redes y Granel
+            Área de Redes y Granel
         </div>
     </footer>
 
