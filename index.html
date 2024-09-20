@@ -249,10 +249,6 @@
             display: none;
         }
     </style>
-    <!-- Agregar los Scripts de Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 </head>
 <body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
@@ -311,7 +307,6 @@
     <script type="module">
         // Importar funciones necesarias desde Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
         // Tu configuración de Firebase
@@ -327,7 +322,6 @@
 
         // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
 
         // Función para enviar datos a Firestore
@@ -353,7 +347,7 @@
     <script>
         let otData = [];
 
-        // Función para cargar contratistas desde Firestore
+        // Función para cargar contratistas desde JSON
         async function loadContratistas() {
             try {
                 const contratistaSelect = document.getElementById('contratista');
@@ -641,38 +635,24 @@
 
         // Función de Logout
         function logout() {
-            signOut(auth).then(() => {
-                // Cerrar sesión exitosamente
-                localStorage.removeItem('sesionIniciada');
-                localStorage.removeItem('usuario');
-                window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-            }).catch((error) => {
-                console.error('Error al cerrar sesión:', error);
-            });
+            localStorage.removeItem('sesionIniciada');
+            localStorage.removeItem('usuario');
+            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
         }
 
-        // Función para verificar la sesión con Firebase Authentication
+        // Función para verificar la sesión
         function checkSession() {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // Usuario autenticado
-                    const email = user.email;
-                    document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${email}</strong>!`;
-                    document.getElementById('logoutBtn').classList.remove('hidden');
+            const sesionIniciada = localStorage.getItem('sesionIniciada');
+            const usuario = localStorage.getItem('usuario');
 
-                    // Guardar el usuario en localStorage
-                    localStorage.setItem('sesionIniciada', 'true');
-                    localStorage.setItem('usuario', email);
-
-                    // Predefinir el contratista en el select
-                    const contratistaSelect = document.getElementById('contratista');
-                    contratistaSelect.value = email; // Asumiendo que 'nombreCompleto' es el correo
-                    contratistaSelect.disabled = true;
-                } else {
-                    // No autenticado, redirigir al login
-                    window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-                }
-            });
+            if (sesionIniciada === 'true' && usuario) {
+                // Mostrar mensaje de bienvenida y botón de logout
+                document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
+                document.getElementById('logoutBtn').classList.remove('hidden');
+            } else {
+                // Redirigir al login si no está autenticado
+                window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+            }
         }
 
         // Llamar a la función de verificación al cargar la página
