@@ -212,6 +212,33 @@
                 width: 120px;
             }
         }
+
+        /* Estilos para el botón de logout */
+        #logoutBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #logoutBtn:hover {
+            background-color: #c82333;
+        }
+
+        /* Estilos para el mensaje de bienvenida */
+        #welcome-msg {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1em;
+            color: #333;
+        }
     </style>
     <!-- Agregar los Scripts de Firebase -->
     <!-- Firebase App (la base de Firebase) -->
@@ -223,9 +250,7 @@
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
-    <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
-       Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
-       Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
+    <div id="welcome-msg"></div>
 
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
@@ -268,6 +293,9 @@
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
     </footer>
 
+    <!-- Botón de Logout -->
+    <button id="logoutBtn" class="hidden" onclick="logout()">Cerrar Sesión</button>
+
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
@@ -279,13 +307,13 @@
 
         // Tu configuración de Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
-            authDomain: "pagocontratistas.firebaseapp.com",
-            projectId: "pagocontratistas",
-            storageBucket: "pagocontratistas.appspot.com",
-            messagingSenderId: "87829393195",
-            appId: "1:87829393195:web:d46970885f29126eef5f6e",
-            measurementId: "G-NHR6KRCG3R"
+    apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+  authDomain: "pagocontratistas.firebaseapp.com",
+  projectId: "pagocontratistas",
+  storageBucket: "pagocontratistas.appspot.com",
+  messagingSenderId: "87829393195",
+  appId: "1:87829393195:web:d46970885f29126eef5f6e",
+  measurementId: "G-NHR6KRCG3R"
         };
 
         // Inicializar Firebase
@@ -580,10 +608,33 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Cargar contratistas y trabajos al cargar la página
+        // Función de Logout
+        function logout() {
+            localStorage.removeItem('sesionIniciada');
+            localStorage.removeItem('usuario');
+            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+        }
+
+        // Función para verificar la sesión
+        function checkSession() {
+            const sesionIniciada = localStorage.getItem('sesionIniciada');
+            const usuario = localStorage.getItem('usuario');
+
+            if (sesionIniciada === 'true' && usuario) {
+                // Mostrar mensaje de bienvenida y botón de logout
+                document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
+                document.getElementById('logoutBtn').classList.remove('hidden');
+            } else {
+                // Redirigir al login si no está autenticado
+                window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+            }
+        }
+
+        // Llamar a la función de verificación al cargar la página
         window.onload = function() {
-            loadContratistas();
-            loadTrabajos();
+            checkSession(); // Verificar sesión
+            loadContratistas(); // Cargar contratistas
+            loadTrabajos(); // Cargar trabajos
         };
     </script>
 </body>
