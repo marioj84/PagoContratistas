@@ -213,6 +213,11 @@
             }
         }
     </style>
+    <!-- Agregar los Scripts de Firebase -->
+    <!-- Firebase App (la base de Firebase) -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 </head>
 <body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
@@ -221,17 +226,6 @@
     <p>Esta herramienta permite a los contratistas ingresar sus órdenes de trabajo (OT) mensualmente. 
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
-
-    <!-- Verificación de sesión -->
-    <script>
-        // Verificar si la sesión está activa
-        const sesionIniciada = localStorage.getItem('sesionIniciada');
-
-        if (sesionIniciada !== 'true') {
-            // Si no hay sesión iniciada, redirigir al login
-            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-        }
-    </script>
 
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
@@ -267,7 +261,6 @@
     <div style="text-align: center;">
         <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
         <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
-        <button onclick="cerrarSesion()" class="burdeo">Cerrar Sesión</button>
     </div>
 
     <footer>
@@ -275,7 +268,45 @@
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
     </footer>
 
+    <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <!-- Inicializar Firebase y Configuración -->
+    <script type="module">
+        // Importar funciones necesarias desde Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+            authDomain: "pagocontratistas.firebaseapp.com",
+            projectId: "pagocontratistas",
+            storageBucket: "pagocontratistas.appspot.com",
+            messagingSenderId: "87829393195",
+            appId: "1:87829393195:web:d46970885f29126eef5f6e",
+            measurementId: "G-NHR6KRCG3R"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Función para enviar datos a Firestore
+        window.enviarDatosFirestore = async function(otData) {
+            try {
+                // Enviar cada OT como un documento separado
+                const promises = otData.map(ot => addDoc(collection(db, "ordenes_trabajo"), ot));
+                const docs = await Promise.all(promises);
+                console.log("Documentos escritos con IDs: ", docs.map(doc => doc.id));
+                alert("Datos guardados exitosamente en Firestore.");
+            } catch (e) {
+                console.error("Error al agregar documentos: ", e);
+                alert("Error al guardar los datos en Firestore.");
+            }
+        };
+    </script>
+
     <script>
         let otData = [];
 
@@ -332,7 +363,7 @@
             inputOT.type = 'number';
             inputOT.step = "1";  
             inputOT.min = "1";
-            inputOT.ariaLabel = 'Ingresar OT';
+            inputOT.setAttribute('aria-label', 'Ingresar OT');
             otCell.appendChild(inputOT);
 
             const selectTipo = document.createElement('select');
@@ -342,19 +373,19 @@
                 optionElement.text = trabajo;
                 selectTipo.appendChild(optionElement);
             });
-            selectTipo.ariaLabel = 'Seleccionar Tipo de OT';
+            selectTipo.setAttribute('aria-label', 'Seleccionar Tipo de OT');
             tipoCell.appendChild(selectTipo);
 
             const inputCant = document.createElement('input');
             inputCant.type = 'number';
             inputCant.min = "1";
             inputCant.value = "1";
-            inputCant.ariaLabel = 'Ingresar Cantidad';
+            inputCant.setAttribute('aria-label', 'Ingresar Cantidad');
             cantCell.appendChild(inputCant);
 
             const inputDesc = document.createElement('input');
             inputDesc.type = 'text';
-            inputDesc.ariaLabel = 'Ingresar Descripción';
+            inputDesc.setAttribute('aria-label', 'Ingresar Descripción');
             descCell.appendChild(inputDesc);
 
             const inputMonto = document.createElement('input');
@@ -362,26 +393,22 @@
             inputMonto.placeholder = '$0.00';
             inputMonto.step = "0.01";
             inputMonto.min = "0";
-            inputMonto.ariaLabel = 'Ingresar Monto';
+            inputMonto.setAttribute('aria-label', 'Ingresar Monto');
             montoCell.appendChild(inputMonto);
 
             const inputSubtotal = document.createElement('input');
             inputSubtotal.type = 'text';
             inputSubtotal.placeholder = '$0.00';
             inputSubtotal.disabled = true;
-            inputSubtotal.ariaLabel = 'Subtotal';
+            inputSubtotal.setAttribute('aria-label', 'Subtotal');
             subtotalCell.appendChild(inputSubtotal);
 
             // Calcular subtotal al cambiar cantidad o monto
             inputCant.oninput = function() {
-                const cantidad = inputCant.value;
-                const monto = inputMonto.value;
-                inputSubtotal.value = (cantidad * monto).toFixed(2);
+                calcularSubtotal(inputCant, inputMonto, inputSubtotal);
             };
             inputMonto.oninput = function() {
-                const cantidad = inputCant.value;
-                const monto = inputMonto.value;
-                inputSubtotal.value = (cantidad * monto).toFixed(2);
+                calcularSubtotal(inputCant, inputMonto, inputSubtotal);
             };
 
             const deleteButton = document.createElement('button');
@@ -392,6 +419,12 @@
             actionsCell.appendChild(deleteButton);
 
             document.getElementById('summaryBtn').classList.remove('hidden');
+        }
+
+        function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
+            const cantidad = parseFloat(inputCant.value) || 0;
+            const monto = parseFloat(inputMonto.value) || 0;
+            inputSubtotal.value = `$${(cantidad * monto).toFixed(2)}`;
         }
 
         function deleteRow(row) {
@@ -452,7 +485,7 @@
                     const cantidad = row.cells[2].children[0].value;
                     const descripcion = row.cells[3].children[0].value.trim();
                     const monto = row.cells[4].children[0].value.trim();
-                    const subtotal = row.cells[5].children[0].value.trim();
+                    const subtotal = row.cells[5].children[0].value.trim().replace('$','');
 
                     otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
                 }
@@ -491,8 +524,8 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para generar y descargar el archivo XLSX
-        function finalizeAndDownload() {
+        // Función para generar y descargar el archivo XLSX y enviar datos a Firestore
+        async function finalizeAndDownload() {
             const resumenContent = [
                 ["Resumen de Cobros del Mes"],
                 ["Cantidad", "Tipo de OT", "Valor"]
@@ -527,6 +560,9 @@
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
             XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            // Enviar datos a Firestore
+            await enviarDatosFirestore(otData);
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -544,14 +580,7 @@
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para cerrar sesión
-        function cerrarSesion() {
-            localStorage.removeItem('sesionIniciada');
-            localStorage.removeItem('usuario');
-            window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-        }
-
-        // Cargar contratistas y trabajos al cargar la págin
+        // Cargar contratistas y trabajos al cargar la página
         window.onload = function() {
             loadContratistas();
             loadTrabajos();
