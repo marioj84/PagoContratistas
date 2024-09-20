@@ -413,7 +413,7 @@
         </div>
 
         <p class="portal-text">Portal de ingreso de cobros mensuales.</p>
-        <p class="subtitle">Inicia sesión para acceder a ingresar tus cobros del mes.</p>
+        <p class="subtitle" id="dynamic-subtitle">Inicia sesión para acceder a ingresar tus cobros del mes.</p>
 
         <!-- Formulario de inicio de sesión -->
         <form id="login-form">
@@ -442,7 +442,7 @@
             </div>
 
             <button type="submit">
-                Ingresar <i class="fa-solid fa-sign-in-alt"></i>
+                <i class="fa-solid fa-sign-in-alt"></i> Ingresar
                 <div class="spinner" id="spinner"></div>
             </button>
         </form>
@@ -562,29 +562,17 @@
             }
         });
 
-        // Mensaje de Bienvenida Personalizado
+        // Mensaje de Bienvenida Personalizado Integrado en el Subtítulo
         window.addEventListener('load', () => {
-            const saludo = document.createElement('p');
-            const hora = new Date().getHours();
-            let mensaje = '';
+            const saludo = (() => {
+                const hora = new Date().getHours();
+                if (hora < 12) return '¡Buenos días!';
+                if (hora < 18) return '¡Buenas tardes!';
+                return '¡Buenas noches!';
+            })();
 
-            if (hora < 12) {
-                mensaje = '¡Buenos días!';
-            } else if (hora < 18) {
-                mensaje = '¡Buenas tardes!';
-            } else {
-                mensaje = '¡Buenas noches!';
-            }
-
-            saludo.textContent = mensaje;
-            saludo.style.textAlign = 'center';
-            saludo.style.fontSize = '0.9em';
-            saludo.style.color = '#555';
-            saludo.style.marginTop = '10px';
-            saludo.style.animation = 'fadeIn 1s ease-in-out';
-
-            const loginContainer = document.querySelector('.login-container');
-            loginContainer.insertBefore(saludo, loginContainer.firstChild);
+            const subtitle = document.getElementById('dynamic-subtitle');
+            subtitle.textContent = `${saludo}, Inicia sesión para acceder a ingresar tus cobros del mes.`;
         });
     </script>
 </body>
