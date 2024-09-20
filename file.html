@@ -216,8 +216,6 @@
     <!-- Agregar los Scripts de Firebase -->
     <!-- Firebase App (la base de Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <!-- Firebase Authentication -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <!-- Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
 </head>
@@ -229,21 +227,15 @@
        Cada OT debe incluir la descripción del trabajo realizado y el monto a cobrar. 
        Al finalizar, se generará un resumen de los valores ingresados y un archivo con el detalle completo.</p>
 
-    <!-- Botones de Autenticación -->
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button id="loginBtn" class="verde" onclick="login()">Iniciar sesión con Google</button>
-        <button id="logoutBtn" class="burdeo hidden" onclick="cerrarSesion()">Cerrar Sesión</button>
-    </div>
-
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
     <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista" aria-label="Seleccionar Contratista" disabled>
+        <select id="contratista" aria-label="Seleccionar Contratista">
             <option value="">Seleccione un contratista</option>
         </select>
-        <button onclick="addRow()" disabled>Cargar OT</button>
+        <button onclick="addRow()">Cargar OT</button>
     </div>
 
     <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
@@ -260,7 +252,7 @@
 
     <div style="text-align: center;">
         <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
-        <button onclick="addRow()" class="verde" disabled>Agregar OT</button>
+        <button onclick="addRow()" class="verde">Agregar OT</button>
     </div>
 
     <h3>Resumen</h3>
@@ -283,7 +275,6 @@
     <script type="module">
         // Importar funciones necesarias desde Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
         // Tu configuración de Firebase
@@ -299,55 +290,7 @@
 
         // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
-
-        // Elementos del DOM
-        const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const contratistaSelect = document.getElementById('contratista');
-        const cargarOTButtons = document.querySelectorAll('button[onclick="addRow()"]');
-
-        // Estado de autenticación
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuario ha iniciado sesión
-                loginBtn.classList.add('hidden');
-                logoutBtn.classList.remove('hidden');
-                contratistaSelect.disabled = false;
-                cargarOTButtons.forEach(button => button.disabled = false);
-                // Opcional: Cargar contratistas después de iniciar sesión
-                loadContratistas();
-            } else {
-                // Usuario no ha iniciado sesión
-                loginBtn.classList.remove('hidden');
-                logoutBtn.classList.add('hidden');
-                contratistaSelect.disabled = true;
-                cargarOTButtons.forEach(button => button.disabled = true);
-            }
-        });
-
-        // Función de autenticación
-        window.login = function() {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    const user = result.user;
-                    alert("Usuario autenticado: " + user.displayName);
-                })
-                .catch((error) => {
-                    alert("Error en la autenticación: " + error.message);
-                });
-        };
-
-        // Función para cerrar sesión
-        window.cerrarSesion = function() {
-            auth.signOut().then(() => {
-                alert("Sesión cerrada exitosamente.");
-            }).catch((error) => {
-                alert("Error al cerrar sesión: " + error.message);
-            });
-        };
 
         // Función para enviar datos a Firestore
         window.enviarDatosFirestore = async function(otData) {
@@ -368,6 +311,8 @@
         // Función para cargar contratistas desde JSON
         async function loadContratistas() {
             try {
+                const contratistaSelect = document.getElementById('contratista');
+                
                 const response = await fetch('contratistas.json');
                 if (!response.ok) {
                     throw new Error('Error al cargar contratistas');
@@ -635,8 +580,8 @@
 
         // Cargar contratistas y trabajos al cargar la página
         window.onload = function() {
+            loadContratistas();
             loadTrabajos();
-            // loadContratistas(); // Ahora se carga después de iniciar sesión
         };
     </script>
 </body>
