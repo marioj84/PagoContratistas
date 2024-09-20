@@ -6,16 +6,50 @@
     <title>Inicio de Sesión - Pago Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        
+
+        /* Variables para Modo Claro y Oscuro */
+        :root {
+            --background-color: #f4f4f4;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #004aad;
+            --secondary-color: #003380;
+            --error-color: #e74c3c;
+            --input-background: #ffffff;
+            --link-color: #004aad;
+            --tooltip-background: #333333;
+            --tooltip-text: #ffffff;
+            --button-hover-bg: #003380;
+            --spinner-border: #f3f3f3;
+            --spinner-color: var(--primary-color);
+        }
+
+        [data-theme="dark"] {
+            --background-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #ffffff;
+            --primary-color: #1e90ff;
+            --secondary-color: #104e8b;
+            --error-color: #ff6b6b;
+            --input-background: #2c2c2c;
+            --link-color: #1e90ff;
+            --tooltip-background: #ffffff;
+            --tooltip-text: #333333;
+            --button-hover-bg: #104e8b;
+            --spinner-border: #444444;
+            --spinner-color: var(--primary-color);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: var(--background-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
             display: flex;
             min-height: 100vh;
             flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .main-container {
@@ -29,11 +63,12 @@
         #login-container {
             max-width: 400px;
             width: 100%;
-            padding: 20px;
-            background-color: #fff;
+            padding: 30px;
+            background-color: var(--container-bg);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             position: relative;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         #logo {
@@ -41,106 +76,226 @@
             top: 10px;
             right: 20px;
             width: 80px;
+            transition: width 0.3s ease;
         }
 
         label {
             font-size: 1.1em;
             margin-bottom: 8px;
             display: block;
+            position: relative;
         }
 
-        input {
+        /* Tooltip */
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 180px;
+            background-color: var(--tooltip-background);
+            color: var(--tooltip-text);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8em;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 12px 40px 12px 15px;
+            margin-bottom: 10px; /* Reducido para espacio adicional del link */
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: var(--input-background);
+            transition: border-color 0.3s ease, background-color 0.3s ease;
             font-size: 1em;
+            color: var(--text-color);
             box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
 
         .password-wrapper {
             position: relative;
-        }
-
-        .password-wrapper input {
-            padding-right: 40px;
+            margin-bottom: 10px; /* Espacio para el link */
         }
 
         .password-toggle {
             position: absolute;
-            right: 10px;
-            top: 50%;
+            top: 50%; /* Alineado verticalmente al centro */
+            right: 15px;
             transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        /* Link para Recuperar Clave de Acceso */
+        .recover-link {
+            display: block;
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 0.85em; /* Tamaño pequeño */
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
             cursor: pointer;
         }
 
-        .password-toggle img {
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-        }
-
-        .password-toggle img:hover {
-            opacity: 1;
+        .recover-link:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background-color: #004aad;
-            color: white;
+            background-color: var(--primary-color);
+            color: #fff;
             border: none;
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         button:hover {
-            background-color: #003380;
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Spinner (Cargando) */
+        .spinner {
+            border: 4px solid var(--spinner-border);
+            border-top: 4px solid var(--spinner-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .error {
-            color: red;
+            color: var(--error-color);
             font-size: 0.9em;
             text-align: center;
             margin-top: 10px;
+            display: none;
         }
 
+        /* Checkbox Recordar Sesión */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Contact Text */
         .contact-text {
             text-align: center;
-            font-size: 0.9em;
-            color: #666;
-            padding: 20px 0;
+            font-size: 0.85em;
+            color: var(--text-color);
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         .contact-text a {
-            color: #004aad;
+            color: var(--link-color);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .contact-text a:hover {
             text-decoration: underline;
         }
 
-        .subtitle {
-            text-align: center;
-            font-size: 1em;
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 20px;
+        /* Theme Toggle Switch */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .image-container {
-            flex-grow: 1;
-            height: 100%;
-            background-image: url('/mnt/data/image.png'); /* Ruta de la imagen que has proporcionado */
-            background-size: cover;
-            background-position: center;
-            filter: blur(5px); /* Efecto difuminado */
+        .theme-toggle input {
+            display: none;
         }
 
+        .theme-toggle .slider {
+            width: 50px;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 25px;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle .slider::before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle input:checked + .slider {
+            background-color: var(--secondary-color);
+        }
+
+        .theme-toggle input:checked + .slider::before {
+            transform: translateX(25px);
+        }
+
+        /* Tooltip Estilo */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             #logo {
                 width: 60px;
@@ -154,33 +309,67 @@
                 display: none;
             }
         }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
     </style>
 </head>
 <body>
+    <!-- Toggle Switch para Modo Oscuro -->
+    <div class="theme-toggle">
+        <label>
+            <input type="checkbox" id="theme-switch">
+            <div class="slider"></div>
+        </label>
+    </div>
+
     <div class="main-container">
         <div id="login-container">
             <h2>Inicio de Sesión</h2>
-            <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
+            <p class="subtitle" id="dynamic-subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
 
             <!-- Formulario de inicio de sesión -->
             <form id="login-form">
-                <label for="usuario">Usuario</label>
+                <label for="usuario" class="tooltip">Usuario
+                    <span class="tooltiptext">Ingrese su nombre de usuario asignado.</span>
+                </label>
                 <input type="text" id="usuario" required placeholder="Ingrese su usuario">
-                <label for="clave">Clave</label>
+
+                <label for="clave" class="tooltip">Clave
+                    <span class="tooltiptext">Ingrese su clave de acceso segura.</span>
+                </label>
                 <div class="password-wrapper">
                     <input type="password" id="clave" required placeholder="Ingrese su clave">
                     <span class="password-toggle" onclick="togglePasswordVisibility()">
-                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
+                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña" id="toggle-icon">
                     </span>
                 </div>
-                <button type="submit">Ingresar</button>
+
+                <!-- Link para recuperar clave de acceso -->
+                <a href="mailto:mjaimes@lipigas.cl?subject=Recuperación%20de%20Clave%20de%20Acceso&body=Estimado%20Mario%20Jaimes,%0D%0A%0D%0AHe%20olvidado%20mi%20clave%20de%20acceso%20y%20necesito%20recuperarla.%0D%0APor%20favor,%20ayúdame%20con%20este%20proceso.%0D%0A%0D%0AGracias." class="recover-link">¿Olvidaste tu clave de acceso?</a>
+
+                <!-- Checkbox Recordar Sesión -->
+                <div class="remember-me">
+                    <input type="checkbox" id="remember-me">
+                    <label for="remember-me">Recordar sesión</label>
+                </div>
+
+                <button type="submit">
+                    Ingresar
+                    <div class="spinner" id="spinner"></div>
+                </button>
             </form>
-            <div id="error-message" class="error"></div>
+            <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
             <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
         </div>
 
-        <!-- Imagen difuminada -->
-        <div class="image-container"></div>
+        <!-- Imagen difuminada (Opcional) -->
+        <!-- Puedes descomentar y ajustar la ruta de la imagen si lo deseas -->
+        <!-- <div class="image-container"></div> -->
     </div>
 
     <footer>
@@ -194,16 +383,26 @@
         // Función para mostrar/ocultar la contraseña
         function togglePasswordVisibility() {
             const passwordField = document.getElementById('clave');
-            const passwordToggleIcon = document.querySelector('.password-toggle img');
+            const toggleIcon = document.getElementById('toggle-icon');
 
             if (passwordField.type === 'password') {
-                passwordField.type = 'text'; // Mostrar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
+                passwordField.type = 'text';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Ojo cerrado
             } else {
-                passwordField.type = 'password'; // Ocultar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
+                passwordField.type = 'password';
+                toggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Ojo abierto
             }
         }
+
+        // Función para cambiar el tema (Light/Dark)
+        const themeSwitch = document.getElementById('theme-switch');
+        themeSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        });
 
         // Función de inicio de sesión
         document.getElementById('login-form').addEventListener('submit', async function(event) {
@@ -212,6 +411,27 @@
             const usuario = document.getElementById('usuario').value.trim();
             const clave = document.getElementById('clave').value.trim();
             const errorMessage = document.getElementById('error-message');
+            const spinner = document.getElementById('spinner');
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            // Validaciones en Tiempo Real
+            if (usuario.length < 3) {
+                errorMessage.textContent = 'El usuario debe tener al menos 3 caracteres.';
+                errorMessage.style.display = 'block';
+                spinner.style.display = 'none';
+                return;
+            }
+
+            if (clave.length < 5) {
+                errorMessage.textContent = 'La clave debe tener al menos 5 caracteres.';
+                errorMessage.style.display = 'block';
+                spinner.style.display = 'none';
+                return;
+            }
+
+            // Mostrar spinner
+            spinner.style.display = 'block';
+            errorMessage.style.display = 'none';
 
             try {
                 const response = await fetch('contratistas.json');
@@ -224,21 +444,45 @@
                 const contratista = contratistas.find(c => c.usuario === usuario && c.clave === clave);
 
                 if (contratista) {
-                    // Inicio de sesión exitoso: Guardar el estado de sesión en localStorage
-                    localStorage.setItem('sesionIniciada', 'true');
-                    localStorage.setItem('usuario', contratista.nombreCompleto);
+                    // Inicio de sesión exitoso: Guardar el estado de sesión en localStorage o sessionStorage
+                    if (rememberMe) {
+                        localStorage.setItem('sesionIniciada', 'true');
+                        localStorage.setItem('usuario', contratista.nombreCompleto);
+                    } else {
+                        sessionStorage.setItem('sesionIniciada', 'true');
+                        sessionStorage.setItem('usuario', contratista.nombreCompleto);
+                    }
 
-                    // Redirigir al formulario de pago
-                    errorMessage.textContent = ''; // Limpiar mensaje de error
-                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html'; // Redirigir al formulario
+                    // Redirigir al dashboard
+                    setTimeout(() => {
+                        spinner.style.display = 'none';
+                        window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html'; // Asegúrate de que la ruta sea correcta
+                    }, 1000); // Retardo para mostrar el spinner
                 } else {
                     // Credenciales incorrectas
+                    spinner.style.display = 'none';
                     errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
+                    errorMessage.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error durante el inicio de sesión:', error);
+                spinner.style.display = 'none';
                 errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
+                errorMessage.style.display = 'block';
             }
+        });
+
+        // Mensaje de Bienvenida Personalizado Integrado en el Subtítulo
+        window.addEventListener('load', () => {
+            const saludo = (() => {
+                const hora = new Date().getHours();
+                if (hora < 12) return '¡Buenos días!';
+                if (hora < 18) return '¡Buenas tardes!';
+                return '¡Buenas noches!';
+            })();
+
+            const subtitle = document.getElementById('dynamic-subtitle');
+            subtitle.textContent = `${saludo}, inicia sesión para acceder a tus cobros del mes.`;
         });
     </script>
 </body>
