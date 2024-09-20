@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - Pago Contratistas</title>
+    <title>Pago Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         
@@ -12,193 +12,307 @@
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-
-        .main-container {
-            display: flex;
-            flex-grow: 1;
-            justify-content: space-between;
-            align-items: center;
             padding: 20px;
         }
 
-        #login-container {
-            max-width: 400px;
-            width: 100%;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
+        h2 {
+            color: #004aad;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
         }
 
         #logo {
             position: absolute;
-            top: 10px;
-            right: 20px;
-            width: 80px;
+            top: 20px;
+            left: 20px;
+            width: 240px;
         }
 
-        label {
-            font-size: 1.1em;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        input {
+        table {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .col-ot {
+            width: 10%;
+        }
+
+        .col-cant {
+            width: 5%;
+        }
+
+        .col-descripcion {
+            width: 30%;
+        }
+
+        .col-monto {
+            width: 15%;
+        }
+
+        .col-subtotal {
+            width: 15%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        th {
+            background-color: #fdd835;
+            color: #004aad;
+        }
+
+        td input, td select {
+            width: 100%;
+            padding: 6px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
         }
 
-        .password-wrapper {
-            position: relative;
+        td select {
+            width: auto;
         }
 
-        .password-wrapper input {
-            padding-right: 40px;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
-
-        .password-toggle img {
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-        }
-
-        .password-toggle img:hover {
-            opacity: 1;
+        .invalid-input {
+            border: 2px solid red;
         }
 
         button {
-            width: 100%;
-            padding: 12px;
+            padding: 8px 15px;
+            margin: 5px;
             background-color: #004aad;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1.1em;
+            font-size: 0.9em;
             cursor: pointer;
             transition: background-color 0.3s ease;
+        }
+
+        .burdeo {
+            background-color: #800000;
+        }
+
+        .verde {
+            background-color: #28a745;
         }
 
         button:hover {
             background-color: #003380;
         }
 
-        .error {
-            color: red;
-            font-size: 0.9em;
-            text-align: center;
-            margin-top: 10px;
+        .burdeo:hover {
+            background-color: #5a0000;
         }
 
-        .contact-text {
-            text-align: center;
-            font-size: 0.9em;
-            color: #666;
-            padding: 20px 0;
+        .verde:hover {
+            background-color: #218838;
         }
 
-        .contact-text a {
+        #summary {
+            font-size: 1.2em;
+            background-color: #fdd835;
             color: #004aad;
-            text-decoration: none;
-        }
-
-        .contact-text a:hover {
-            text-decoration: underline;
-        }
-
-        .subtitle {
+            padding: 10px;
+            border-radius: 8px;
             text-align: center;
-            font-size: 1em;
-            color: #333;
-            margin-top: 0;
             margin-bottom: 20px;
         }
 
-        .image-container {
-            flex-grow: 1;
-            height: 100%;
-            background-image: url('/mnt/data/image.png'); /* Ruta de la imagen que has proporcionado */
-            background-size: cover;
-            background-position: center;
-            filter: blur(5px); /* Efecto difuminado */
+        label {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            color: #333;
+        }
+
+        #contratista {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: auto;
+        }
+
+        #error-msg {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #999;
+        }
+
+        .acciones-btn {
+            white-space: nowrap;
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 0.8em;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
             #logo {
-                width: 60px;
-            }
-
-            .main-container {
-                flex-direction: column;
-            }
-
-            .image-container {
-                display: none;
+                width: 180px;
             }
         }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+
+            th, td {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+
+            #logo {
+                width: 120px;
+            }
+        }
+
+        /* Estilos para el botón de logout */
+        #logoutBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #logoutBtn:hover {
+            background-color: #c82333;
+        }
+
+        /* Estilos para el mensaje de bienvenida */
+        #welcome-msg {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1em;
+            color: #333;
+        }
+
+        /* Estilos para mensajes de éxito */
+        #success-msg {
+            color: green;
+            font-size: 0.9em;
+            text-align: center;
+            margin-bottom: 10px;
+            display: none;
+        }
     </style>
-</head>
-<body>
-    <div class="main-container">
-        <div id="login-container">
-            <h2>Inicio de Sesión</h2>
-            <p class="subtitle">Portal de Ingreso de Cobros Contratistas 1.0</p>
-
-            <!-- Formulario de inicio de sesión -->
-            <form id="login-form">
-                <label for="email">Correo Electrónico</label>
-                <input type="email" id="email" required placeholder="Ingrese su correo electrónico">
-                <label for="password">Clave</label>
-                <div class="password-wrapper">
-                    <input type="password" id="password" required placeholder="Ingrese su clave">
-                    <span class="password-toggle" onclick="togglePasswordVisibility()">
-                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
-                    </span>
-                </div>
-                <button type="submit">Ingresar</button>
-            </form>
-            <div id="error-message" class="error"></div>
-            <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-        </div>
-
-        <!-- Imagen difuminada -->
-        <div class="image-container"></div>
-    </div>
-
-    <footer>
-        <div class="contact-text">
-            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
-            <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-        </div>
-    </footer>
-
     <!-- Agregar los Scripts de Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+</head>
+<body>
+    <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+    <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+    
+    <div id="welcome-msg"></div>
+    <div id="success-msg">Datos guardados exitosamente en Firestore.</div>
+    <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
-    <!-- Inicializar Firebase -->
+    <!-- Contratista -->
+    <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <select id="contratista" aria-label="Seleccionar Contratista">
+            <option value="">Seleccione un contratista</option>
+        </select>
+        <button onclick="addRow()">Cargar OT</button>
+    </div>
+
+    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
+        <tr>
+            <th class="col-ot">OT</th>
+            <th>Tipo de OT</th>
+            <th>Cant</th>
+            <th class="col-descripcion">Descripción</th>
+            <th class="col-monto">Monto</th>
+            <th class="col-subtotal">Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+    </table>
+
+    <div style="text-align: center;">
+        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
+        <button onclick="addRow()" class="verde">Agregar OT</button>
+    </div>
+
+    <h3>Resumen</h3>
+    <div id="summary">Total Facturado: $0.00</div>
+
+    <div style="text-align: center;">
+        <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
+        <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
+    </div>
+
+    <footer>
+        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+    </footer>
+
+    <!-- Botón de Logout -->
+    <button id="logoutBtn" class="hidden" onclick="logout()">Cerrar Sesión</button>
+
+    <!-- Librería para descargar XLSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <!-- Inicializar Firebase y Configuración -->
     <script type="module">
         // Importar funciones necesarias desde Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
 
         // Tu configuración de Firebase
         const firebaseConfig = {
@@ -214,50 +328,359 @@
         // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Función para enviar datos a Firestore
+        window.enviarDatosFirestore = async function(otData) {
+            try {
+                // Enviar cada OT como un documento separado
+                const promises = otData.map(ot => addDoc(collection(db, "ordenes_trabajo"), ot));
+                const docs = await Promise.all(promises);
+                console.log("Documentos escritos con IDs: ", docs.map(doc => doc.id));
+                
+                // Mostrar mensaje de éxito
+                document.getElementById('success-msg').style.display = "block";
+                document.getElementById('error-msg').style.display = "none";
+            } catch (e) {
+                console.error("Error al agregar documentos: ", e);
+                // Mostrar mensaje de error
+                document.getElementById('error-msg').style.display = "block";
+                document.getElementById('success-msg').style.display = "none";
+            }
+        };
     </script>
 
     <script>
-        // Función para mostrar/ocultar la contraseña
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('password');
-            const passwordToggleIcon = document.querySelector('.password-toggle img');
+        let otData = [];
 
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text'; // Mostrar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png'; // Cambiar a ícono de "ojo cerrado"
-            } else {
-                passwordField.type = 'password'; // Ocultar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png'; // Cambiar a ícono de "ojo abierto"
+        // Función para cargar contratistas desde Firestore
+        async function loadContratistas() {
+            try {
+                const contratistaSelect = document.getElementById('contratista');
+                
+                const response = await fetch('contratistas.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                const contratistas = await response.json();
+                contratistas.forEach(contratista => {
+                    const option = document.createElement('option');
+                    option.value = contratista.nombreCompleto;
+                    option.text = contratista.nombreCompleto;
+                    contratistaSelect.appendChild(option);
+                });
+
+                // Obtener el usuario autenticado desde localStorage
+                const usuarioAutenticado = localStorage.getItem('usuario');
+
+                if (usuarioAutenticado) {
+                    // Establecer el valor seleccionado en el select
+                    contratistaSelect.value = usuarioAutenticado;
+
+                    // Opcional: Deshabilitar el select para evitar cambios
+                    contratistaSelect.disabled = true;
+                }
+            } catch (error) {
+                console.error('Error al cargar contratistas:', error);
+                alert('Error al cargar los contratistas.');
             }
         }
 
-        // Función de inicio de sesión utilizando Firebase Authentication
-        document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // Función para cargar tipos de trabajos desde JSON
+        async function loadTrabajos() {
+            try {
+                const response = await fetch('trabajos.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar trabajos');
+                }
+                const trabajos = await response.json();
+                window.trabajosList = trabajos.trabajos;
+            } catch (error) {
+                console.error('Error al cargar trabajos:', error);
+                alert('Error al cargar los trabajos.');
+            }
+        }
 
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorMessage = document.getElementById('error-message');
+        // Función para agregar una fila de OT
+        function addRow() {
+            const table = document.getElementById('otTable');
+            const row = table.insertRow();
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const cantCell = row.insertCell(2);
+            const descCell = row.insertCell(3);
+            const montoCell = row.insertCell(4);
+            const subtotalCell = row.insertCell(5);
+            const actionsCell = row.insertCell(6);
 
-            // Autenticar al usuario con Firebase Authentication
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Inicio de sesión exitoso
-                    const user = userCredential.user;
+            const inputOT = document.createElement('input');
+            inputOT.type = 'number';
+            inputOT.step = "1";  
+            inputOT.min = "1";
+            inputOT.setAttribute('aria-label', 'Ingresar OT');
+            otCell.appendChild(inputOT);
 
-                    // Guardar el estado de sesión en localStorage
+            const selectTipo = document.createElement('select');
+            window.trabajosList.forEach(trabajo => {
+                const optionElement = document.createElement('option');
+                optionElement.value = trabajo;
+                optionElement.text = trabajo;
+                selectTipo.appendChild(optionElement);
+            });
+            selectTipo.setAttribute('aria-label', 'Seleccionar Tipo de OT');
+            tipoCell.appendChild(selectTipo);
+
+            const inputCant = document.createElement('input');
+            inputCant.type = 'number';
+            inputCant.min = "1";
+            inputCant.value = "1";
+            inputCant.setAttribute('aria-label', 'Ingresar Cantidad');
+            cantCell.appendChild(inputCant);
+
+            const inputDesc = document.createElement('input');
+            inputDesc.type = 'text';
+            inputDesc.setAttribute('aria-label', 'Ingresar Descripción');
+            descCell.appendChild(inputDesc);
+
+            const inputMonto = document.createElement('input');
+            inputMonto.type = 'number';
+            inputMonto.placeholder = '$0.00';
+            inputMonto.step = "0.01";
+            inputMonto.min = "0";
+            inputMonto.setAttribute('aria-label', 'Ingresar Monto');
+            montoCell.appendChild(inputMonto);
+
+            const inputSubtotal = document.createElement('input');
+            inputSubtotal.type = 'text';
+            inputSubtotal.placeholder = '$0.00';
+            inputSubtotal.disabled = true;
+            inputSubtotal.setAttribute('aria-label', 'Subtotal');
+            subtotalCell.appendChild(inputSubtotal);
+
+            // Calcular subtotal al cambiar cantidad o monto
+            inputCant.oninput = function() {
+                calcularSubtotal(inputCant, inputMonto, inputSubtotal);
+            };
+            inputMonto.oninput = function() {
+                calcularSubtotal(inputCant, inputMonto, inputSubtotal);
+            };
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Eliminar OT';
+            deleteButton.className = 'acciones-btn burdeo';
+            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
+            deleteButton.onclick = () => deleteRow(row);
+            actionsCell.appendChild(deleteButton);
+
+            document.getElementById('summaryBtn').classList.remove('hidden');
+        }
+
+        function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
+            const cantidad = parseFloat(inputCant.value) || 0;
+            const monto = parseFloat(inputMonto.value) || 0;
+            inputSubtotal.value = `$${(cantidad * monto).toFixed(2)}`;
+        }
+
+        function deleteRow(row) {
+            row.remove(); 
+        }
+
+        // Función para ver el resumen
+        function viewSummary() {
+            const table = document.getElementById('otTable');
+            otData = [];
+            const contratista = document.getElementById('contratista').value.trim();
+            let valid = true;
+
+            // Limpiar la clase invalid-input antes de hacer la validación
+            document.getElementById('contratista').classList.remove('invalid-input');
+            for (let i = 1; i < table.rows.length; i++) {
+                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
+                }
+            }
+
+            // Validar contratista
+            if (contratista === "") {
+                document.getElementById('contratista').classList.add('invalid-input');
+                valid = false;
+            }
+
+            // Validar cada fila de la tabla
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const ot = row.cells[0].children[0].value.trim();
+                const descripcion = row.cells[3].children[0].value.trim();
+                const monto = row.cells[4].children[0].value.trim();
+
+                if (ot === "") {
+                    row.cells[0].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (descripcion === "") {
+                    row.cells[3].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (monto === "") {
+                    row.cells[4].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+            }
+
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                // Procesar los datos ingresados para el resumen
+                for (let i = 1; i < table.rows.length; i++) {
+                    const row = table.rows[i];
+                    const ot = row.cells[0].children[0].value.trim();
+                    const tipo = row.cells[1].children[0].value;
+                    const cantidad = row.cells[2].children[0].value;
+                    const descripcion = row.cells[3].children[0].value.trim();
+                    const monto = row.cells[4].children[0].value.trim();
+                    const subtotal = row.cells[5].children[0].value.trim().replace('$','');
+
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+                }
+
+                displaySummary();
+                document.getElementById('finalizeBtn').classList.remove('hidden');
+                document.getElementById('clearBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('error-msg').style.display = "block";
+            }
+        }
+
+        // Función para mostrar el resumen
+        function displaySummary() {
+            if (otData.length === 0) {
+                document.getElementById('summary').innerHTML = "No hay datos para mostrar.";
+                return;
+            }
+
+            const resumenPorTipo = {};
+            let totalMonto = 0;
+
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
+                totalMonto += parseFloat(data.subtotal);
+            });
+
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+            document.getElementById('summaryBtn').classList.add('hidden');
+        }
+
+        // Función para generar y descargar el archivo XLSX y enviar datos a Firestore
+        async function finalizeAndDownload() {
+            const resumenContent = [
+                ["Resumen de Cobros del Mes"],
+                ["Cantidad", "Tipo de OT", "Valor"]
+            ];
+
+            const detalleContent = [
+                ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+            ];
+
+            let total = 0;
+
+            otData.forEach(row => {
+                detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+                const resumenRow = resumenContent.find(res => res[1] === row.tipo);
+                if (!resumenRow) {
+                    resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+                } else {
+                    resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
+                    resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+                }
+                total += parseFloat(row.subtotal);
+            });
+
+            resumenContent.push(["", "Total", total.toFixed(2)]);
+
+            const workbook = XLSX.utils.book_new();
+
+            const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
+            const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
+
+            XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
+            XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            // Enviar datos a Firestore
+            await enviarDatosFirestore(otData);
+        }
+
+        // Función para limpiar la tabla después de la descarga
+        function clearTable() {
+            const table = document.getElementById('otTable');
+            const rowCount = table.rows.length;
+
+            for (let i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+
+            document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
+            document.getElementById('finalizeBtn').classList.add('hidden');
+            document.getElementById('clearBtn').classList.add('hidden');
+            document.getElementById('summaryBtn').classList.add('hidden');
+        }
+
+        // Función de Logout
+        function logout() {
+            signOut(auth).then(() => {
+                // Cerrar sesión exitosamente
+                localStorage.removeItem('sesionIniciada');
+                localStorage.removeItem('usuario');
+                window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+            }).catch((error) => {
+                console.error('Error al cerrar sesión:', error);
+            });
+        }
+
+        // Función para verificar la sesión con Firebase Authentication
+        function checkSession() {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Usuario autenticado
+                    const email = user.email;
+                    document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${email}</strong>!`;
+                    document.getElementById('logoutBtn').classList.remove('hidden');
+
+                    // Guardar el usuario en localStorage
                     localStorage.setItem('sesionIniciada', 'true');
-                    localStorage.setItem('usuario', user.email); // Puedes almacenar más datos si lo necesitas
+                    localStorage.setItem('usuario', email);
 
-                    // Redirigir al formulario de pago
-                    errorMessage.textContent = ''; // Limpiar mensaje de error
-                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.htm'; // Redirigir al formulario
-                })
-                .catch((error) => {
-                    console.error('Error al iniciar sesión:', error);
-                    errorMessage.textContent = 'Correo electrónico o clave incorrectos. Por favor, intente nuevamente.';
-                });
-        });
+                    // Predefinir el contratista en el select
+                    const contratistaSelect = document.getElementById('contratista');
+                    contratistaSelect.value = email; // Asumiendo que 'nombreCompleto' es el correo
+                    contratistaSelect.disabled = true;
+                } else {
+                    // No autenticado, redirigir al login
+                    window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+                }
+            });
+        }
+
+        // Llamar a la función de verificación al cargar la página
+        window.onload = function() {
+            checkSession(); // Verificar sesión
+            loadContratistas(); // Cargar contratistas
+            loadTrabajos(); // Cargar trabajos
+        };
     </script>
 </body>
 </html>
