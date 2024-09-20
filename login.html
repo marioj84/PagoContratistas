@@ -6,7 +6,7 @@
     <title>Inicio de Sesión - Pago Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
+        
         /* Variables para Modo Claro y Oscuro */
         :root {
             --background-color: #f4f4f4;
@@ -75,7 +75,7 @@
             position: absolute;
             top: 10px;
             right: 20px;
-            width: 80px;
+            width: 60px; /* Reducido para evitar que quede gigante */
             transition: width 0.3s ease;
         }
 
@@ -456,7 +456,7 @@
                     // Redirigir al dashboard
                     setTimeout(() => {
                         spinner.style.display = 'none';
-                        window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html'; // Asegúrate de que la ruta sea correcta
+                        window.location.href = 'https://marioj84.github.io/PagoContratistas/index.htm'; // Asegúrate de que la ruta sea correcta
                     }, 1000); // Retardo para mostrar el spinner
                 } else {
                     // Credenciales incorrectas
@@ -482,8 +482,4 @@
             })();
 
             const subtitle = document.getElementById('dynamic-subtitle');
-            subtitle.textContent = `${saludo}, inicia sesión para acceder a tus cobros del mes.`;
-        });
-    </script>
-</body>
-</html>
+            subtitle.textContent = `${saludo}, inicia sesión para ac
