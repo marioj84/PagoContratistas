@@ -279,13 +279,13 @@
 
         // Tu configuración de Firebase
         const firebaseConfig = {
-  apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
-  authDomain: "pagocontratistas.firebaseapp.com",
-  projectId: "pagocontratistas",
-  storageBucket: "pagocontratistas.appspot.com",
-  messagingSenderId: "87829393195",
-  appId: "1:87829393195:web:d46970885f29126eef5f6e",
-  measurementId: "G-NHR6KRCG3R"
+            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+            authDomain: "pagocontratistas.firebaseapp.com",
+            projectId: "pagocontratistas",
+            storageBucket: "pagocontratistas.appspot.com",
+            messagingSenderId: "87829393195",
+            appId: "1:87829393195:web:d46970885f29126eef5f6e",
+            measurementId: "G-NHR6KRCG3R"
         };
 
         // Inicializar Firebase
@@ -295,11 +295,13 @@
         // Función para enviar datos a Firestore
         window.enviarDatosFirestore = async function(otData) {
             try {
-                const docRef = await addDoc(collection(db, "ordenes_trabajo"), otData);
-                console.log("Documento escrito con ID: ", docRef.id);
+                // Enviar cada OT como un documento separado
+                const promises = otData.map(ot => addDoc(collection(db, "ordenes_trabajo"), ot));
+                const docs = await Promise.all(promises);
+                console.log("Documentos escritos con IDs: ", docs.map(doc => doc.id));
                 alert("Datos guardados exitosamente en Firestore.");
             } catch (e) {
-                console.error("Error al agregar documento: ", e);
+                console.error("Error al agregar documentos: ", e);
                 alert("Error al guardar los datos en Firestore.");
             }
         };
