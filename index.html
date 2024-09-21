@@ -420,7 +420,7 @@ footer a:hover {
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
     <div id="welcome-msg"></div>
-    <div id="success-msg">Datos guardados exitosamente en Firestore.</div>
+    <div id="success-msg">Datos guardados exitosamente.</div>
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
     <!-- Contratista -->
@@ -460,6 +460,8 @@ footer a:hover {
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+        <div>Área de redes y Granel</div>
+
     </footer>
 
     <!-- Botón de Logout -->
@@ -730,7 +732,7 @@ footer a:hover {
                 totalMonto += parseFloat(data.subtotal);
             });
 
-            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados, da click en Validar y Descargar Soporte, para finalizar y obtener un respaldo de las OT enviadas a cobro:<br><br>`;
             resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
 
             for (const tipo in resumenPorTipo) {
