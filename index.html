@@ -6,290 +6,474 @@
     <title>Pago Contratistas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        
+
+        /* Variables para Modo Claro y Oscuro */
+        :root {
+            --background-gradient: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #1e90ff;
+            --secondary-color: #4682b4;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --input-background: #ffffff;
+            --input-border: #ccc;
+            --footer-text-color: #777777;
+            --link-color: #1e90ff;
+            --button-hover-bg: #1c86ee;
+            --button-active-transform: scale(0.98);
+            --table-header-bg: #1e90ff;
+            --table-header-color: #ffffff;
+            --table-row-hover-bg: #f1f1f1;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        [data-theme="dark"] {
+            --background-gradient: linear-gradient(135deg, #2c3e50, #4ca1af);
+            --background-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --input-background: #34495e;
+            --input-border: #7f8c8d;
+            --footer-text-color: #95a5a6;
+            --link-color: #3498db;
+            --button-hover-bg: #2980b9;
+            --table-header-bg: #2980b9;
+            --table-header-color: #ffffff;
+            --table-row-hover-bg: #3d566e;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --border-radius: 8px;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            background: var(--background-gradient);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+            min-height: 100vh;
         }
 
-        h2 {
-            color: #004aad;
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-
-        p {
-            text-align: center;
-            font-size: 1.1em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        #logo {
+        /* Toggle Switch para Modo Oscuro */
+        .theme-toggle {
             position: absolute;
             top: 20px;
-            left: 20px;
-            width: 240px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .col-ot {
-            width: 10%;
-        }
-
-        .col-cant {
-            width: 5%;
-        }
-
-        .col-descripcion {
-            width: 30%;
-        }
-
-        .col-monto {
-            width: 15%;
-        }
-
-        .col-subtotal {
-            width: 15%;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
-        }
-
-        th {
-            background-color: #fdd835;
-            color: #004aad;
-        }
-
-        td input, td select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        td select {
-            width: auto;
-        }
-
-        .invalid-input {
-            border: 2px solid red;
-        }
-
-        button {
-            padding: 8px 15px;
-            margin: 5px;
-            background-color: #004aad;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.9em;
+            right: 20px;
+            display: flex;
+            align-items: center;
             cursor: pointer;
+            user-select: none;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .theme-toggle .slider {
+            width: 50px;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 25px;
+            position: relative;
             transition: background-color 0.3s ease;
         }
 
-        .burdeo {
-            background-color: #800000;
+        .theme-toggle .slider::before {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
         }
 
-        .verde {
-            background-color: #28a745;
+        .theme-toggle input:checked + .slider {
+            background-color: var(--primary-color);
         }
 
-        button:hover {
-            background-color: #003380;
+        .theme-toggle input:checked + .slider::before {
+            transform: translateX(25px);
         }
 
-        .burdeo:hover {
-            background-color: #5a0000;
+        /* Contenedor Principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .verde:hover {
-            background-color: #218838;
+        /* Header con Logo y Título */
+        #logo {
+            width: 200px;
+            transition: width 0.3s ease;
         }
 
-        #summary {
-            font-size: 1.2em;
-            background-color: #fdd835;
-            color: #004aad;
-            padding: 10px;
-            border-radius: 8px;
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        /* Mensajes */
+        #welcome-msg {
             text-align: center;
             margin-bottom: 20px;
+            font-size: 1.1em;
+            color: var(--text-color);
         }
 
+        #success-msg, #error-msg {
+            text-align: center;
+            font-size: 1em;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        #success-msg {
+            background-color: var(--success-color);
+            color: #fff;
+        }
+
+        #error-msg {
+            background-color: var(--error-color);
+            color: #fff;
+        }
+
+        /* Contratista */
         label {
             font-size: 1.1em;
             font-weight: 600;
             margin-bottom: 10px;
             display: block;
-            color: #333;
+            color: var(--text-color);
         }
 
         #contratista {
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            width: auto;
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 300px;
+            transition: border-color 0.3s ease;
         }
 
-        #error-msg {
-            color: red;
+        #contratista:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+        }
+
+        .contratista-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* Tabla de Órdenes de Trabajo */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--background-color);
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        th {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-color);
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: var(--table-row-hover-bg);
+            color: #ffffff;
+        }
+
+        td input, td select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--input-border);
+            border-radius: var(--border-radius);
             font-size: 0.9em;
-            display: none;
-            margin-bottom: 10px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
         }
 
-        .hidden {
-            display: none;
+        td input:focus, td select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
         }
 
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #999;
-        }
-
-        .acciones-btn {
-            white-space: nowrap;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            table {
-                font-size: 0.8em;
-            }
-
-            th, td {
-                padding: 6px;
-            }
-
-            #logo {
-                width: 180px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.5em;
-            }
-
-            p {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 0.8em;
-                padding: 6px 10px;
-            }
-
-            th, td {
-                padding: 5px;
-                font-size: 0.8em;
-            }
-
-            #logo {
-                width: 120px;
-            }
-        }
-
-        /* Estilos para el botón de logout */
-        #logoutBtn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background-color: #dc3545;
-            color: white;
+        .acciones-btn button {
+            padding: 6px 12px;
+            background-color: var(--error-color);
+            color: #fff;
             border: none;
-            border-radius: 5px;
-            font-size: 0.9em;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 0.85em;
+        }
+
+        .acciones-btn button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        /* Botones de Acción */
+        .btn-summary, .btn-add, .btn-finalize, .btn-clear {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 1em;
+        }
+
+        .btn-summary {
+            background-color: #800000;
+        }
+
+        .btn-add {
+            background-color: #28a745;
+        }
+
+        .btn-finalize {
+            background-color: #800000;
+        }
+
+        .btn-clear {
+            background-color: #28a745;
+        }
+
+        .btn-summary:hover, .btn-add:hover, .btn-finalize:hover, .btn-clear:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        /* Resumen */
+        #summary {
+            font-size: 1.2em;
+            background-color: var(--table-header-bg);
+            color: var(--table-header-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.95em;
+            color: var(--footer-text-color);
+        }
+
+        footer a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Botón de Logout */
+        #logoutBtn {
+            position: fixed;
+            top: 20px;
+            right: 80px;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: var(--shadow);
         }
 
         #logoutBtn:hover {
             background-color: #c82333;
+            transform: scale(1.05);
         }
 
-        /* Estilos para el mensaje de bienvenida */
-        #welcome-msg {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1em;
-            color: #333;
-        }
-
-        /* Estilos para mensajes de éxito */
-        #success-msg {
-            color: green;
-            font-size: 0.9em;
-            text-align: center;
-            margin-bottom: 10px;
+        /* Botón de Logout Hidden */
+        .hidden {
             display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #logo {
+                width: 150px;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+
+            .btn-summary, .btn-add, .btn-finalize, .btn-clear {
+                padding: 8px 16px;
+                margin: 8px 4px;
+                font-size: 0.95em;
+            }
+
+            #logoutBtn {
+                top: 15px;
+                right: 70px;
+                padding: 8px 16px;
+                font-size: 0.95em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #logo {
+                width: 120px;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+
+            #welcome-msg {
+                font-size: 1em;
+            }
+
+            #summary {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+            }
+
+            .btn-summary, .btn-add, .btn-finalize, .btn-clear {
+                padding: 6px 12px;
+                margin: 6px 3px;
+                font-size: 0.9em;
+            }
+
+            #logoutBtn {
+                top: 10px;
+                right: 60px;
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Estilos para Exportar a XLSX */
+        @media print {
+            body {
+                background: none;
+                color: #000;
+            }
+
+            table {
+                box-shadow: none;
+            }
+
+            #logoutBtn, .theme-toggle, footer {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-    <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
-    
-    <div id="welcome-msg"></div>
-    <div id="success-msg">Datos guardados exitosamente en Firestore.</div>
-    <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
-
-    <!-- Contratista -->
-    <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <select id="contratista" aria-label="Seleccionar Contratista">
-            <option value="">Seleccione un contratista</option>
-        </select>
-        <button onclick="addRow()">Cargar OT</button>
+    <!-- Toggle Switch para Modo Oscuro -->
+    <div class="theme-toggle">
+        <label>
+            <input type="checkbox" id="theme-switch">
+            <div class="slider"></div>
+        </label>
     </div>
 
-    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
-        <tr>
-            <th class="col-ot">OT</th>
-            <th>Tipo de OT</th>
-            <th>Cant</th>
-            <th class="col-descripcion">Descripción</th>
-            <th class="col-monto">Monto</th>
-            <th class="col-subtotal">Subtotal</th>
-            <th>Acciones</th>
-        </tr>
-    </table>
+    <div class="main-container">
+        <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+        <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+        
+        <div id="welcome-msg"></div>
+        <div id="success-msg">Datos guardados exitosamente en Firestore.</div>
+        <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
-    <div style="text-align: center;">
-        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
-        <button onclick="addRow()" class="verde">Agregar OT</button>
-    </div>
+        <!-- Contratista -->
+        <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
+        <div class="contratista-container">
+            <select id="contratista" aria-label="Seleccionar Contratista">
+                <option value="">Seleccione un contratista</option>
+            </select>
+            <button class="btn-add" onclick="addRow()">Agregar OT</button>
+        </div>
 
-    <h3>Resumen</h3>
-    <div id="summary">Total Facturado: $0.00</div>
+        <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
+            <thead>
+                <tr>
+                    <th class="col-ot">OT</th>
+                    <th>Tipo de OT</th>
+                    <th>Cant</th>
+                    <th class="col-descripcion">Descripción</th>
+                    <th class="col-monto">Monto</th>
+                    <th class="col-subtotal">Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filas de OT agregadas dinámicamente -->
+            </tbody>
+        </table>
 
-    <div style="text-align: center;">
-        <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
-        <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
+        <div style="text-align: center;">
+            <button id="summaryBtn" class="btn-summary hidden" onclick="viewSummary()">Ver Resumen</button>
+            <button onclick="addRow()" class="btn-add">Agregar OT</button>
+        </div>
+
+        <h3>Resumen</h3>
+        <div id="summary">Total Facturado: $0.00</div>
+
+        <div style="text-align: center;">
+            <button id="finalizeBtn" class="btn-summary hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
+            <button id="clearBtn" class="btn-add hidden" onclick="clearTable()">Limpiar Tabla</button>
+        </div>
     </div>
 
     <footer>
@@ -347,17 +531,17 @@
     <script>
         let otData = [];
 
-        // Función para cargar contratistas desde JSON
+        // Función para cargar contratistas desde Firestore
         async function loadContratistas() {
             try {
                 const contratistaSelect = document.getElementById('contratista');
                 
-                const response = await fetch('contratistas.json');
-                if (!response.ok) {
-                    throw new Error('Error al cargar contratistas');
+                const querySnapshot = await firebase.firestore().collection("usuarios").where("rol", "==", "contratista").get();
+                if (querySnapshot.empty) {
+                    throw new Error('No hay contratistas registrados.');
                 }
-                const contratistas = await response.json();
-                contratistas.forEach(contratista => {
+                querySnapshot.forEach(doc => {
+                    const contratista = doc.data();
                     const option = document.createElement('option');
                     option.value = contratista.nombreCompleto;
                     option.text = contratista.nombreCompleto;
@@ -380,15 +564,17 @@
             }
         }
 
-        // Función para cargar tipos de trabajos desde JSON
+        // Función para cargar tipos de trabajos desde Firestore
         async function loadTrabajos() {
             try {
-                const response = await fetch('trabajos.json');
-                if (!response.ok) {
-                    throw new Error('Error al cargar trabajos');
+                const trabajosSnapshot = await firebase.firestore().collection("trabajos").get();
+                if (trabajosSnapshot.empty) {
+                    throw new Error('No hay tipos de trabajos registrados.');
                 }
-                const trabajos = await response.json();
-                window.trabajosList = trabajos.trabajos;
+                window.trabajosList = [];
+                trabajosSnapshot.forEach(doc => {
+                    window.trabajosList.push(doc.data().tipo);
+                });
             } catch (error) {
                 console.error('Error al cargar trabajos:', error);
                 alert('Error al cargar los trabajos.');
@@ -397,23 +583,21 @@
 
         // Función para agregar una fila de OT
         function addRow() {
-            const table = document.getElementById('otTable');
-            const row = table.insertRow();
-            const otCell = row.insertCell(0);
-            const tipoCell = row.insertCell(1);
-            const cantCell = row.insertCell(2);
-            const descCell = row.insertCell(3);
-            const montoCell = row.insertCell(4);
-            const subtotalCell = row.insertCell(5);
-            const actionsCell = row.insertCell(6);
+            const tableBody = document.querySelector('#otTable tbody');
+            const row = document.createElement('tr');
 
+            // OT
+            const otCell = document.createElement('td');
             const inputOT = document.createElement('input');
             inputOT.type = 'number';
             inputOT.step = "1";  
             inputOT.min = "1";
             inputOT.setAttribute('aria-label', 'Ingresar OT');
             otCell.appendChild(inputOT);
+            row.appendChild(otCell);
 
+            // Tipo de OT
+            const tipoCell = document.createElement('td');
             const selectTipo = document.createElement('select');
             window.trabajosList.forEach(trabajo => {
                 const optionElement = document.createElement('option');
@@ -423,19 +607,28 @@
             });
             selectTipo.setAttribute('aria-label', 'Seleccionar Tipo de OT');
             tipoCell.appendChild(selectTipo);
+            row.appendChild(tipoCell);
 
+            // Cantidad
+            const cantCell = document.createElement('td');
             const inputCant = document.createElement('input');
             inputCant.type = 'number';
             inputCant.min = "1";
             inputCant.value = "1";
             inputCant.setAttribute('aria-label', 'Ingresar Cantidad');
             cantCell.appendChild(inputCant);
+            row.appendChild(cantCell);
 
+            // Descripción
+            const descCell = document.createElement('td');
             const inputDesc = document.createElement('input');
             inputDesc.type = 'text';
             inputDesc.setAttribute('aria-label', 'Ingresar Descripción');
             descCell.appendChild(inputDesc);
+            row.appendChild(descCell);
 
+            // Monto
+            const montoCell = document.createElement('td');
             const inputMonto = document.createElement('input');
             inputMonto.type = 'number';
             inputMonto.placeholder = '$0.00';
@@ -443,13 +636,26 @@
             inputMonto.min = "0";
             inputMonto.setAttribute('aria-label', 'Ingresar Monto');
             montoCell.appendChild(inputMonto);
+            row.appendChild(montoCell);
 
+            // Subtotal
+            const subtotalCell = document.createElement('td');
             const inputSubtotal = document.createElement('input');
             inputSubtotal.type = 'text';
             inputSubtotal.placeholder = '$0.00';
             inputSubtotal.disabled = true;
             inputSubtotal.setAttribute('aria-label', 'Subtotal');
             subtotalCell.appendChild(inputSubtotal);
+            row.appendChild(subtotalCell);
+
+            // Acciones
+            const actionsCell = document.createElement('td');
+            actionsCell.classList.add('acciones-btn');
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = 'Eliminar OT';
+            deleteButton.onclick = () => deleteRow(row);
+            actionsCell.appendChild(deleteButton);
+            row.appendChild(actionsCell);
 
             // Calcular subtotal al cambiar cantidad o monto
             inputCant.oninput = function() {
@@ -459,13 +665,7 @@
                 calcularSubtotal(inputCant, inputMonto, inputSubtotal);
             };
 
-            const deleteButton = document.createElement('button');
-            deleteButton.innerText = 'Eliminar OT';
-            deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
-            deleteButton.onclick = () => deleteRow(row);
-            actionsCell.appendChild(deleteButton);
-
+            tableBody.appendChild(row);
             document.getElementById('summaryBtn').classList.remove('hidden');
         }
 
@@ -477,22 +677,22 @@
 
         function deleteRow(row) {
             row.remove(); 
+            calcularTotal();
         }
 
         // Función para ver el resumen
         function viewSummary() {
-            const table = document.getElementById('otTable');
+            const tableBody = document.querySelector('#otTable tbody');
             otData = [];
             const contratista = document.getElementById('contratista').value.trim();
             let valid = true;
 
             // Limpiar la clase invalid-input antes de hacer la validación
             document.getElementById('contratista').classList.remove('invalid-input');
-            for (let i = 1; i < table.rows.length; i++) {
-                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
-                }
-            }
+            const inputs = tableBody.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.classList.remove('invalid-input');
+            });
 
             // Validar contratista
             if (contratista === "") {
@@ -501,8 +701,7 @@
             }
 
             // Validar cada fila de la tabla
-            for (let i = 1; i < table.rows.length; i++) {
-                const row = table.rows[i];
+            tableBody.querySelectorAll('tr').forEach(row => {
                 const ot = row.cells[0].children[0].value.trim();
                 const descripcion = row.cells[3].children[0].value.trim();
                 const monto = row.cells[4].children[0].value.trim();
@@ -521,13 +720,12 @@
                     row.cells[4].children[0].classList.add('invalid-input');
                     valid = false;
                 }
-            }
+            });
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
                 // Procesar los datos ingresados para el resumen
-                for (let i = 1; i < table.rows.length; i++) {
-                    const row = table.rows[i];
+                tableBody.querySelectorAll('tr').forEach(row => {
                     const ot = row.cells[0].children[0].value.trim();
                     const tipo = row.cells[1].children[0].value;
                     const cantidad = row.cells[2].children[0].value;
@@ -536,7 +734,7 @@
                     const subtotal = row.cells[5].children[0].value.trim().replace('$','');
 
                     otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
-                }
+                });
 
                 displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
@@ -566,15 +764,26 @@
             });
 
             let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
-            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+            resumenTabla += `<table><thead><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr></thead><tbody>`;
 
             for (const tipo in resumenPorTipo) {
                 resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
             }
-            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+            resumenTabla += `</tbody></table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
             document.getElementById('summaryBtn').classList.add('hidden');
+        }
+
+        // Función para calcular el total facturado
+        function calcularTotal() {
+            const tableBody = document.querySelector('#otTable tbody');
+            let total = 0;
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const subtotal = parseFloat(row.cells[5].children[0].value.trim().replace('$','')) || 0;
+                total += subtotal;
+            });
+            document.getElementById('summary').innerHTML = `Total Facturado: $${total.toFixed(2)}`;
         }
 
         // Función para generar y descargar el archivo XLSX y enviar datos a Firestore
@@ -620,13 +829,8 @@
 
         // Función para limpiar la tabla después de la descarga
         function clearTable() {
-            const table = document.getElementById('otTable');
-            const rowCount = table.rows.length;
-
-            for (let i = rowCount - 1; i > 0; i--) {
-                table.deleteRow(i);
-            }
-
+            const tableBody = document.querySelector('#otTable tbody');
+            tableBody.innerHTML = '';
             document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
@@ -654,6 +858,20 @@
                 window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
             }
         }
+
+        // Función para cambiar el tema (Light/Dark)
+        const themeSwitch = document.getElementById('theme-switch');
+        themeSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        });
+
+        // Inicializar Firestore con Firebase SDK
+        // Nota: Asegúrate de incluir Firebase SDK correctamente si no estás usando módulos
+        // Aquí asumimos que ya está inicializado en el módulo anterior
 
         // Llamar a la función de verificación al cargar la página
         window.onload = function() {
