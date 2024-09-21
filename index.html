@@ -744,10 +744,11 @@
             for (const tipo in resumenPorTipo) {
                 resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
             }
-            resumenTabla += `</table><br><strong>Total General: ${formatCurrency(totalMonto)}</strong>`;
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
-    summaryDiv.innerHTML = resumenTabla;
+            document.getElementById('summary').innerHTML = resumenTabla;
             document.getElementById('summaryBtn').classList.add('hidden');
+
         }
 
         // Función para generar y descargar el archivo XLSX y enviar datos a Firestore
