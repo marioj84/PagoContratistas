@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 /* Variables de CSS para facilitar cambios de color y mantener consistencia */
 :root {
@@ -20,7 +20,7 @@
     --border-color: #ddd;
     --button-hover-primary: #003380;
     --button-hover-secondary: #218838;
-    --button-hover-danger: #c82333;
+    --button-hover-danger: #5a0000; /* Ajustado para coincidir con .burdeo hover */
     --input-border: #ccc;
     --success-color: green;
     --invalid-color: red;
@@ -195,6 +195,17 @@ td select {
     width: auto;
 }
 
+/* Ampliar el campo de OT para mostrar hasta 9 caracteres */
+#otTable tbody tr td:nth-child(1) input {
+    width: 9ch;
+}
+
+/* Alinear el texto a la derecha para campos monetarios */
+td input[type="number"],
+td input[type="text"] {
+    text-align: right;
+}
+
 /* Botones */
 button {
     padding: 10px 20px;
@@ -234,7 +245,7 @@ button:hover {
     top: 20px;
     right: 20px;
     padding: 10px 20px;
-    background-color: var(--danger-color);
+    background-color: #800000; /* Mismo color que .burdeo */
     color: white;
     border: none;
     border-radius: 5px;
@@ -244,7 +255,7 @@ button:hover {
 }
 
 #logoutBtn:hover {
-    background-color: var(--button-hover-danger);
+    background-color: var(--button-hover-danger); /* Mismo hover que .burdeo */
     transform: translateY(-2px);
 }
 
@@ -254,6 +265,9 @@ h3 {
     text-align: center;
     font-size: 1.5em;
     margin-bottom: 15px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+    margin-top: 30px;
 }
 
 #summary {
@@ -398,6 +412,7 @@ footer a:hover {
         align-items: stretch;
     }
 }
+
     </style>
 </head>
 <body>
