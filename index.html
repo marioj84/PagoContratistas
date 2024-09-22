@@ -11,9 +11,9 @@
     :root {
         --background-color: #f4f4f4;
         --text-color: #333333;
-        --primary-color: #004aad;
-        --secondary-color: #28a745;
-        --danger-color: #800000;
+        --primary-color: #004aad; /* Azul */
+        --secondary-color: #28a745; /* Verde */
+        --danger-color: #800000; /* Burdeo */
         --warning-color: #fdd835;
         --input-background: #ffffff;
         --input-border: #ccc;
@@ -253,6 +253,14 @@
 
     .verde {
         background-color: var(--secondary-color);
+    }
+
+    .azul {
+        background-color: var(--primary-color);
+    }
+
+    .azul:hover {
+        background-color: var(--button-hover-primary);
     }
 
     button:hover {
@@ -797,8 +805,12 @@
             resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
-            document.getElementById('summaryBtn').classList.add('hidden');
 
+            // Cambiar el texto y el estilo del botón
+            const summaryBtn = document.getElementById('summaryBtn');
+            summaryBtn.innerText = 'Actualizar Resumen';
+            summaryBtn.classList.remove('burdeo');
+            summaryBtn.classList.add('azul');
         }
 
         // Función para generar y descargar el archivo XLSX y enviar datos al endpoint
@@ -877,7 +889,13 @@
             document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
-            document.getElementById('summaryBtn').classList.add('hidden');
+
+            // Restablecer el botón de resumen
+            const summaryBtn = document.getElementById('summaryBtn');
+            summaryBtn.innerText = 'Ver Resumen';
+            summaryBtn.classList.remove('azul');
+            summaryBtn.classList.add('burdeo');
+            summaryBtn.classList.add('hidden');
         }
 
         // Función de Logout
