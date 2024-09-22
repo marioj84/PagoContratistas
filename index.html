@@ -524,36 +524,34 @@ function displayCurrentDate() {
     dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 }
 
-// Función para cargar contratistas desde JSON
+// Función para cargar contratistas desde JSON o localStorage
 async function loadContratistas() {
     try {
         const contratistaSelect = document.getElementById('contratista');
-        
+
+        // Si no se puede cargar el JSON, no lanzar un error, pero notificar
         const response = await fetch('contratistas.json');
         if (!response.ok) {
-            throw new Error('Error al cargar contratistas');
+            console.warn('Error al cargar contratistas desde el archivo.');
+        } else {
+            const contratistas = await response.json();
+            contratistas.forEach(contratista => {
+                const option = document.createElement('option');
+                option.value = contratista.nombreCompleto;
+                option.text = contratista.nombreCompleto;
+                contratistaSelect.appendChild(option);
+            });
         }
-        const contratistas = await response.json();
-        contratistas.forEach(contratista => {
-            const option = document.createElement('option');
-            option.value = contratista.nombreCompleto;
-            option.text = contratista.nombreCompleto;
-            contratistaSelect.appendChild(option);
-        });
 
         // Obtener el usuario autenticado desde localStorage
         const usuarioAutenticado = localStorage.getItem('usuario');
-
         if (usuarioAutenticado) {
-            // Establecer el valor seleccionado en el select
             contratistaSelect.value = usuarioAutenticado;
-
-            // Opcional: Deshabilitar el select para evitar cambios
-            contratistaSelect.disabled = true;
+            contratistaSelect.disabled = true; // Deshabilitar para evitar cambios
         }
+
     } catch (error) {
-        console.error('Error al cargar contratistas:', error);
-        alert('Error al cargar los contratistas.');
+        console.error('Error general al cargar los contratistas:', error);
     }
 }
 
