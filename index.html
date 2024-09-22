@@ -1,450 +1,430 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Metadatos y título -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
-    
-    <!-- Estilos CSS -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-        /* Variables de CSS */
-        :root {
-            --primary-color: #004aad;
-            --secondary-color: #28a745;
-            --danger-color: #800000;
-            --warning-color: #fdd835;
-            --background-color: #f4f4f4;
-            --text-color: #333;
-            --light-text-color: #666;
-            --footer-color: #999;
-            --border-color: #ddd;
-            --button-hover-primary: #003380;
-            --button-hover-secondary: #218838;
-            --button-hover-danger: #5a0000;
-            --input-border: #ccc;
-            --success-color: green;
-            --invalid-color: red;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-        }
+    /* Variables de CSS para facilitar cambios de color y mantener consistencia */
+    :root {
+        --primary-color: #004aad;
+        --secondary-color: #28a745;
+        --danger-color: #800000; /* Cambiado a burdeo */
+        --warning-color: #fdd835;
+        --background-color: #f4f4f4;
+        --text-color: #333;
+        --light-text-color: #666;
+        --footer-color: #999;
+        --border-color: #ddd;
+        --button-hover-primary: #003380;
+        --button-hover-secondary: #218838;
+        --button-hover-danger: #5a0000; /* Ajustado para coincidir con .burdeo hover */
+        --input-border: #ccc;
+        --success-color: green;
+        --invalid-color: red;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
 
-        /* Reset de márgenes y paddings */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    /* Reset de márgenes y paddings para una base consistente */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        padding: 40px 20px;
+        position: relative;
+        min-height: 100vh;
+    }
+
+    /* Logo */
+    #logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 200px;
+        transition: width 0.3s ease;
+    }
+
+    /* Encabezado */
+    h2 {
+        color: var(--primary-color);
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+
+    /* Subtítulo o descripción */
+    p {
+        text-align: center;
+        font-size: 1.1em;
+        color: var(--light-text-color);
+        margin-bottom: 30px;
+    }
+
+    /* Contenedor de mensajes */
+    #welcome-msg, #success-msg, #error-msg {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1em;
+    }
+
+    #success-msg {
+        color: var(--success-color);
+        display: none;
+    }
+
+    #error-msg {
+        color: var(--invalid-color);
+        display: none;
+    }
+
+    /* Formulario de Contratista */
+    label {
+        font-size: 1.1em;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: var(--text-color);
+    }
+
+    .form-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    select#contratista {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid var(--input-border);
+        border-radius: 5px;
+        font-size: 1em;
+        background-color: #fff;
+        color: var(--text-color);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    select#contratista:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 5px var(--primary-color);
+        outline: none;
+    }
+
+    /* Ocultar la etiqueta y el campo de "Nombre del Contratista" */
+    label[for="contratista"],
+    #contratista {
+        display: none;
+    }
+
+    .form-group button {
+        flex: 0 0 auto;
+        padding: 10px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .form-group button:hover {
+        background-color: var(--button-hover-primary);
+        transform: translateY(-2px);
+    }
+
+    /* Tabla de Órdenes de Trabajo */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 4px 12px var(--shadow-color);
+        margin-bottom: 30px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.95em;
+    }
+
+    th {
+        background-color: var(--warning-color);
+        color: var(--primary-color);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Ajustes de columnas */
+    .col-ot { width: 10%; }
+    .col-cant { width: 5%; }
+    .col-descripcion { width: 30%; }
+    .col-monto { width: 15%; }
+    .col-subtotal { width: 15%; }
+    .col-acciones { width: 20%; }
+
+    /* Inputs y selects dentro de la tabla */
+    td input, td select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--input-border);
+        border-radius: 4px;
+        font-size: 0.9em;
+        background-color: #fff;
+        color: var(--text-color);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    td input:focus, td select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 5px var(--primary-color);
+        outline: none;
+    }
+
+    td select {
+        width: auto;
+    }
+
+    /* Ampliar el campo de OT para mostrar hasta 9 caracteres */
+    #otTable tbody tr td:nth-child(1) input {
+        width: 15ch;
+    }
+
+    /* Alinear el texto a la derecha para campos monetarios */
+    td input[type="number"],
+    td input[type="text"] {
+        text-align: right;
+    }
+
+    /* Botones */
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .burdeo {
+        background-color: #800000;
+    }
+
+    .verde {
+        background-color: var(--secondary-color);
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+    }
+
+    .burdeo:hover {
+        background-color: var(--button-hover-danger);
+    }
+
+    .verde:hover {
+        background-color: var(--button-hover-secondary);
+    }
+
+    /* Botones específicos */
+    #logoutBtn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #800000; /* Mismo color que .burdeo */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    #logoutBtn:hover {
+        background-color: var(--button-hover-danger); /* Mismo hover que .burdeo */
+        transform: translateY(-2px);
+    }
+
+    /* Resumen */
+    h3 {
+        color: var(--primary-color);
+        text-align: center;
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 15px;
+        margin-top: 30px;
+    }
+
+    #summary {
+        font-size: 1.2em;
+        background-color: var(--warning-color);
+        color: var(--primary-color);
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 6px var(--shadow-color);
+    }
+
+    /* Footer */
+    footer {
+        margin-top: auto;
+        text-align: center;
+        font-size: 0.9em;
+        color: var(--footer-color);
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: var(--button-hover-primary);
+        text-decoration: underline;
+    }
+
+    /* Acciones de botones dentro de la tabla */
+    .acciones-btn {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Clases para ocultar elementos */
+    .hidden {
+        display: none;
+    }
+
+    /* Medias Queries para Responsividad */
+    @media (max-width: 992px) {
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            padding: 40px 20px;
-            position: relative;
-            min-height: 100vh;
+            padding: 30px 15px;
         }
 
-        /* Logo */
         #logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 200px;
-            transition: width 0.3s ease;
+            width: 180px;
         }
 
-        /* Encabezado */
         h2 {
-            color: var(--primary-color);
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 15px;
+            font-size: 1.8em;
         }
 
-        /* Fecha actual */
-        #current-date {
-            text-align: center;
+        p {
             font-size: 1em;
-            color: var(--light-text-color);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        /* Mensajes */
-        #welcome-msg, #success-msg, #error-msg {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1em;
-        }
-
-        #success-msg {
-            color: var(--success-color);
-            display: none;
-        }
-
-        #error-msg {
-            color: var(--invalid-color);
-            display: none;
-        }
-
-        /* Formulario de Contratista */
-        label {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            color: var(--text-color);
-        }
-
-        .form-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        select#contratista {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid var(--input-border);
-            border-radius: 5px;
-            font-size: 1em;
-            background-color: #fff;
-            color: var(--text-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        select#contratista:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px var(--primary-color);
-            outline: none;
-        }
-
-        /* Ocultar la etiqueta y el campo de "Nombre del Contratista" */
-        label[for="contratista"],
-        #contratista {
-            display: none;
-        }
-
-        .form-group button {
-            flex: 0 0 auto;
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .form-group button:hover {
-            background-color: var(--button-hover-primary);
-            transform: translateY(-2px);
-        }
-
-        /* Tabla de Órdenes de Trabajo */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            margin-bottom: 30px;
-            border-radius: 8px;
-            overflow: hidden;
+            font-size: 0.9em;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #logo {
+            width: 160px;
+        }
+
+        h2 {
+            font-size: 1.6em;
+        }
+
+        p {
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+
+        button, #logoutBtn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        table {
+            font-size: 0.85em;
         }
 
         th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.95em;
-        }
-
-        th {
-            background-color: var(--warning-color);
-            color: var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        /* Ajustes de columnas */
-        .col-ot { width: 10%; }
-        .col-cant { width: 5%; }
-        .col-descripcion { width: 30%; }
-        .col-monto { width: 15%; }
-        .col-subtotal { width: 15%; }
-        .col-acciones { width: 20%; }
-
-        /* Inputs y selects dentro de la tabla */
-        td input, td select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--input-border);
-            border-radius: 4px;
-            font-size: 0.9em;
-            background-color: #fff;
-            color: var(--text-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        td input:focus, td select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px var(--primary-color);
-            outline: none;
-        }
-
-        td select {
-            width: auto;
-        }
-
-        /* Ampliar el campo de OT */
-        #otTable tbody tr td:nth-child(1) input {
-            width: 15ch;
-        }
-
-        /* Alinear el texto a la derecha para campos monetarios */
-        td input[type="number"],
-        td input[type="text"] {
-            text-align: right;
-        }
-
-        /* Botones */
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .burdeo {
-            background-color: #800000;
-        }
-
-        .verde {
-            background-color: var(--secondary-color);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-        }
-
-        .burdeo:hover {
-            background-color: var(--button-hover-danger);
-        }
-
-        .verde:hover {
-            background-color: var(--button-hover-secondary);
-        }
-
-        /* Botón "Cerrar Sesión" */
-        #logoutBtn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: #800000;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.95em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        #logoutBtn:hover {
-            background-color: var(--button-hover-danger);
-            transform: translateY(-2px);
-        }
-
-        /* Resumen */
-        h3 {
-            color: var(--primary-color);
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 15px;
-            margin-top: 30px;
+            padding: 10px 12px;
         }
 
         #summary {
-            font-size: 1.2em;
-            background-color: var(--warning-color);
-            color: var(--primary-color);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 6px var(--shadow-color);
+            font-size: 1.1em;
+            padding: 12px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        #logo {
+            width: 140px;
         }
 
-        /* Footer */
-        footer {
-            margin-top: auto;
-            text-align: center;
+        h2 {
+            font-size: 1.4em;
+        }
+
+        p {
             font-size: 0.9em;
-            color: var(--footer-color);
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
+            margin-bottom: 15px;
         }
 
-        footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        button, #logoutBtn {
+            padding: 6px 12px;
+            font-size: 0.85em;
         }
 
-        footer a:hover {
-            color: var(--button-hover-primary);
-            text-decoration: underline;
+        table {
+            font-size: 0.8em;
         }
 
-        /* Ajuste del texto en el footer */
-        #footer-text {
-            text-align: right;
-            font-size: 0.75em; /* Reducido al 75% del tamaño actual */
-            color: var(--footer-color);
+        th, td {
+            padding: 8px 10px;
         }
 
-        /* Acciones de botones dentro de la tabla */
+        #summary {
+            font-size: 1em;
+            padding: 10px;
+        }
+
+        .form-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
         .acciones-btn {
-            display: flex;
-            gap: 10px;
+            flex-direction: column;
+            align-items: stretch;
         }
+    }
+</style>
 
-        /* Grupo de botones finales */
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        /* Clases para ocultar elementos */
-        .hidden {
-            display: none;
-        }
-
-        /* Medias Queries para Responsividad */
-        @media (max-width: 992px) {
-            body {
-                padding: 30px 15px;
-            }
-
-            #logo {
-                width: 180px;
-            }
-
-            h2 {
-                font-size: 1.8em;
-            }
-
-            p {
-                font-size: 1em;
-                margin-bottom: 25px;
-            }
-
-            table {
-                font-size: 0.9em;
-            }
-        }
-
-        @media (max-width: 768px) {
-            #logo {
-                width: 160px;
-            }
-
-            h2 {
-                font-size: 1.6em;
-            }
-
-            p {
-                font-size: 0.95em;
-                margin-bottom: 20px;
-            }
-
-            button, #logoutBtn {
-                padding: 8px 16px;
-                font-size: 0.9em;
-            }
-
-            table {
-                font-size: 0.85em;
-            }
-
-            th, td {
-                padding: 10px 12px;
-            }
-
-            #summary {
-                font-size: 1.1em;
-                padding: 12px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            #logo {
-                width: 140px;
-            }
-
-            h2 {
-                font-size: 1.4em;
-            }
-
-            p {
-                font-size: 0.9em;
-                margin-bottom: 15px;
-            }
-
-            button, #logoutBtn {
-                padding: 6px 12px;
-                font-size: 0.85em;
-            }
-
-            table {
-                font-size: 0.8em;
-            }
-
-            th, td {
-                padding: 8px 10px;
-            }
-
-            #summary {
-                font-size: 1em;
-                padding: 10px;
-            }
-
-            .form-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .acciones-btn {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-    </style>
 </head>
 <body>
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-    <h2>Ingreso de Cobros Órdenes de Trabajo</h2>
-
-    <!-- Fecha actual -->
-    <div id="current-date"></div>
-
+    <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
+    
     <div id="welcome-msg"></div>
     <div id="success-msg">Datos guardados exitosamente.</div>
     <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
@@ -470,43 +450,34 @@
         </tr>
     </table>
 
-    <!-- Botones principales -->
     <div style="text-align: center;">
-        <button id="summaryBtn" class="burdeo" onclick="viewSummary()">Ver Resumen</button>
+        <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
         <button onclick="addRow()" class="verde">Agregar OT</button>
     </div>
 
     <h3>Resumen</h3>
     <div id="summary">Total Facturado: $0.00</div>
 
-    <!-- Botones finales y cierre de sesión -->
-    <div class="button-group">
-        <button id="finalizeBtn" class="burdeo" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
-        <button id="clearBtn" class="verde" onclick="clearTable()">Limpiar Tabla</button>
-        <!-- Botón "Cerrar Sesión" agregado aquí -->
-        <button onclick="logout()" class="burdeo">Cerrar Sesión</button>
+    <div style="text-align: center;">
+        <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">Validar y Descargar Soporte</button>
+        <button id="clearBtn" class="verde hidden" onclick="clearTable()">Limpiar Tabla</button>
     </div>
 
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-        <div id="footer-text">Área de redes y Granel</div>
+        <div>Área de redes y Granel</div>
+
     </footer>
+
+    <!-- Botón de Logout -->
+    <button id="logoutBtn" class="hidden" onclick="logout()">Cerrar Sesión</button>
 
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
-    <!-- Código JavaScript -->
     <script>
         let otData = [];
-
-        // Función para mostrar la fecha actual
-        function showCurrentDate() {
-            const currentDateElement = document.getElementById('current-date');
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const currentDate = new Date().toLocaleDateString('es-ES', options);
-            currentDateElement.innerText = currentDate;
-        }
 
         // Función para cargar contratistas desde JSON
         async function loadContratistas() {
@@ -532,7 +503,7 @@
                     // Establecer el valor seleccionado en el select
                     contratistaSelect.value = usuarioAutenticado;
 
-                    // Deshabilitar el select para evitar cambios
+                    // Opcional: Deshabilitar el select para evitar cambios
                     contratistaSelect.disabled = true;
                 }
             } catch (error) {
@@ -623,7 +594,7 @@
             const deleteButton = document.createElement('button');
             deleteButton.innerText = 'Eliminar OT';
             deleteButton.className = 'acciones-btn burdeo';
-            deleteButton.style.whiteSpace = "nowrap";
+            deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
             deleteButton.onclick = () => deleteRow(row);
             actionsCell.appendChild(deleteButton);
 
@@ -686,11 +657,6 @@
 
             if (valid) {
                 document.getElementById('error-msg').style.display = "none";
-                // Obtener la fecha y hora actual
-                const now = new Date();
-                const fechaCarga = now.toISOString().split('T')[0]; // 'YYYY-MM-DD'
-                const horaCarga = now.toTimeString().split(' ')[0]; // 'HH:MM:SS'
-
                 // Procesar los datos ingresados para el resumen
                 for (let i = 1; i < table.rows.length; i++) {
                     const row = table.rows[i];
@@ -701,25 +667,12 @@
                     const monto = row.cells[4].children[0].value.trim();
                     const subtotal = row.cells[5].children[0].value.trim().replace('$','');
 
-                    otData.push({ 
-                        contratista, 
-                        ot, 
-                        tipo, 
-                        cantidad, 
-                        descripcion, 
-                        monto, 
-                        subtotal,
-                        fechaCarga,
-                        horaCarga
-                    });
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
                 }
 
                 displaySummary();
                 document.getElementById('finalizeBtn').classList.remove('hidden');
                 document.getElementById('clearBtn').classList.remove('hidden');
-
-                // Cambiar el texto del botón a "Actualizar Resumen"
-                document.getElementById('summaryBtn').innerText = 'Actualizar Resumen';
             } else {
                 document.getElementById('error-msg').style.display = "block";
             }
@@ -753,6 +706,8 @@
             resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
+            document.getElementById('summaryBtn').classList.add('hidden');
+
         }
 
         // Función para generar y descargar el archivo XLSX y enviar datos al endpoint
@@ -832,7 +787,6 @@
             document.getElementById('finalizeBtn').classList.add('hidden');
             document.getElementById('clearBtn').classList.add('hidden');
             document.getElementById('summaryBtn').classList.add('hidden');
-            document.getElementById('summaryBtn').innerText = 'Ver Resumen';
         }
 
         // Función de Logout
@@ -857,12 +811,11 @@
             }
         }
 
-        // Llamar a las funciones al cargar la página
+        // Llamar a la función de verificación al cargar la página
         window.onload = function() {
             checkSession(); // Verificar sesión
             loadContratistas(); // Cargar contratistas
             loadTrabajos(); // Cargar trabajos
-            showCurrentDate(); // Mostrar la fecha actual
         };
     </script>
 </body>
