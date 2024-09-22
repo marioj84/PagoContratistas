@@ -512,6 +512,7 @@ body.loaded {
 .chart-container {
     width: 100%;
     max-width: 800px;
+    height: 400px; /* Ajustar la altura de los gráficos */
     margin: 0 auto 30px;
 }
 
@@ -676,7 +677,7 @@ body.loaded {
 let otData = [];
 let otRows = [];
 let currentPage = 1;
-const rowsPerPage = 5;
+const rowsPerPage = 20; // Cambiado de 5 a 20
 
 // Función para mostrar la fecha actual
 function displayCurrentDate() {
@@ -711,7 +712,7 @@ async function loadContratistas() {
             // Establecer el valor seleccionado en el select
             contratistaSelect.value = usuarioAutenticado;
 
-            // Opcional: Deshabilitar el select para evitar cambios
+            // Deshabilitar el select para evitar cambios
             contratistaSelect.disabled = true;
         }
     } catch (error) {
@@ -737,7 +738,6 @@ async function loadTrabajos() {
 
 // Función para agregar una fila de OT
 function addRow() {
-    const table = document.getElementById('otTable');
     const row = document.createElement('tr');
     const otCell = row.insertCell(0);
     const tipoCell = row.insertCell(1);
@@ -753,7 +753,7 @@ function addRow() {
     inputOT.step = "1";  
     inputOT.min = "1";
     inputOT.setAttribute('aria-label', 'Ingresar OT');
-    inputOT.classList.add('ot-input'); // Añadida la clase
+    inputOT.classList.add('ot-input');
     otCell.appendChild(inputOT);
 
     const selectTipo = document.createElement('select');
@@ -771,13 +771,13 @@ function addRow() {
     inputCant.min = "1";
     inputCant.value = "1";
     inputCant.setAttribute('aria-label', 'Ingresar Cantidad');
-    inputCant.classList.add('cantidad-input'); // Añadir clase para ampliar el ancho
+    inputCant.classList.add('cantidad-input');
     cantCell.appendChild(inputCant);
 
     const inputDesc = document.createElement('input');
     inputDesc.type = 'text';
     inputDesc.setAttribute('aria-label', 'Ingresar Descripción');
-    inputDesc.classList.add('descripcion-input'); // Añadir clase para alinear a la izquierda
+    inputDesc.classList.add('descripcion-input');
     descCell.appendChild(inputDesc);
 
     const inputMonto = document.createElement('input');
@@ -786,7 +786,7 @@ function addRow() {
     inputMonto.step = "0.01";
     inputMonto.min = "0";
     inputMonto.setAttribute('aria-label', 'Ingresar Monto');
-    inputMonto.classList.add('monetary'); // Añadir clase para alinear a la derecha
+    inputMonto.classList.add('monetary');
     montoCell.appendChild(inputMonto);
 
     const inputSubtotal = document.createElement('input');
@@ -794,7 +794,7 @@ function addRow() {
     inputSubtotal.placeholder = '$0.00';
     inputSubtotal.disabled = true;
     inputSubtotal.setAttribute('aria-label', 'Subtotal');
-    inputSubtotal.classList.add('monetary'); // Añadir clase para alinear a la derecha
+    inputSubtotal.classList.add('monetary');
     subtotalCell.appendChild(inputSubtotal);
 
     // Calcular subtotal al cambiar cantidad o monto
@@ -814,7 +814,7 @@ function addRow() {
     const deleteButton = document.createElement('button');
     deleteButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar OT';
     deleteButton.className = 'acciones-btn burdeo';
-    deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
+    deleteButton.style.whiteSpace = "nowrap";
     deleteButton.onclick = () => deleteRow(row);
     actionsCell.appendChild(deleteButton);
 
@@ -866,17 +866,20 @@ function renderPaginationControls(totalPages) {
     const paginationDiv = document.getElementById('pagination');
     paginationDiv.innerHTML = '';
 
-    for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.innerText = i;
-        if (i === currentPage) {
-            pageButton.classList.add('active-page');
+    // Mostrar controles solo si hay más de una página
+    if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.innerText = i;
+            if (i === currentPage) {
+                pageButton.classList.add('active-page');
+            }
+            pageButton.addEventListener('click', function() {
+                currentPage = i;
+                renderTable();
+            });
+            paginationDiv.appendChild(pageButton);
         }
-        pageButton.addEventListener('click', function() {
-            currentPage = i;
-            renderTable();
-        });
-        paginationDiv.appendChild(pageButton);
     }
 }
 
@@ -888,35 +891,28 @@ function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
 
 function deleteRow(row) {
     if (confirm('¿Estás seguro de que deseas eliminar esta OT?')) {
-        // Remover la fila del array de filas
         const index = otRows.indexOf(row);
         if (index > -1) {
             otRows.splice(index, 1);
         }
-        // Renderizar la tabla actualizada
         renderTable();
     }
 }
 
 function viewSummary() {
-    const contratista = document.getElementById('contratista').value.trim();
+    const contratista = localStorage.getItem('usuario');
     let valid = true;
 
-    otData = []; // Limpiar datos anteriores
+    otData = [];
 
-    // Limpiar la clase invalid-input antes de hacer la validación
-    document.getElementById('contratista').classList.remove('invalid-input');
+    // Limpiar mensajes de error
+    document.getElementById('error-msg').style.display = "none";
+
     otRows.forEach(row => {
         for (let j = 0; j < row.cells.length - 1; j++) {
             row.cells[j].children[0].classList.remove('invalid-input');
         }
     });
-
-    // Validar contratista
-    if (contratista === "") {
-        document.getElementById('contratista').classList.add('invalid-input');
-        valid = false;
-    }
 
     // Validar cada fila de la tabla
     otRows.forEach(row => {
@@ -941,7 +937,6 @@ function viewSummary() {
     });
 
     if (valid) {
-        document.getElementById('error-msg').style.display = "none";
         // Procesar los datos ingresados para el resumen
         otRows.forEach(row => {
             const ot = row.cells[0].children[0].value.trim();
@@ -950,7 +945,6 @@ function viewSummary() {
             const descripcion = row.cells[3].children[0].value.trim();
             const monto = row.cells[4].children[0].value.trim();
             const subtotal = row.cells[5].children[0].value.trim().replace('$','');
-            const contratista = localStorage.getItem('usuario');
 
             otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
         });
@@ -1101,7 +1095,6 @@ function clearTable() {
 function downloadPDF() {
     const { jsPDF } = window.jspdf;
 
-    // Crear un nuevo documento PDF
     const doc = new jsPDF();
 
     // Añadir título
@@ -1127,7 +1120,7 @@ function downloadPDF() {
 
 // Función para generar gráficos
 function generateCharts(resumenPorTipo) {
-    // Preparar datos para el gráfico de cantidades
+    // Preparar datos para los gráficos
     const tipos = Object.keys(resumenPorTipo);
     const cantidades = tipos.map(tipo => resumenPorTipo[tipo].cantidad);
     const totales = tipos.map(tipo => resumenPorTipo[tipo].total.toFixed(2));
@@ -1151,11 +1144,13 @@ function generateCharts(resumenPorTipo) {
                 data: cantidades,
                 backgroundColor: 'rgba(54, 162, 235, 0.7)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                barThickness: 40
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // Permitir ajustar la altura
             scales: {
                 y: {
                     beginAtZero: true
@@ -1175,11 +1170,13 @@ function generateCharts(resumenPorTipo) {
                 data: totales,
                 backgroundColor: 'rgba(255, 99, 132, 0.7)',
                 borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                barThickness: 40
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // Permitir ajustar la altura
             scales: {
                 y: {
                     beginAtZero: true
@@ -1204,11 +1201,9 @@ function checkSession() {
     const usuario = localStorage.getItem('usuario');
 
     if (sesionIniciada === 'true' && usuario) {
-        // Mostrar mensaje de bienvenida y botones
         document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
         document.getElementById('logoutBtn').classList.remove('hidden');
     } else {
-        // Redirigir al login si no está autenticado
         window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
     }
 }
@@ -1218,7 +1213,6 @@ const themeToggleButton = document.getElementById('theme-toggle-button');
 const themeIcon = document.getElementById('theme-icon');
 const themeToggleText = document.getElementById('theme-toggle-text');
 
-// Verificar si el usuario ya tiene una preferencia guardada
 const currentTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', currentTheme);
 if (currentTheme === 'dark') {
@@ -1248,10 +1242,10 @@ themeToggleButton.addEventListener('click', function() {
 
 // Llamar a las funciones al cargar la página
 window.onload = function() {
-    checkSession(); // Verificar sesión
-    loadContratistas(); // Cargar contratistas
-    loadTrabajos(); // Cargar trabajos
-    displayCurrentDate(); // Mostrar la fecha actual
+    checkSession();
+    loadContratistas();
+    loadTrabajos();
+    displayCurrentDate();
 
     // Añadir clase 'loaded' para el efecto de fade-in
     document.body.classList.add('loaded');
