@@ -298,7 +298,7 @@ tr:hover {
 
 /* Ajustes de columnas */
 .col-ot { width: 12%; } /* Incrementado de 10% a 12% */
-.col-cant { width: 7.5%; } /* El ancho permanece igual */
+.col-cant { width: 7.5%; } /* Aumentar el ancho de la columna Cantidad */
 .col-descripcion { width: 30%; }
 .col-monto { width: 15%; }
 .col-subtotal { width: 15%; }
@@ -331,6 +331,11 @@ td select {
     width: auto;
 }
 
+/* Campo de entrada OT */
+.ot-input {
+    width: 100%; /* Asegura que ocupe todo el ancho de la columna OT */
+}
+
 /* Alinear el texto a la derecha para campos monetarios */
 td input.monetary {
     text-align: right;
@@ -343,12 +348,9 @@ td input.descripcion-input {
 
 /* Aumentar el ancho del campo Cantidad */
 .cantidad-input {
-    width: 120%;
+    width: 150%;
 }
-/* Campo de entrada OT */
-.ot-input {
-    width: 100%; /* Asegura que ocupe todo el ancho de la columna OT */
-}
+
 /* Animaciones y Transiciones Suaves */
 a, button, input, select, th, td {
     transition: all 0.3s ease;
@@ -420,7 +422,151 @@ footer {
     font-size: 0.9em;
     color: var(--text-color);
     padding: 20px;
-    border-to
+    border-top: 1px solid var(--input-border);
+}
+
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--button-hover-primary);
+    text-decoration: underline;
+}
+
+.footer-right {
+    text-align: right;
+    font-size: 0.7em;
+    margin-top: 10px;
+}
+
+/* Botón de WhatsApp */
+.whatsapp-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #25D366;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.whatsapp-button:hover {
+    background-color: #1EBE57;
+}
+
+/* Clases para ocultar elementos */
+.hidden {
+    display: none;
+}
+
+/* Acciones de botones dentro de la tabla */
+.acciones-btn {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Efecto de Fade-in en la carga */
+body.loaded {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Estilos para los controles de paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pagination button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination button.active-page {
+    background-color: var(--secondary-color);
+}
+
+.pagination button:hover {
+    background-color: var(--button-hover-primary);
+}
+
+/* Estilos para los gráficos */
+.chart-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+/* Ajustes Responsivos */
+@media (max-width: 992px) {
+    main {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    #logo {
+        width: 120px;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    main {
+        margin-top: 120px;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    table, th, td {
+        display: block;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 8px 10px;
+    }
+
+    /* Asegurar que la tabla sea desplazable horizontalmente */
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
     </style>
 </head>
 <body>
@@ -470,10 +616,14 @@ footer {
                     <th class="col-descripcion">Descripción</th>
                     <th class="col-monto">Monto</th>
                     <th class="col-subtotal">Subtotal</th>
+                    <th>Adjunto</th>
                     <th>Acciones</th>
                 </tr>
             </table>
         </div>
+
+        <!-- Controles de Paginación -->
+        <div id="pagination" class="pagination"></div>
 
         <!-- Botones alineados al centro -->
         <div class="button-group">
@@ -490,7 +640,17 @@ footer {
 
         <div class="button-group">
             <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()"><i class="fas fa-download"></i> Validar y Descargar Soporte</button>
+            <button id="downloadPdfBtn" class="burdeo hidden" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> Descargar PDF</button>
             <button id="clearBtn" class="verde hidden" onclick="clearTable()"><i class="fas fa-broom"></i> Limpiar Tabla</button>
+        </div>
+
+        <!-- Gráficos de Resumen -->
+        <h3>Gráficos de Resumen</h3>
+        <div class="chart-container">
+            <canvas id="cantidadChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="totalChart"></canvas>
         </div>
     </main>
 
@@ -498,14 +658,25 @@ footer {
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
         <div class="footer-right">Área de Redes y Granel</div>
+        <!-- Botón de WhatsApp para soporte -->
+        <a href="https://api.whatsapp.com/send?phone=XXXXXXXXXXX" target="_blank" class="whatsapp-button">
+            <i class="fab fa-whatsapp"></i> Soporte en Línea
+        </a>
     </footer>
 
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <!-- Librería jsPDF para generar PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Librería Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Tu script JavaScript -->
     <script>
 let otData = [];
+let otRows = [];
+let currentPage = 1;
+const rowsPerPage = 5;
 
 // Función para mostrar la fecha actual
 function displayCurrentDate() {
@@ -567,14 +738,15 @@ async function loadTrabajos() {
 // Función para agregar una fila de OT
 function addRow() {
     const table = document.getElementById('otTable');
-    const row = table.insertRow();
+    const row = document.createElement('tr');
     const otCell = row.insertCell(0);
     const tipoCell = row.insertCell(1);
     const cantCell = row.insertCell(2);
     const descCell = row.insertCell(3);
     const montoCell = row.insertCell(4);
     const subtotalCell = row.insertCell(5);
-    const actionsCell = row.insertCell(6);
+    const attachCell = row.insertCell(6);
+    const actionsCell = row.insertCell(7);
 
     const inputOT = document.createElement('input');
     inputOT.type = 'number';
@@ -633,6 +805,12 @@ function addRow() {
         calcularSubtotal(inputCant, inputMonto, inputSubtotal);
     };
 
+    // Input para adjuntar archivos
+    const inputFile = document.createElement('input');
+    inputFile.type = 'file';
+    inputFile.setAttribute('aria-label', 'Adjuntar Archivo');
+    attachCell.appendChild(inputFile);
+
     const deleteButton = document.createElement('button');
     deleteButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar OT';
     deleteButton.className = 'acciones-btn burdeo';
@@ -640,7 +818,66 @@ function addRow() {
     deleteButton.onclick = () => deleteRow(row);
     actionsCell.appendChild(deleteButton);
 
+    // Añadir la fila al array de filas
+    otRows.push(row);
+
+    // Renderizar la tabla
+    renderTable();
+
     document.getElementById('summaryBtn').classList.remove('hidden');
+}
+
+// Función para renderizar la tabla con paginación
+function renderTable() {
+    const table = document.getElementById('otTable');
+
+    // Limpiar las filas existentes (excepto el encabezado)
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+    // Calcular el número total de páginas
+    const totalPages = Math.ceil(otRows.length / rowsPerPage);
+
+    // Ajustar la página actual si es necesario
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+    if (currentPage < 1) {
+        currentPage = 1;
+    }
+
+    // Calcular el índice de inicio y fin
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedRows = otRows.slice(start, end);
+
+    // Añadir las filas paginadas a la tabla
+    paginatedRows.forEach(row => {
+        table.appendChild(row);
+    });
+
+    // Renderizar los controles de paginación
+    renderPaginationControls(totalPages);
+}
+
+// Función para renderizar los controles de paginación
+function renderPaginationControls(totalPages) {
+    const paginationDiv = document.getElementById('pagination');
+    paginationDiv.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerText = i;
+        if (i === currentPage) {
+            pageButton.classList.add('active-page');
+        }
+        pageButton.addEventListener('click', function() {
+            currentPage = i;
+            renderTable();
+        });
+        paginationDiv.appendChild(pageButton);
+    }
 }
 
 function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
@@ -650,22 +887,30 @@ function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
 }
 
 function deleteRow(row) {
-    row.remove(); 
+    if (confirm('¿Estás seguro de que deseas eliminar esta OT?')) {
+        // Remover la fila del array de filas
+        const index = otRows.indexOf(row);
+        if (index > -1) {
+            otRows.splice(index, 1);
+        }
+        // Renderizar la tabla actualizada
+        renderTable();
+    }
 }
 
 function viewSummary() {
-    const table = document.getElementById('otTable');
-    otData = [];
     const contratista = document.getElementById('contratista').value.trim();
     let valid = true;
 
+    otData = []; // Limpiar datos anteriores
+
     // Limpiar la clase invalid-input antes de hacer la validación
     document.getElementById('contratista').classList.remove('invalid-input');
-    for (let i = 1; i < table.rows.length; i++) {
-        for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-            table.rows[i].cells[j].children[0].classList.remove('invalid-input');
+    otRows.forEach(row => {
+        for (let j = 0; j < row.cells.length - 1; j++) {
+            row.cells[j].children[0].classList.remove('invalid-input');
         }
-    }
+    });
 
     // Validar contratista
     if (contratista === "") {
@@ -674,8 +919,7 @@ function viewSummary() {
     }
 
     // Validar cada fila de la tabla
-    for (let i = 1; i < table.rows.length; i++) {
-        const row = table.rows[i];
+    otRows.forEach(row => {
         const ot = row.cells[0].children[0].value.trim();
         const descripcion = row.cells[3].children[0].value.trim();
         const monto = row.cells[4].children[0].value.trim();
@@ -694,26 +938,27 @@ function viewSummary() {
             row.cells[4].children[0].classList.add('invalid-input');
             valid = false;
         }
-    }
+    });
 
     if (valid) {
         document.getElementById('error-msg').style.display = "none";
         // Procesar los datos ingresados para el resumen
-        for (let i = 1; i < table.rows.length; i++) {
-            const row = table.rows[i];
+        otRows.forEach(row => {
             const ot = row.cells[0].children[0].value.trim();
             const tipo = row.cells[1].children[0].value;
             const cantidad = row.cells[2].children[0].value;
             const descripcion = row.cells[3].children[0].value.trim();
             const monto = row.cells[4].children[0].value.trim();
             const subtotal = row.cells[5].children[0].value.trim().replace('$','');
+            const contratista = localStorage.getItem('usuario');
 
             otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
-        }
+        });
 
         displaySummary();
         document.getElementById('finalizeBtn').classList.remove('hidden');
         document.getElementById('clearBtn').classList.remove('hidden');
+        document.getElementById('downloadPdfBtn').classList.remove('hidden');
     } else {
         document.getElementById('error-msg').style.display = "block";
     }
@@ -747,6 +992,9 @@ function displaySummary() {
     resumenTabla += `</table><br><strong><span class="total-general">Total General: $${totalMonto.toFixed(2)}</span></strong>`;
 
     document.getElementById('summary').innerHTML = resumenTabla;
+
+    // Generar gráficos
+    generateCharts(resumenPorTipo);
 
     // Cambiar el texto y el estilo del botón
     const summaryBtn = document.getElementById('summaryBtn');
@@ -824,16 +1072,14 @@ async function enviarDatos(otData) {
 
 // Función para limpiar la tabla después de la descarga
 function clearTable() {
-    const table = document.getElementById('otTable');
-    const rowCount = table.rows.length;
-
-    for (let i = rowCount - 1; i > 0; i--) {
-        table.deleteRow(i);
-    }
+    otRows = [];
+    currentPage = 1;
+    renderTable();
 
     document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
     document.getElementById('finalizeBtn').classList.add('hidden');
     document.getElementById('clearBtn').classList.add('hidden');
+    document.getElementById('downloadPdfBtn').classList.add('hidden');
 
     // Restablecer el botón de resumen
     const summaryBtn = document.getElementById('summaryBtn');
@@ -841,13 +1087,115 @@ function clearTable() {
     summaryBtn.classList.remove('azul');
     summaryBtn.classList.add('burdeo');
     summaryBtn.classList.add('hidden');
+
+    // Limpiar gráficos
+    if (window.cantidadChart) {
+        window.cantidadChart.destroy();
+    }
+    if (window.totalChart) {
+        window.totalChart.destroy();
+    }
+}
+
+// Función para descargar el resumen en PDF
+function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+
+    // Crear un nuevo documento PDF
+    const doc = new jsPDF();
+
+    // Añadir título
+    doc.setFontSize(18);
+    doc.text('Resumen de Cobros del Mes', 14, 22);
+
+    // Añadir contenido del resumen
+    let y = 30;
+    otData.forEach((item, index) => {
+        doc.setFontSize(12);
+        doc.text(`OT: ${item.ot}`, 14, y);
+        doc.text(`Tipo de OT: ${item.tipo}`, 14, y + 7);
+        doc.text(`Cantidad: ${item.cantidad}`, 14, y + 14);
+        doc.text(`Descripción: ${item.descripcion}`, 14, y + 21);
+        doc.text(`Monto: $${item.monto}`, 14, y + 28);
+        doc.text(`Subtotal: $${item.subtotal}`, 14, y + 35);
+        y += 45;
+    });
+
+    // Guardar el PDF
+    doc.save(`Resumen_OT_${Date.now()}.pdf`);
+}
+
+// Función para generar gráficos
+function generateCharts(resumenPorTipo) {
+    // Preparar datos para el gráfico de cantidades
+    const tipos = Object.keys(resumenPorTipo);
+    const cantidades = tipos.map(tipo => resumenPorTipo[tipo].cantidad);
+    const totales = tipos.map(tipo => resumenPorTipo[tipo].total.toFixed(2));
+
+    // Destruir gráficos anteriores si existen
+    if (window.cantidadChart) {
+        window.cantidadChart.destroy();
+    }
+    if (window.totalChart) {
+        window.totalChart.destroy();
+    }
+
+    // Crear gráfico de cantidades
+    const ctxCantidad = document.getElementById('cantidadChart').getContext('2d');
+    window.cantidadChart = new Chart(ctxCantidad, {
+        type: 'bar',
+        data: {
+            labels: tipos,
+            datasets: [{
+                label: 'Cantidad por Tipo de Trabajo',
+                data: cantidades,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Crear gráfico de totales
+    const ctxTotal = document.getElementById('totalChart').getContext('2d');
+    window.totalChart = new Chart(ctxTotal, {
+        type: 'bar',
+        data: {
+            labels: tipos,
+            datasets: [{
+                label: 'Total por Tipo de Trabajo',
+                data: totales,
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
 
 // Función de Logout
 function logout() {
-    localStorage.removeItem('sesionIniciada');
-    localStorage.removeItem('usuario');
-    window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+        localStorage.removeItem('sesionIniciada');
+        localStorage.removeItem('usuario');
+        window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
+    }
 }
 
 // Función para verificar la sesión
