@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión - Pago Contratistas</title>
+    <!-- Enlace a la fuente Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Variables para Modo Claro y Oscuro */
@@ -19,7 +20,7 @@
             --icon-color: #999999;
             --footer-text-color: #666666;
             --link-color: #004aad;
-            --warning-background: #d0e7ff; /* Azul claro para la advertencia */
+            --mobile-warning-background: #cce7ff; /* Fondo azul claro para la advertencia en móviles */
         }
 
         [data-theme="dark"] {
@@ -34,7 +35,6 @@
             --icon-color: #bdc3c7;
             --footer-text-color: #95a5a6;
             --link-color: #3498db;
-            --warning-background: #4ca1af; /* Ajuste para modo oscuro */
         }
 
         body {
@@ -49,19 +49,18 @@
             justify-content: center;
             align-items: center;
             transition: background 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Evitar desplazamiento horizontal */
         }
 
         .mobile-warning {
             display: none;
-            background-color: var(--warning-background); /* Azul claro */
-            color: var(--text-color);
+            background-color: var(--mobile-warning-background); /* Fondo azul claro */
+            color: #333; /* Texto oscuro para contraste */
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             font-size: 1.2em;
             margin: 20px 0;
-            max-width: 500px;
         }
 
         .main-container {
@@ -104,17 +103,24 @@
             transition: font-size 0.3s ease;
         }
 
-        .subtitle {
-            text-align: center;
-            font-size: 1em;
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 20px;
+        label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            display: block;
+            position: relative;
         }
 
-        /* Ocultar solo el formulario en móviles */
-        #login-form {
-            display: none;
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 30%;
+            transform: translateY(-50%);
+            color: var(--icon-color);
+            pointer-events: none;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         input[type="text"],
@@ -138,17 +144,111 @@
             outline: none;
         }
 
-        /* Otros estilos... */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .password-toggle img {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .error {
+            color: var(--error-color);
+            font-size: 0.9em;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-text {
+            text-align: right;
+            font-size: 0.9em;
+            color: var(--footer-text-color);
+            padding: 20px 0;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .contact-text a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-text a:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1em;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header img {
+                width: 80px;
+            }
+
+            .header h2 {
+                font-size: 1.3em;
+            }
+
+            #login-container {
+                padding: 20px;
+            }
+
+            .contact-text {
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Mensaje de advertencia para móviles -->
     <div id="mobile-warning" class="mobile-warning">
-        ⚠️ Este sitio no está disponible para dispositivos móviles o tablets.
-        <br>
-        Las órdenes de trabajo (OT) deben ser ingresadas desde una computadora para garantizar mayor precisión y acceso a todos los detalles necesarios.
-        <br>
-        Por favor, acceda desde una PC para completar el proceso.
+        ⚠️ Este sitio no está disponible para dispositivos móviles. <br> 
+        Por favor, acceda desde una computadora de escritorio o portátil, ya que el ingreso de OT requiere mayor detalle y precisión.
     </div>
 
     <div class="main-container">
@@ -162,21 +262,34 @@
             <!-- Formulario de inicio de sesión -->
             <form id="login-form">
                 <label for="usuario">Usuario</label>
-                <input type="text" id="usuario" required placeholder="Ingrese su usuario">
-                
+                <div style="position: relative;">
+                    <span class="input-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Usuario" width="20" height="20">
+                    </span>
+                    <input type="text" id="usuario" required placeholder="Ingrese su usuario" class="shadow-input">
+                </div>
+
                 <label for="clave">Clave</label>
-                <input type="password" id="clave" required placeholder="Ingrese su clave">
-                
+                <div class="password-wrapper">
+                    <span class="input-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Clave" width="20" height="20">
+                    </span>
+                    <input type="password" id="clave" required placeholder="Ingrese su clave" class="shadow-input">
+                    <span class="password-toggle" onclick="togglePasswordVisibility()">
+                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
+                    </span>
+                </div>
+
                 <button type="submit">Ingresar</button>
             </form>
-
             <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
         </div>
     </div>
 
     <footer>
-        <div class="contact-text">
-            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <!-- Pie de página que solo aparecerá en la versión móvil -->
+        <div class="contact-text" id="mobile-footer" style="display:none;">
+            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo:
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
             <br>
             Área de Redes y Granel
@@ -184,23 +297,66 @@
     </footer>
 
     <script>
-        // Función para detectar dispositivos móviles o tablets
+        // Función para mostrar/ocultar la contraseña
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('clave');
+            const passwordToggleIcon = document.querySelector('.password-toggle img');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text'; // Mostrar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png';
+            } else {
+                passwordField.type = 'password'; // Ocultar la contraseña
+                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png';
+            }
+        }
+
+        // Detectar dispositivos móviles o tablets
         function isMobileOrTablet() {
             return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Mostrar mensaje de advertencia y ocultar el formulario si es móvil
+        // Mostrar mensaje de advertencia para móviles
         window.onload = function() {
             const mobileWarning = document.getElementById('mobile-warning');
-            const loginForm = document.getElementById('login-form');
+            const loginContainer = document.getElementById('login-container');
+            const mobileFooter = document.getElementById('mobile-footer');
 
             if (isMobileOrTablet()) {
-                mobileWarning.style.display = 'block'; // Mostrar advertencia
-                loginForm.style.display = 'none'; // Ocultar formulario
+                mobileWarning.style.display = 'block';
+                mobileFooter.style.display = 'block'; // Mostrar pie de página en móvil
             } else {
-                loginForm.style.display = 'block'; // Mostrar formulario en PC
+                loginContainer.style.display = 'block'; // Mostrar contenido en escritorio
             }
         };
+
+        // Función de inicio de sesión
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const usuario = document.getElementById('usuario').value.trim();
+            const clave = document.getElementById('clave').value.trim();
+            const errorMessage = document.getElementById('error-message');
+
+            try {
+                const response = await fetch('contratistas.json');
+                if (!response.ok) throw new Error('Error al cargar contratistas');
+                const contratistas = await response.json();
+                const contratista = contratistas.find(c => c.usuario === usuario && c.clave === clave);
+
+                if (contratista) {
+                    localStorage.setItem('sesionIniciada', 'true');
+                    localStorage.setItem('usuario', contratista.nombreCompleto);
+                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html';
+                } else {
+                    errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
+                errorMessage.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>
