@@ -557,6 +557,7 @@ async function loadTrabajos() {
             throw new Error('Error al cargar trabajos');
         }
         const trabajos = await response.json();
+        console.log(trabajos); // Verificar el contenido
         window.trabajosList = trabajos.trabajos;
     } catch (error) {
         console.error('Error al cargar trabajos:', error);
