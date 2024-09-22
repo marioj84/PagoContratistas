@@ -2,121 +2,101 @@
     {
         "nombreCompleto": "ANA CORNEJO",
         "usuario": "acornejo",
-        "clave": "a12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "a12345"
     },
     {
         "nombreCompleto": "ANGELICA FUENTES FUENTES",
         "usuario": "afuentes",
-        "clave": "a12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "a12345"
     },
     {
         "nombreCompleto": "DANIEL OJEDA",
         "usuario": "dojeda",
-        "clave": "d12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "d12345"
     },
     {
         "nombreCompleto": "EFRAIN ALVAREZ",
         "usuario": "ealvarez",
-        "clave": "e12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "e12345"
     },
     {
         "nombreCompleto": "FERNANDO SOTO",
         "usuario": "fsoto",
-        "clave": "f12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "f12345"
     },
     {
         "nombreCompleto": "FREDDY PALAVICINO",
         "usuario": "fpalavicino",
-        "clave": "f12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "f12345"
     },
     {
         "nombreCompleto": "FUENZALIDA Y FUENZALIDA CIA. LTDA",
         "usuario": "ffuenzalida",
-        "clave": "f12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "f12345"
     },
     {
         "nombreCompleto": "GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES",
         "usuario": "gstuardo",
-        "clave": "g12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "g12345"
     },
     {
         "nombreCompleto": "HUGO PAVEZ",
         "usuario": "hpavez",
-        "clave": "h12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "h12345"
     },
     {
         "nombreCompleto": "HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.",
         "usuario": "hconstrucciones",
-        "clave": "h12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "h12345"
     },
     {
         "nombreCompleto": "JENNY VEGA",
         "usuario": "jvega",
-        "clave": "j12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "j12345"
     },
     {
         "nombreCompleto": "JMG SERVICIOS",
         "usuario": "jservicios",
-        "clave": "j12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "j12345"
     },
     {
         "nombreCompleto": "JUAN FERRADA ESCOBAR",
         "usuario": "jferrada",
-        "clave": "j12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "j12345"
     },
     {
         "nombreCompleto": "JUAN GALLARDO CERDA",
         "usuario": "jgallardo",
-        "clave": "j12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "j12345"
     },
     {
         "nombreCompleto": "KLAIT ANTOFAGASTA",
         "usuario": "kantofagasta",
-        "clave": "k12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "k12345"
     },
     {
-        "nombreCompleto": "KLAIT CALAMA",
+        "nombreCompleto": "KLAIT CALAMA", cla
         "usuario": "kcalama",
-        "clave": "k12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "k12345"
     },
     {
         "nombreCompleto": "MANUEL SUAREZ",
         "usuario": "msuarez",
-        "clave": "m12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "m12345"
     },
     {
         "nombreCompleto": "MARLENE VALENCIA",
         "usuario": "mvalencia",
-        "clave": "m12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "m12345"
     },
     {
         "nombreCompleto": "VICTOR FERNANDO CRUCES CESPEDES",
         "usuario": "vfernando",
-        "clave": "v12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "v12345"
     },
     {
         "nombreCompleto": "YANINA BECERRA",
         "usuario": "ybecerra",
-        "clave": "y12345",
-        "mail": "mjaimes@lipigas.cl"
+        "clave": "y12345"
     }
 ]
