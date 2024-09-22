@@ -43,12 +43,11 @@
             margin: 0;
             padding: 0;
             display: flex;
-            min-height: 100vh;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             transition: background 0.3s ease, color 0.3s ease;
-            overflow-x: hidden; /* Evitar desplazamiento horizontal */
         }
 
         .mobile-warning {
@@ -66,8 +65,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
             width: 100%;
+            padding: 20px;
+            flex-grow: 1; /* Esto asegura que el contenido principal ocupe el espacio disponible */
         }
 
         #login-container {
@@ -77,15 +77,14 @@
             background-color: var(--background-color);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
         }
 
         /* Header con Logo y Título */
         .header {
             display: flex;
             align-items: center;
+            justify-content: center;
             margin-bottom: 20px;
         }
 
@@ -93,13 +92,11 @@
             width: 120px;
             height: auto;
             margin-right: 15px;
-            transition: width 0.3s ease;
         }
 
         .header h2 {
             font-size: 1.5em;
             margin: 0;
-            transition: font-size 0.3s ease;
         }
 
         label {
@@ -173,8 +170,6 @@
             font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         button:hover {
@@ -192,15 +187,13 @@
             text-align: center;
             margin-top: 10px;
             display: none;
-            transition: opacity 0.3s ease;
         }
 
         .contact-text {
-            text-align: right;
+            text-align: center;
             font-size: 0.9em;
             color: var(--footer-text-color);
             padding: 20px 0;
-            margin-top: 20px;
             font-weight: bold;
         }
 
@@ -289,11 +282,9 @@
     </div>
 
     <footer>
-        <!-- Pie de página que solo aparecerá en la versión móvil -->
-        <div class="contact-text" id="mobile-footer" style="display:none;">
-            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo:
-            <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-            <br>
+        <div class="contact-text" id="contact-text">
+            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+            <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>. <br>
             Área de Redes y Granel
         </div>
     </footer>
@@ -322,15 +313,16 @@
         window.onload = function() {
             const mobileWarning = document.getElementById('mobile-warning');
             const formContainer = document.getElementById('form-container');
-            const mobileFooter = document.getElementById('mobile-footer');
+            const contactText = document.getElementById('contact-text');
 
             if (isMobileOrTablet()) {
                 mobileWarning.style.display = 'block'; // Mostrar advertencia en móviles
-                formContainer.style.display = 'none'; // Ocultar formulario de ingreso
-                mobileFooter.style.display = 'block'; // Mostrar pie de página en móviles
+                formContainer.style.display = 'none'; // Ocultar formulario de ingreso en móviles
             } else {
-                formContainer.style.display = 'block'; // Mostrar formulario en escritorio
+                formContainer.style.display = 'flex'; // Asegurarse de que el formulario esté centrado
             }
+
+            contactText.style.display = 'block'; // Mostrar el pie de página en ambas versiones
         };
 
         // Función de inicio de sesión
