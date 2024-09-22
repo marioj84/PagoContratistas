@@ -297,13 +297,23 @@ tr:hover {
 }
 
 /* Ajustes de columnas */
-.col-ot { width: 12%; } /* Incrementado de 10% a 12% */
-.col-cant { width: 7.5%; } /* El ancho permanece igual */
-.col-descripcion { width: 30%; }
-.col-monto { width: 15%; }
-.col-movilizacion { width: 15%; } /* Nueva clase para Movilización */
-.col-subtotal { width: 15%; }
-.col-acciones { width: 20%; }
+.col-ot { width: 10%; }
+.col-tipo { 
+    width: 20%; /* Asignar el ancho adecuado */
+    white-space: nowrap; /* Prevenir el salto de línea */
+} 
+.col-cant { width: 8%; }
+.col-descripcion { width: 20%; }
+.col-monto { width: 8%; }
+.col-movilizacion { width: 8%; }
+.col-subtotal { width: 8%; }
+.col-acciones { width: 18%; }
+
+/* Opcional: Asegurar que los encabezados no tengan padding que cause envolvimiento */
+th {
+    padding: 12px 5px; /* Reducir el padding horizontal */
+}
+
 
 /* Inputs y selects dentro de la tabla */
 td input, td select {
@@ -465,17 +475,17 @@ footer {
 
         <div class="table-responsive">
             <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
-                <tr>
-                    <th class="col-ot">OT</th>
-                    <th>Tipo de OT</th>
-                    <th class="col-cant">Cant</th>
-                    <th class="col-descripcion">Descripción</th>
-                    <th class="col-monto">Monto</th>
-                    <th class="col-movilizacion">Movilización</th> <!-- Nueva columna -->
-                    <th class="col-subtotal">Subtotal</th>
-                    <th>Acciones</th>
-                </tr>
-            </table>
+    <tr>
+        <th class="col-ot">OT</th>
+        <th class="col-tipo">Tipo de OT</th> <!-- Clase añadida -->
+        <th class="col-cant">Cant</th>
+        <th class="col-descripcion">Descripción</th>
+        <th class="col-monto">Monto</th>
+        <th class="col-movilizacion">Movilización</th>
+        <th class="col-subtotal">Subtotal</th>
+        <th class="col-acciones">Acciones</th>
+    </tr>
+</table>
         </div>
 
         <!-- Botones alineados al centro -->
