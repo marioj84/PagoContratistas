@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,27 +7,43 @@
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    /* Variables de CSS para facilitar cambios de color y mantener consistencia */
+    /* Variables para Modo Claro */
     :root {
+        --background-color: #f4f4f4;
+        --text-color: #333333;
         --primary-color: #004aad;
         --secondary-color: #28a745;
-        --danger-color: #800000; /* Cambiado a burdeo */
+        --danger-color: #800000;
         --warning-color: #fdd835;
-        --background-color: #f4f4f4;
-        --text-color: #333;
-        --light-text-color: #666;
-        --footer-color: #999;
-        --border-color: #ddd;
+        --input-background: #ffffff;
+        --input-border: #ccc;
         --button-hover-primary: #003380;
         --button-hover-secondary: #218838;
-        --button-hover-danger: #5a0000; /* Ajustado para coincidir con .burdeo hover */
-        --input-border: #ccc;
+        --button-hover-danger: #5a0000;
         --success-color: green;
         --invalid-color: red;
         --shadow-color: rgba(0, 0, 0, 0.1);
     }
 
-    /* Reset de márgenes y paddings para una base consistente */
+    /* Variables para Modo Oscuro */
+    [data-theme="dark"] {
+        --background-color: #2c3e50;
+        --text-color: #ecf0f1;
+        --primary-color: #3498db;
+        --secondary-color: #27ae60;
+        --danger-color: #c0392b;
+        --warning-color: #f39c12;
+        --input-background: #34495e;
+        --input-border: #7f8c8d;
+        --button-hover-primary: #2980b9;
+        --button-hover-secondary: #1e8449;
+        --button-hover-danger: #922b21;
+        --success-color: #2ecc71;
+        --invalid-color: #e74c3c;
+        --shadow-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Reset de márgenes y paddings */
     * {
         margin: 0;
         padding: 0;
@@ -41,6 +57,7 @@
         padding: 40px 20px;
         position: relative;
         min-height: 100vh;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Logo */
@@ -64,7 +81,7 @@
     p {
         text-align: center;
         font-size: 1.1em;
-        color: var(--light-text-color);
+        color: var(--text-color);
         margin-bottom: 30px;
     }
 
@@ -108,7 +125,7 @@
         border: 1px solid var(--input-border);
         border-radius: 5px;
         font-size: 1em;
-        background-color: #fff;
+        background-color: var(--input-background);
         color: var(--text-color);
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -143,10 +160,14 @@
     }
 
     /* Tabla de Órdenes de Trabajo */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
-        background-color: #fff;
+        background-color: var(--input-background);
         box-shadow: 0 4px 12px var(--shadow-color);
         margin-bottom: 30px;
         border-radius: 8px;
@@ -156,8 +177,9 @@
     th, td {
         padding: 12px 15px;
         text-align: left;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--input-border);
         font-size: 0.95em;
+        color: var(--text-color);
     }
 
     th {
@@ -168,7 +190,7 @@
     }
 
     tr:hover {
-        background-color: #f1f1f1;
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
     /* Ajustes de columnas */
@@ -186,7 +208,7 @@
         border: 1px solid var(--input-border);
         border-radius: 4px;
         font-size: 0.9em;
-        background-color: #fff;
+        background-color: var(--input-background);
         color: var(--text-color);
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
@@ -226,7 +248,7 @@
     }
 
     .burdeo {
-        background-color: #800000;
+        background-color: var(--danger-color);
     }
 
     .verde {
@@ -251,7 +273,7 @@
         top: 20px;
         right: 20px;
         padding: 10px 20px;
-        background-color: #800000; /* Mismo color que .burdeo */
+        background-color: var(--danger-color);
         color: white;
         border: none;
         border-radius: 5px;
@@ -261,7 +283,7 @@
     }
 
     #logoutBtn:hover {
-        background-color: var(--button-hover-danger); /* Mismo hover que .burdeo */
+        background-color: var(--button-hover-danger);
         transform: translateY(-2px);
     }
 
@@ -271,7 +293,7 @@
         text-align: center;
         font-size: 1.5em;
         margin-bottom: 15px;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid var(--input-border);
         padding-top: 15px;
         margin-top: 30px;
     }
@@ -292,9 +314,9 @@
         margin-top: auto;
         text-align: center;
         font-size: 0.9em;
-        color: var(--footer-color);
+        color: var(--text-color);
         padding-top: 20px;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid var(--input-border);
     }
 
     footer a {
@@ -317,6 +339,50 @@
     /* Clases para ocultar elementos */
     .hidden {
         display: none;
+    }
+
+    /* Estilos para el interruptor de modo oscuro */
+    .theme-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+    }
+
+    .theme-toggle input {
+        display: none;
+    }
+
+    .theme-toggle .slider {
+        width: 50px;
+        height: 25px;
+        background-color: var(--input-border);
+        border-radius: 25px;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .theme-toggle .slider::before {
+        content: "";
+        position: absolute;
+        width: 21px;
+        height: 21px;
+        background-color: #fff;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s ease;
+    }
+
+    .theme-toggle input:checked + .slider {
+        background-color: var(--secondary-color);
+    }
+
+    .theme-toggle input:checked + .slider::before {
+        transform: translateX(25px);
     }
 
     /* Medias Queries para Responsividad */
@@ -345,7 +411,7 @@
 
     @media (max-width: 768px) {
         #logo {
-            width: 160px;
+            width: 150px;
         }
 
         h2 {
@@ -378,7 +444,7 @@
 
     @media (max-width: 576px) {
         #logo {
-            width: 140px;
+            width: 120px;
         }
 
         h2 {
@@ -395,8 +461,9 @@
             font-size: 0.85em;
         }
 
-        table {
-            font-size: 0.8em;
+        table, th, td {
+            display: block;
+            width: 100%;
         }
 
         th, td {
@@ -417,11 +484,21 @@
             flex-direction: column;
             align-items: stretch;
         }
-    }
-</style>
 
+        /* Asegurar que la tabla sea desplazable horizontalmente */
+        .table-responsive {
+            overflow-x: auto;
+        }
+    }
+    </style>
 </head>
 <body>
+    <!-- Interruptor de Modo Oscuro -->
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-toggle-checkbox">
+        <label for="theme-toggle-checkbox" class="slider"></label>
+    </div>
+
     <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
     <h2>Ingreso de Órdenes de Trabajo (OT)</h2>
     
@@ -431,24 +508,26 @@
 
     <!-- Contratista -->
     <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
-    <div style="display: flex; gap: 10px; align-items: center;">
+    <div class="form-group">
         <select id="contratista" aria-label="Seleccionar Contratista">
             <option value="">Seleccione un contratista</option>
         </select>
         <button onclick="addRow()">Cargar OT</button>
     </div>
 
-    <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
-        <tr>
-            <th class="col-ot">OT</th>
-            <th>Tipo de OT</th>
-            <th>Cant</th>
-            <th class="col-descripcion">Descripción</th>
-            <th class="col-monto">Monto</th>
-            <th class="col-subtotal">Subtotal</th>
-            <th>Acciones</th>
-        </tr>
-    </table>
+    <div class="table-responsive">
+        <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
+            <tr>
+                <th class="col-ot">OT</th>
+                <th>Tipo de OT</th>
+                <th>Cant</th>
+                <th class="col-descripcion">Descripción</th>
+                <th class="col-monto">Monto</th>
+                <th class="col-subtotal">Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </table>
+    </div>
 
     <div style="text-align: center;">
         <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()">Ver Resumen</button>
@@ -466,8 +545,7 @@
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-        <div>Área de redes y Granel</div>
-
+        <div>Área de Redes y Granel</div>
     </footer>
 
     <!-- Botón de Logout -->
@@ -810,6 +888,24 @@
                 window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
             }
         }
+
+        // Manejador del cambio de tema
+        const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+
+        // Verificar si el usuario ya tiene una preferencia guardada
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        themeToggleCheckbox.checked = currentTheme === 'dark';
+
+        themeToggleCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
 
         // Llamar a la función de verificación al cargar la página
         window.onload = function() {
