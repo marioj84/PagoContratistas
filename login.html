@@ -19,21 +19,7 @@
             --icon-color: #999999;
             --footer-text-color: #666666;
             --link-color: #004aad;
-            --mobile-warning-background: #cce7ff; /* Fondo azul claro para la advertencia en móviles */
-        }
-
-        [data-theme="dark"] {
-            --background-gradient: linear-gradient(135deg, #2c3e50, #4ca1af);
-            --background-color: #2c3e50;
-            --text-color: #ecf0f1;
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --error-color: #e74c3c;
-            --input-background: #34495e;
-            --input-border: #7f8c8d;
-            --icon-color: #bdc3c7;
-            --footer-text-color: #95a5a6;
-            --link-color: #3498db;
+            --mobile-warning-background: #cce7ff;
         }
 
         body {
@@ -48,31 +34,9 @@
             align-items: center;
             min-height: 100vh;
             transition: background 0.3s ease, color 0.3s ease;
-            overflow-y: hidden; /* Evitar el desplazamiento vertical */
         }
 
-        .mobile-warning {
-            display: none;
-            background-color: var(--mobile-warning-background); /* Fondo azul claro */
-            color: #333; /* Texto oscuro para contraste */
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.2em;
-            margin: 20px 0;
-        }
-
-        .main-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-            flex-grow: 1;
-        }
-
-        /* Contenedor único para encabezado y formulario */
-        #form-header-container {
+        #login-container {
             max-width: 400px;
             width: 100%;
             padding: 20px;
@@ -80,296 +44,102 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-bottom: 0px;
+            margin-top: 10px; /* Espacio reducido entre el encabezado y el formulario */
+            margin-bottom: 0; /* Sin espacio debajo del formulario */
         }
 
-        /* Header con Logo y Título */
         .header {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0px; /* Sin espacio entre encabezado y formulario */
+            margin-bottom: 10px; /* Espacio reducido debajo del encabezado */
         }
 
         .header img {
-            width: 100px; /* Reducir el tamaño del logo */
+            width: 100px;
             height: auto;
             margin-right: 10px;
         }
 
         .header h2 {
-            font-size: 1.4em; /* Reducir ligeramente el tamaño del título */
+            font-size: 1.4em;
             margin: 0;
         }
 
-        /* Ajustes solicitados */
         .subtitle-big {
-            font-size: 1.8em; /* Tamaño ligeramente más pequeño */
+            font-size: 1.8em;
             font-weight: bold;
-            margin: 5px 0;
+            margin-bottom: 5px; /* Espacio reducido debajo de 'Bienvenido' */
         }
 
         .subtitle-small {
             font-size: 0.8em;
             font-weight: bold;
-            margin: 5px 0;
-        }
-
-        label {
-            font-size: 1em; /* Reducir el tamaño de los labels */
-            margin-bottom: 8px;
-            display: block;
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 30%;
-            transform: translateY(-50%);
-            color: var(--icon-color);
-            pointer-events: none;
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px 40px 10px 40px; /* Reducir padding */
-            margin-bottom: 15px; /* Reducir el margen */
-            border: 1px solid var(--input-border);
-            border-radius: 5px;
-            font-size: 1em;
-            box-sizing: border-box;
-            background-color: var(--input-background);
-            color: var(--text-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-            outline: none;
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .password-toggle img {
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px; /* Reducir el padding */
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        button:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.02);
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .error {
-            color: var(--error-color);
-            font-size: 0.9em;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
+            margin-top: 0;
+            margin-bottom: 5px; /* Espacio reducido debajo de la descripción */
         }
 
         .contact-text {
             text-align: center;
-            font-size: 0.85em; /* Reducir el tamaño del pie de página */
+            font-size: 0.85em;
             color: var(--footer-text-color);
-            padding: 15px 0; /* Reducir el padding */
+            padding: 15px 0;
             font-weight: bold;
-            margin-top: 0px; /* Eliminar espacio entre el formulario y el pie de página */
-        }
-
-        /* Estilo para el pie de página modificado */
-        .contact-text a {
-            color: var(--link-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .contact-text a:hover {
-            text-decoration: underline;
-            color: var(--secondary-color);
+            margin-top: 5px; /* Espacio reducido antes del pie de página */
         }
 
         .footer-right {
             text-align: right;
-            font-size: 0.85em; /* Ajustar el tamaño del pie derecho */
+            font-size: 0.85em;
             color: var(--footer-text-color);
-        }
-
-        .subtitle {
-            text-align: center;
-            font-size: 1em;
-            color: #333;
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header img {
-                width: 80px;
-            }
-
-            .header h2 {
-                font-size: 1.2em;
-            }
-
-            #form-header-container {
-                padding: 15px;
-            }
-
-            .contact-text {
-                text-align: center;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Unir encabezado y formulario en un solo contenedor -->
-    <div id="form-header-container">
-        <div class="header">
-            <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-            <h2>Inicio de Sesión</h2>
-        </div>
+    <div class="header">
+        <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+        <h2>Inicio de Sesión</h2>
+    </div>
+    <div id="login-container">
         <p class="subtitle-big">Bienvenido</p>
-        <p class="subtitle">Portal de ingreso de cobros mensuales, Contraatistas LIPIGAS.</p>
+        <p class="subtitle">Portal de ingreso de cobros mensuales, Contratistas LIPIGAS.</p>
         <p class="subtitle-small">Ingrese los datos proporcionados, en minúscula.</p>
-        <!-- Formulario de inicio de sesión -->
         <form id="login-form">
             <label for="usuario">Usuario</label>
             <div style="position: relative;">
                 <span class="input-icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Usuario" width="20" height="20">
                 </span>
-                <input type="text" id="usuario" required placeholder="Ingrese su usuario" class="shadow-input">
+                <input type="text" id="usuario" required placeholder="Ingrese su usuario">
             </div>
-
             <label for="clave">Clave</label>
             <div class="password-wrapper">
                 <span class="input-icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Clave" width="20" height="20">
                 </span>
-                <input type="password" id="clave" required placeholder="Ingrese su clave" class="shadow-input">
+                <input type="password" id="clave" required placeholder="Ingrese su clave">
                 <span class="password-toggle" onclick="togglePasswordVisibility()">
                     <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
                 </span>
             </div>
-
             <button type="submit">Ingresar</button>
         </form>
-        <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
     </div>
-
     <footer>
         <div class="contact-text">
             Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo:
-            <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>. <br>
-            o por <a href="https://api.whatsapp.com/send/?phone=34XXXXXX" target="_blank">WhatsApp</a>.
+            <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>. o por
+            <a href="https://api.whatsapp.com/send/?phone=34XXXXXX" target="_blank">WhatsApp</a>.
         </div>
-        <div class="footer-right">
-            Área de Redes y Granel
-        </div>
+        <div class="footer-right">Área de Redes y Granel</div>
     </footer>
-
     <script>
-        // Función para mostrar/ocultar la contraseña
         function togglePasswordVisibility() {
             const passwordField = document.getElementById('clave');
             const passwordToggleIcon = document.querySelector('.password-toggle img');
-
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text'; // Mostrar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/565/565655.png';
-            } else {
-                passwordField.type = 'password'; // Ocultar la contraseña
-                passwordToggleIcon.src = 'https://cdn-icons-png.flaticon.com/512/159/159604.png';
-            }
+            passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordToggleIcon.src = passwordField.type === 'text' ? 'https://cdn-icons-png.flaticon.com/512/565/565655.png' : 'https://cdn-icons-png.flaticon.com/512/159/159604.png';
         }
-
-        // Detectar dispositivos móviles o tablets
-        function isMobileOrTablet() {
-            return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
-        // Mostrar mensaje de advertencia para móviles
-        window.onload = function() {
-            const mobileWarning = document.getElementById('mobile-warning');
-            const formHeaderContainer = document.getElementById('form-header-container');
-            const contactText = document.getElementById('contact-text');
-
-            if (isMobileOrTablet()) {
-                mobileWarning.style.display = 'block'; // Mostrar advertencia en móviles
-                formHeaderContainer.style.display = 'none'; // Ocultar formulario en móviles
-            } else {
-                formHeaderContainer.style.display = 'block'; // Asegurarse de que el formulario esté visible
-            }
-
-            contactText.style.display = 'block'; // Mostrar el pie de página en ambas versiones
-        };
-
-        // Función de inicio de sesión
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const usuario = document.getElementById('usuario').value.trim();
-            const clave = document.getElementById('clave').value.trim();
-            const errorMessage = document.getElementById('error-message');
-
-            try {
-                const response = await fetch('contratistas.json');
-                if (!response.ok) throw new Error('Error al cargar contratistas');
-                const contratistas = await response.json();
-                const contratista = contratistas.find(c => c.usuario === usuario && c.clave === clave);
-
-                if (contratista) {
-                    localStorage.setItem('sesionIniciada', 'true');
-                    localStorage.setItem('usuario', contratista.nombreCompleto);
-                    window.location.href = 'https://marioj84.github.io/PagoContratistas/index.html';
-                } else {
-                    errorMessage.textContent = 'Usuario o clave incorrectos. Por favor, intente nuevamente.';
-                    errorMessage.style.display = 'block';
-                }
-            } catch (error) {
-                errorMessage.textContent = 'Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.';
-                errorMessage.style.display = 'block';
-            }
-        });
     </script>
 </body>
 </html>
