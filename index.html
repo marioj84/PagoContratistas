@@ -470,7 +470,7 @@ footer {
                     <th class="col-cant">Cant</th>
                     <th class="col-descripcion">Descripción</th>
                     <th class="col-monto">Monto</th>
-                    <th class="col-movilizacion">Movilización</th>
+                    <th class="col-movilizacion">Movilizacion</th>
                     <th class="col-subtotal">Subtotal</th>
                     <th>Acciones</th>
                 </tr>
@@ -707,6 +707,11 @@ function viewSummary() {
             row.cells[4].children[0].classList.add('invalid-input');
             valid = false;
         }
+
+        if (movilizacion === "") {
+            row.cells[4].children[0].classList.add('invalid-input');
+            valid = false;
+        }
     }
 
     if (valid) {
@@ -776,13 +781,13 @@ async function finalizeAndDownload() {
     ];
 
     const detalleContent = [
-        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Movilizacion", "Subtotal"]
     ];
 
     let total = 0;
 
     otData.forEach(row => {
-        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.movilizacion, row.subtotal]);
         const resumenRow = resumenContent.find(res => res[1] === row.tipo);
         if (!resumenRow) {
             resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
