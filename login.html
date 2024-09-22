@@ -197,6 +197,18 @@
             display: none;
         }
 
+        /* Advertencia para móviles */
+        #mobile-warning {
+            display: none;
+            background-color: var(--mobile-warning-background);
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
         .contact-text {
             text-align: center;
             font-size: 0.85em;
@@ -259,7 +271,9 @@
     </style>
 </head>
 <body>
-    <div class="main-container">
+    <div id="mobile-warning">⚠️ Este sitio no está disponible para dispositivos móviles. Por favor, acceda desde una computadora de escritorio.</div>
+
+    <div class="main-container" id="form-container">
         <!-- Encabezado visible en móviles y escritorio -->
         <div id="header-container">
             <div class="header">
@@ -336,16 +350,12 @@
         window.onload = function() {
             const mobileWarning = document.getElementById('mobile-warning');
             const formContainer = document.getElementById('form-container');
-            const contactText = document.getElementById('contact-text');
-
             if (isMobileOrTablet()) {
                 mobileWarning.style.display = 'block'; // Mostrar advertencia en móviles
                 formContainer.style.display = 'none'; // Ocultar formulario de ingreso en móviles
             } else {
                 formContainer.style.display = 'flex'; // Asegurarse de que el formulario esté centrado
             }
-
-            contactText.style.display = 'block'; // Mostrar el pie de página en ambas versiones
         };
 
         // Función de inicio de sesión
