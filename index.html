@@ -476,6 +476,47 @@
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
+    <!-- Inicializar Firebase y Configuración -->
+    <script type="module">
+        // Importar funciones necesarias desde Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+            authDomain: "pagocontratistas.firebaseapp.com",
+            projectId: "pagocontratistas",
+            storageBucket: "pagocontratistas.appspot.com",
+            messagingSenderId: "87829393195",
+            appId: "1:87829393195:web:d46970885f29126eef5f6e",
+            measurementId: "G-NHR6KRCG3R"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Función para enviar datos a Firestore
+        window.enviarDatosFirestore = async function(otData) {
+            try {
+                // Enviar cada OT como un documento separado
+                const promises = otData.map(ot => addDoc(collection(db, "ordenes_trabajo"), ot));
+                const docs = await Promise.all(promises);
+                console.log("Documentos escritos con IDs: ", docs.map(doc => doc.id));
+                
+                // Mostrar mensaje de éxito
+                document.getElementById('success-msg').style.display = "block";
+                document.getElementById('error-msg').style.display = "none";
+            } catch (e) {
+                console.error("Error al agregar documentos: ", e);
+                // Mostrar mensaje de error
+                document.getElementById('error-msg').style.display = "block";
+                document.getElementById('success-msg').style.display = "none";
+            }
+        };
+    </script>
+
     <script>
         let otData = [];
 
@@ -604,7 +645,7 @@
         function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
             const cantidad = parseFloat(inputCant.value) || 0;
             const monto = parseFloat(inputMonto.value) || 0;
-            inputSubtotal.value = `$${(cantidad * monto).toFixed(2)}`;
+            inputSubtotal.value = $${(cantidad * monto).toFixed(2)};
         }
 
         function deleteRow(row) {
@@ -697,20 +738,20 @@
                 totalMonto += parseFloat(data.subtotal);
             });
 
-            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados, da click en Validar y Descargar Soporte, para finalizar y obtener un respaldo de las OT enviadas a cobro:<br><br>`;
-            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
+            let resumenTabla = <strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados, da click en Validar y Descargar Soporte, para finalizar y obtener un respaldo de las OT enviadas a cobro:<br><br>;
+            resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>;
 
             for (const tipo in resumenPorTipo) {
-                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
+                resumenTabla += <tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>;
             }
-            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
+            resumenTabla += </table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>;
 
             document.getElementById('summary').innerHTML = resumenTabla;
             document.getElementById('summaryBtn').classList.add('hidden');
 
         }
 
-        // Función para generar y descargar el archivo XLSX y enviar datos al endpoint
+        // Función para generar y descargar el archivo XLSX y enviar datos a Firestore
         async function finalizeAndDownload() {
             const resumenContent = [
                 ["Resumen de Cobros del Mes"],
@@ -745,33 +786,10 @@
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+            XLSX.writeFile(workbook, Resumen_OT_${Date.now()}.xlsx);
 
-            // Enviar datos al endpoint
-            await enviarDatos(otData);
-        }
-
-        // Nueva función para enviar datos al endpoint
-        async function enviarDatos(otData) {
-            try {
-                const response = await fetch('https://prod-128.westus.logic.azure.com:443/workflows/49e80f55e1a241b4bf544c1844198d76/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Fav22oO_Stk8uY0qUZ7Q-XIrt4xbvquMOe52D_HNHw8', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(otData)
-                });
-                if (response.ok) {
-                    console.log('Datos enviados exitosamente al endpoint.');
-                    alert('Datos enviados a cobro.');
-                } else {
-                    console.error('Error al enviar datos:', response.statusText);
-                    alert('Error al enviar los datos a cobro.');
-                }
-            } catch (e) {
-                console.error('Error en la solicitud:', e);
-                alert('Error al enviar los datos al servidor.');
-            }
+            // Enviar datos a Firestore
+            await enviarDatosFirestore(otData);
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -803,7 +821,7 @@
 
             if (sesionIniciada === 'true' && usuario) {
                 // Mostrar mensaje de bienvenida y botón de logout
-                document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
+                document.getElementById('welcome-msg').innerHTML = Bienvenido, <strong>${usuario}</strong>!;
                 document.getElementById('logoutBtn').classList.remove('hidden');
             } else {
                 // Redirigir al login si no está autenticado
