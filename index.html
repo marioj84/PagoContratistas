@@ -421,7 +421,8 @@ footer {
     font-size: 0.9em;
     color: var(--text-color);
     padding: 20px;
-    border-to
+    border-top: 1px solid var(--input-border); /* Corrección de la propiedad */
+}
     </style>
 </head>
 <body>
@@ -743,7 +744,6 @@ function viewSummary() {
     }
 }
 
-
 // Función para mostrar el resumen
 function displaySummary() {
     if (otData.length === 0) {
@@ -790,7 +790,6 @@ function displaySummary() {
     summaryBtn.classList.remove('burdeo');
     summaryBtn.classList.add('azul');
 }
-
 
 // Función para generar y descargar el archivo XLSX y enviar datos al endpoint
 async function finalizeAndDownload() {
@@ -848,7 +847,6 @@ async function finalizeAndDownload() {
     // Limpiar la tabla después de descargar
     clearTable();
 }
-
 
 // Nueva función para enviar datos al endpoint
 async function enviarDatos(otData) {
@@ -908,7 +906,7 @@ function checkSession() {
 
     if (sesionIniciada === 'true' && usuario) {
         // Mostrar mensaje de bienvenida y botones
-        document.getElementById('welcome-msg').innerHTML = Bienvenido, <strong>${usuario}</strong>!;
+        document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
         document.getElementById('logoutBtn').classList.remove('hidden');
     } else {
         // Redirigir al login si no está autenticado
