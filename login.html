@@ -78,7 +78,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-bottom: 10px; /* Reducir margen inferior */
+            margin-bottom: 10px;
         }
 
         /* Header con Logo y Título */
@@ -86,18 +86,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 5px; /* Reducir el espacio entre el logo y el título */
+            margin-bottom: 5px;
         }
 
         .header img {
             width: 120px;
             height: auto;
-            margin-right: 10px; /* Reducir el margen entre logo y texto */
+            margin-right: 10px;
         }
 
         .header h2 {
             font-size: 1.5em;
             margin: 0;
+        }
+
+        /* Ajustes solicitados */
+        .subtitle-big {
+            font-size: 2em; /* Tamaño del doble */
+            font-weight: bold;
+        }
+
+        .subtitle-small {
+            font-size: 0.8em; /* 80% del tamaño */
+            font-weight: bold;
         }
 
         label {
@@ -196,9 +207,10 @@
             color: var(--footer-text-color);
             padding: 20px 0;
             font-weight: bold;
-            margin-top: 30px; /* Añadir más espacio antes del pie de página */
+            margin-top: 30px;
         }
 
+        /* Estilo para el pie de página modificado */
         .contact-text a {
             color: var(--link-color);
             text-decoration: none;
@@ -210,12 +222,18 @@
             color: var(--secondary-color);
         }
 
+        .footer-right {
+            text-align: right;
+            font-size: 0.9em;
+            color: var(--footer-text-color);
+        }
+
         .subtitle {
             text-align: center;
             font-size: 1em;
             color: #333;
             margin-top: 0;
-            margin-bottom: 10px; /* Reducir el espacio entre el subtítulo y el formulario */
+            margin-bottom: 10px;
         }
 
         /* Responsive */
@@ -245,16 +263,16 @@
             <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
             <h2>Inicio de Sesión</h2>
         </div>
-        <p class="subtitle">Bienvenido</p>
+        <!-- Ajustes de tamaños -->
+        <p class="subtitle-big">Bienvenido</p>
         <p class="subtitle">Portal de ingreso de cobros mensuales, Contraatistas LIPIGAS.</p>
-        <p class="subtitle">Bienvenido a portal de ingreso de cobros mensuales, Técnicos LIPIGAS.</p>
-        <p class="subtitle">Ingrese los datos proporcionados, en minuscula.</p>
+        <p class="subtitle-small">Ingrese los datos proporcionados, en minúscula.</p>
     </div>
 
     <!-- Mensaje de advertencia para móviles -->
     <div id="mobile-warning" class="mobile-warning">
         ⚠️ Este sitio no está disponible para dispositivos móviles. <br> 
-        Por favor, acceda desde una computadora de escritorio o portátil, ya que el ingreso de OT requiere mayor detalle y precisión.
+        Por favor, acceda desde una computadora de escritorio o portátil, el ingreso de OT requiere mayor detalle y precisión.
     </div>
 
     <div class="main-container" id="form-container">
@@ -287,9 +305,12 @@
     </div>
 
     <footer>
-        <div class="contact-text" id="contact-text">
-            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <div class="contact-text">
+            Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo:
             <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>. <br>
+            o por <a href="https://api.whatsapp.com/send/?phone=34XXXXXX" target="_blank">WhatsApp</a>.
+        </div>
+        <div class="footer-right">
             Área de Redes y Granel
         </div>
     </footer>
