@@ -270,7 +270,7 @@ table {
 }
 
 th, td {
-    padding: 12px 15px;
+    padding: 12px 5px; /* Reducido el padding horizontal */
     border-bottom: 1px solid var(--input-border);
     font-size: 0.95em;
     color: var(--text-color);
@@ -297,23 +297,17 @@ tr:hover {
 }
 
 /* Ajustes de columnas */
-.col-ot { width: 10%; }
+.col-ot { width: 8%; }
 .col-tipo { 
-    width: 20%; /* Asignar el ancho adecuado */
+    width: 15%; 
     white-space: nowrap; /* Prevenir el salto de línea */
-} 
-.col-cant { width: 8%; }
-.col-descripcion { width: 20%; }
-.col-monto { width: 8%; }
-.col-movilizacion { width: 8%; }
-.col-subtotal { width: 8%; }
-.col-acciones { width: 18%; }
-
-/* Opcional: Asegurar que los encabezados no tengan padding que cause envolvimiento */
-th {
-    padding: 12px 5px; /* Reducir el padding horizontal */
 }
-
+.col-cant { width: 7.5%; }
+.col-descripcion { width: 20%; }
+.col-monto { width: 10%; }
+.col-movilizacion { width: 10%; }
+.col-subtotal { width: 10%; }
+.col-acciones { width: 19.5%; }
 
 /* Inputs y selects dentro de la tabla */
 td input, td select {
@@ -356,10 +350,12 @@ td input.descripcion-input {
 .cantidad-input {
     width: 120%;
 }
+
 /* Campo de entrada OT */
 .ot-input {
     width: 100%; /* Asegura que ocupe todo el ancho de la columna OT */
 }
+
 /* Animaciones y Transiciones Suaves */
 a, button, input, select, th, td {
     transition: all 0.3s ease;
@@ -475,17 +471,17 @@ footer {
 
         <div class="table-responsive">
             <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
-    <tr>
-        <th class="col-ot">OT</th>
-        <th class="col-tipo">Tipo de OT</th> <!-- Clase añadida -->
-        <th class="col-cant">Cant</th>
-        <th class="col-descripcion">Descripción</th>
-        <th class="col-monto">Monto</th>
-        <th class="col-movilizacion">Movilización</th>
-        <th class="col-subtotal">Subtotal</th>
-        <th class="col-acciones">Acciones</th>
-    </tr>
-</table>
+                <tr>
+                    <th class="col-ot">OT</th>
+                    <th class="col-tipo">Tipo de OT</th> <!-- Clase añadida -->
+                    <th class="col-cant">Cant</th>
+                    <th class="col-descripcion">Descripción</th>
+                    <th class="col-monto">Monto</th>
+                    <th class="col-movilizacion">Movilización</th>
+                    <th class="col-subtotal">Subtotal</th>
+                    <th class="col-acciones">Acciones</th>
+                </tr>
+            </table>
         </div>
 
         <!-- Botones alineados al centro -->
