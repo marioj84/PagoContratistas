@@ -71,15 +71,16 @@
             flex-grow: 1;
         }
 
-        #login-container {
+        /* Contenedor único para encabezado y formulario */
+        #form-header-container {
             max-width: 400px;
             width: 100%;
-            padding: 20px; /* Reducir el padding para compactar */
+            padding: 20px;
             background-color: var(--background-color);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-bottom: 0px; /* Eliminar espacio debajo del formulario */
+            margin-bottom: 0px;
         }
 
         /* Header con Logo y Título */
@@ -87,7 +88,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0px; /* Reducir el espacio entre el logo y el título */
+            margin-bottom: 0px; /* Sin espacio entre encabezado y formulario */
         }
 
         .header img {
@@ -105,13 +106,13 @@
         .subtitle-big {
             font-size: 1.8em; /* Tamaño ligeramente más pequeño */
             font-weight: bold;
-            margin: 5px 0; /* Reducir espacio entre el título y "Bienvenido" */
+            margin: 5px 0;
         }
 
         .subtitle-small {
             font-size: 0.8em;
             font-weight: bold;
-            margin: 5px 0; /* Reducir espacio entre "Portal de ingreso" y "Ingrese los datos" */
+            margin: 5px 0;
         }
 
         label {
@@ -236,7 +237,7 @@
             font-size: 1em;
             color: #333;
             margin-top: 0;
-            margin-bottom: 5px; /* Reducir espacio entre "Bienvenido" y el siguiente subtítulo */
+            margin-bottom: 5px;
         }
 
         /* Responsive */
@@ -249,7 +250,7 @@
                 font-size: 1.2em;
             }
 
-            #login-container {
+            #form-header-container {
                 padding: 15px;
             }
 
@@ -260,51 +261,39 @@
     </style>
 </head>
 <body>
-    <!-- Encabezado visible en móviles y escritorio -->
-    <div id="login-container">
+    <!-- Unir encabezado y formulario en un solo contenedor -->
+    <div id="form-header-container">
         <div class="header">
             <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
             <h2>Inicio de Sesión</h2>
         </div>
-        <!-- Ajustes de tamaños -->
         <p class="subtitle-big">Bienvenido</p>
         <p class="subtitle">Portal de ingreso de cobros mensuales, Contraatistas LIPIGAS.</p>
         <p class="subtitle-small">Ingrese los datos proporcionados, en minúscula.</p>
-    </div>
+        <!-- Formulario de inicio de sesión -->
+        <form id="login-form">
+            <label for="usuario">Usuario</label>
+            <div style="position: relative;">
+                <span class="input-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Usuario" width="20" height="20">
+                </span>
+                <input type="text" id="usuario" required placeholder="Ingrese su usuario" class="shadow-input">
+            </div>
 
-    <!-- Mensaje de advertencia para móviles -->
-    <div id="mobile-warning" class="mobile-warning">
-        ⚠️ Este sitio no está disponible para dispositivos móviles. <br> 
-        Por favor, acceda desde una computadora de escritorio o portátil, el ingreso de OT requiere mayor detalle y precisión.
-    </div>
+            <label for="clave">Clave</label>
+            <div class="password-wrapper">
+                <span class="input-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Clave" width="20" height="20">
+                </span>
+                <input type="password" id="clave" required placeholder="Ingrese su clave" class="shadow-input">
+                <span class="password-toggle" onclick="togglePasswordVisibility()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
+                </span>
+            </div>
 
-    <div class="main-container" id="form-container">
-        <div id="login-container">
-            <!-- Formulario de inicio de sesión, oculto en móviles -->
-            <form id="login-form">
-                <label for="usuario">Usuario</label>
-                <div style="position: relative;">
-                    <span class="input-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Usuario" width="20" height="20">
-                    </span>
-                    <input type="text" id="usuario" required placeholder="Ingrese su usuario" class="shadow-input">
-                </div>
-
-                <label for="clave">Clave</label>
-                <div class="password-wrapper">
-                    <span class="input-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Clave" width="20" height="20">
-                    </span>
-                    <input type="password" id="clave" required placeholder="Ingrese su clave" class="shadow-input">
-                    <span class="password-toggle" onclick="togglePasswordVisibility()">
-                        <img src="https://cdn-icons-png.flaticon.com/512/159/159604.png" alt="Mostrar/Ocultar contraseña">
-                    </span>
-                </div>
-
-                <button type="submit">Ingresar</button>
-            </form>
-            <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
-        </div>
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="error-message" class="error">Usuario o clave incorrectos. Por favor, intente nuevamente.</div>
     </div>
 
     <footer>
@@ -341,14 +330,14 @@
         // Mostrar mensaje de advertencia para móviles
         window.onload = function() {
             const mobileWarning = document.getElementById('mobile-warning');
-            const formContainer = document.getElementById('form-container');
+            const formHeaderContainer = document.getElementById('form-header-container');
             const contactText = document.getElementById('contact-text');
 
             if (isMobileOrTablet()) {
                 mobileWarning.style.display = 'block'; // Mostrar advertencia en móviles
-                formContainer.style.display = 'none'; // Ocultar formulario de ingreso en móviles
+                formHeaderContainer.style.display = 'none'; // Ocultar formulario en móviles
             } else {
-                formContainer.style.display = 'flex'; // Asegurarse de que el formulario esté centrado
+                formHeaderContainer.style.display = 'block'; // Asegurarse de que el formulario esté visible
             }
 
             contactText.style.display = 'block'; // Mostrar el pie de página en ambas versiones
