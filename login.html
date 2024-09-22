@@ -48,6 +48,7 @@
             align-items: center;
             min-height: 100vh;
             transition: background 0.3s ease, color 0.3s ease;
+            overflow-y: hidden; /* Evitar el desplazamiento vertical */
         }
 
         .mobile-warning {
@@ -73,7 +74,7 @@
         #login-container {
             max-width: 400px;
             width: 100%;
-            padding: 30px;
+            padding: 20px; /* Reducir el padding para compactar */
             background-color: var(--background-color);
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -90,29 +91,29 @@
         }
 
         .header img {
-            width: 120px;
+            width: 100px; /* Reducir el tamaño del logo */
             height: auto;
             margin-right: 10px;
         }
 
         .header h2 {
-            font-size: 1.5em;
+            font-size: 1.4em; /* Reducir ligeramente el tamaño del título */
             margin: 0;
         }
 
         /* Ajustes solicitados */
         .subtitle-big {
-            font-size: 2em; /* Tamaño del doble */
+            font-size: 1.8em; /* Tamaño ligeramente más pequeño */
             font-weight: bold;
         }
 
         .subtitle-small {
-            font-size: 0.8em; /* 80% del tamaño */
+            font-size: 0.8em;
             font-weight: bold;
         }
 
         label {
-            font-size: 1.1em;
+            font-size: 1em; /* Reducir el tamaño de los labels */
             margin-bottom: 8px;
             display: block;
             position: relative;
@@ -134,8 +135,8 @@
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 12px 40px 12px 40px;
-            margin-bottom: 20px;
+            padding: 10px 40px 10px 40px; /* Reducir padding */
+            margin-bottom: 15px; /* Reducir el margen */
             border: 1px solid var(--input-border);
             border-radius: 5px;
             font-size: 1em;
@@ -174,7 +175,7 @@
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 10px; /* Reducir el padding */
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -203,11 +204,11 @@
 
         .contact-text {
             text-align: center;
-            font-size: 0.9em;
+            font-size: 0.85em; /* Reducir el tamaño del pie de página */
             color: var(--footer-text-color);
-            padding: 20px 0;
+            padding: 15px 0; /* Reducir el padding */
             font-weight: bold;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         /* Estilo para el pie de página modificado */
@@ -224,7 +225,7 @@
 
         .footer-right {
             text-align: right;
-            font-size: 0.9em;
+            font-size: 0.85em; /* Ajustar el tamaño del pie derecho */
             color: var(--footer-text-color);
         }
 
@@ -233,7 +234,7 @@
             font-size: 1em;
             color: #333;
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Reducir el espacio entre el subtítulo y el formulario */
         }
 
         /* Responsive */
@@ -243,11 +244,11 @@
             }
 
             .header h2 {
-                font-size: 1.3em;
+                font-size: 1.2em;
             }
 
             #login-container {
-                padding: 20px;
+                padding: 15px;
             }
 
             .contact-text {
