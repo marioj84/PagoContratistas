@@ -297,8 +297,8 @@ tr:hover {
 }
 
 /* Ajustes de columnas */
-.col-ot { width: 10.5%; }
-.col-cant { width: 7.5%; } /* Aumentar el ancho de la columna Cantidad */
+.col-ot { width: 12%; } /* Incrementado de 10% a 12% */
+.col-cant { width: 7.5%; } /* El ancho permanece igual */
 .col-descripcion { width: 30%; }
 .col-monto { width: 15%; }
 .col-subtotal { width: 15%; }
@@ -345,9 +345,9 @@ td input.descripcion-input {
 .cantidad-input {
     width: 120%;
 }
-/* Aumentar el ancho del campo OT */
+/* Campo de entrada OT */
 .ot-input {
-    width: 120%;
+    width: 100%; /* Asegura que ocupe todo el ancho de la columna OT */
 }
 /* Animaciones y Transiciones Suaves */
 a, button, input, select, th, td {
@@ -581,6 +581,7 @@ function addRow() {
     inputOT.step = "1";  
     inputOT.min = "1";
     inputOT.setAttribute('aria-label', 'Ingresar OT');
+    inputOT.classList.add('ot-input'); // Añadida la clase
     otCell.appendChild(inputOT);
 
     const selectTipo = document.createElement('select');
