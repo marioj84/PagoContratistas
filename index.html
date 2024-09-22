@@ -128,10 +128,17 @@ header nav ul li a:hover {
     color: var(--primary-color);
 }
 
-header .theme-toggle {
-    /* Ajustes para que encaje en el header */
-    position: static;
-    margin-left: auto;
+header #theme-toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 1.5em;
+    transition: color 0.3s;
+}
+
+header #theme-toggle-button:hover {
+    color: var(--primary-color);
 }
 
 /* Ajustar el contenido principal para que no quede debajo del header */
@@ -342,6 +349,21 @@ a, button, input, select, th, td {
     display: none;
 }
 
+/* Ocultar la etiqueta y el campo de "Nombre del Contratista" */
+label[for="contratista"],
+#contratista {
+    display: none;
+}
+
+/* Botones centrados */
+.button-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
 /* Footer */
 footer {
     margin-top: auto;
@@ -419,7 +441,6 @@ body.loaded {
     }
 
     .button-group {
-        display: flex;
         flex-direction: column;
         align-items: center;
     }
@@ -458,11 +479,10 @@ body.loaded {
                 <!-- Otros elementos de navegación si es necesario -->
             </ul>
         </nav>
-        <!-- Interruptor de Modo Oscuro -->
-        <div class="theme-toggle">
-            <input type="checkbox" id="theme-toggle-checkbox">
-            <label for="theme-toggle-checkbox" class="slider"></label>
-        </div>
+        <!-- Interruptor de Modo Oscuro (Restaurado) -->
+        <button id="theme-toggle-button" aria-label="Cambiar Modo">
+            <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
     </header>
 
     <!-- Contenido principal -->
@@ -474,12 +494,13 @@ body.loaded {
         <div id="success-msg">Datos guardados exitosamente.</div>
         <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
-        <!-- Contratista -->
+        <!-- Contratista (Oculto) -->
         <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
         <div class="form-group">
             <select id="contratista" aria-label="Seleccionar Contratista">
                 <option value="">Seleccione un contratista</option>
             </select>
+            <!-- El botón Cargar OT sigue visible -->
             <button onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
         </div>
 
@@ -497,6 +518,7 @@ body.loaded {
             </table>
         </div>
 
+        <!-- Botones alineados al centro -->
         <div class="button-group">
             <button onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
             <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
@@ -523,7 +545,7 @@ body.loaded {
 
     <!-- Tu script JavaScript -->
     <script>
-        let otData = [];
+let otData = [];
 
 // Función para mostrar la fecha actual
 function displayCurrentDate() {
@@ -807,6 +829,9 @@ async function finalizeAndDownload() {
 
     // Enviar datos al endpoint
     await enviarDatos(otData);
+
+    // Limpiar la tabla después de descargar
+    clearTable();
 }
 
 // Nueva función para enviar datos al endpoint
@@ -876,20 +901,29 @@ function checkSession() {
 }
 
 // Manejador del cambio de tema
-const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+const themeToggleButton = document.getElementById('theme-toggle-button');
+const themeIcon = document.getElementById('theme-icon');
 
 // Verificar si el usuario ya tiene una preferencia guardada
 const currentTheme = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', currentTheme);
-themeToggleCheckbox.checked = currentTheme === 'dark';
+if (currentTheme === 'dark') {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+}
 
-themeToggleCheckbox.addEventListener('change', function() {
-    if (this.checked) {
+themeToggleButton.addEventListener('click', function() {
+    let theme = document.documentElement.getAttribute('data-theme');
+    if (theme === 'light') {
         document.documentElement.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
     } else {
         document.documentElement.setAttribute('data-theme', 'light');
         localStorage.setItem('theme', 'light');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
     }
 });
 
@@ -903,7 +937,6 @@ window.onload = function() {
     // Añadir clase 'loaded' para el efecto de fade-in
     document.body.classList.add('loaded');
 };
-
     </script>
 </body>
 </html>
