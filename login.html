@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión - Pago Contratistas</title>
-    <!-- Enlace a la fuente Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         /* Variables para Modo Claro y Oscuro */
@@ -245,21 +244,24 @@
     </style>
 </head>
 <body>
+    <!-- Encabezado visible en móviles y escritorio -->
+    <div id="login-container">
+        <div class="header">
+            <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+            <h2>Inicio de Sesión</h2>
+        </div>
+        <p class="subtitle">Bienvenido a portal de ingreso de cobros mensuales, Técnicos LIPIGAS.</p>
+    </div>
+
     <!-- Mensaje de advertencia para móviles -->
     <div id="mobile-warning" class="mobile-warning">
         ⚠️ Este sitio no está disponible para dispositivos móviles. <br> 
         Por favor, acceda desde una computadora de escritorio o portátil, ya que el ingreso de OT requiere mayor detalle y precisión.
     </div>
 
-    <div class="main-container">
+    <div class="main-container" id="form-container">
         <div id="login-container">
-            <div class="header">
-                <img src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-                <h2>Inicio de Sesión</h2>
-            </div>
-            <p class="subtitle">Bienvenido a portal de ingreso de cobros mensuales, Técnicos LIPIGAS.</p>
-
-            <!-- Formulario de inicio de sesión -->
+            <!-- Formulario de inicio de sesión, oculto en móviles -->
             <form id="login-form">
                 <label for="usuario">Usuario</label>
                 <div style="position: relative;">
@@ -319,14 +321,15 @@
         // Mostrar mensaje de advertencia para móviles
         window.onload = function() {
             const mobileWarning = document.getElementById('mobile-warning');
-            const loginContainer = document.getElementById('login-container');
+            const formContainer = document.getElementById('form-container');
             const mobileFooter = document.getElementById('mobile-footer');
 
             if (isMobileOrTablet()) {
-                mobileWarning.style.display = 'block';
-                mobileFooter.style.display = 'block'; // Mostrar pie de página en móvil
+                mobileWarning.style.display = 'block'; // Mostrar advertencia en móviles
+                formContainer.style.display = 'none'; // Ocultar formulario de ingreso
+                mobileFooter.style.display = 'block'; // Mostrar pie de página en móviles
             } else {
-                loginContainer.style.display = 'block'; // Mostrar contenido en escritorio
+                formContainer.style.display = 'block'; // Mostrar formulario en escritorio
             }
         };
 
