@@ -604,7 +604,7 @@
         function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
             const cantidad = parseFloat(inputCant.value) || 0;
             const monto = parseFloat(inputMonto.value) || 0;
-            inputSubtotal.value = $${(cantidad * monto).toFixed(2)};
+            inputSubtotal.value = `$${(cantidad * monto).toFixed(2)}`;
         }
 
         function deleteRow(row) {
@@ -697,13 +697,13 @@
                 totalMonto += parseFloat(data.subtotal);
             });
 
-            let resumenTabla = <strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados, da click en Validar y Descargar Soporte, para finalizar y obtener un respaldo de las OT enviadas a cobro:<br><br>;
-            resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>;
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados, da click en Validar y Descargar Soporte, para finalizar y obtener un respaldo de las OT enviadas a cobro:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
 
             for (const tipo in resumenPorTipo) {
-                resumenTabla += <tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>;
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
             }
-            resumenTabla += </table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>;
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
             document.getElementById('summaryBtn').classList.add('hidden');
@@ -745,7 +745,7 @@
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-            XLSX.writeFile(workbook, Resumen_OT_${Date.now()}.xlsx);
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
             // Enviar datos al endpoint
             await enviarDatos(otData);
@@ -763,10 +763,10 @@
                 });
                 if (response.ok) {
                     console.log('Datos enviados exitosamente al endpoint.');
-                    alert('Datos enviados a cobro.');
+                    alert('Datos enviados exitosamente al servidor.');
                 } else {
                     console.error('Error al enviar datos:', response.statusText);
-                    alert('Error al enviar los datos a cobro.');
+                    alert('Error al enviar los datos al servidor.');
                 }
             } catch (e) {
                 console.error('Error en la solicitud:', e);
@@ -803,7 +803,7 @@
 
             if (sesionIniciada === 'true' && usuario) {
                 // Mostrar mensaje de bienvenida y botón de logout
-                document.getElementById('welcome-msg').innerHTML = Bienvenido, <strong>${usuario}</strong>!;
+                document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
                 document.getElementById('logoutBtn').classList.remove('hidden');
             } else {
                 // Redirigir al login si no está autenticado
