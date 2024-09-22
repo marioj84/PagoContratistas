@@ -1,14 +1,14 @@
 {
   "trabajos": [
-    "Retiro de Medidor",
-    "Reinstalación de Medidor",
-    "Presupuesto Trabajo en Terreno",
-    "Cambio de Medidor",
-    "Verificación de Medidor en Terreno",
-    "Cambio de Ubicación Medidor",
-    "Verificación de Lectura",
-    "Revisión de Merma",
     "PH y Análisis de Medidor",
-    "Cargo Fijo Mensual"
+    "Cambio de Medidor",
+    "Verificación de Lectura",
+    "Verificación de Medidor en Terreno",
+    "Revisión de Merma",
+    "Cambio de Ubicación Medidor",
+    "Presupuesto Trabajo en Terreno",
+    "Cargo Fijo Mensual",
+    "Retiro de Medidor",
+    "Reinstalación de Medidor"
   ]
 }
