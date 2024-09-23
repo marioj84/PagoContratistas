@@ -670,7 +670,7 @@ function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtota
     const cantidad = parseFloat(inputCant.value) || 0;
     const monto = parseFloat(inputMonto.value) || 0;
     const movilizacion = parseFloat(inputMovilizacion.value) || 0;
-    inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
+    inputSubtotal.value = $${((cantidad * monto) + movilizacion).toFixed(2)};
 }
 
 function deleteRow(row) {
@@ -772,21 +772,21 @@ function displaySummary() {
         totalMovilizacion += parseFloat(data.movilizacion);
     });
 
-    let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>`;
-    resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>`;
+    let resumenTabla = <strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>;
+    resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>;
 
     for (const tipo in resumenPorTipo) {
-        resumenTabla += `<tr>
+        resumenTabla += <tr>
             <td>${resumenPorTipo[tipo].cantidad}</td>
             <td>${tipo}</td>
             <td>$${resumenPorTipo[tipo].totalMonto.toFixed(2)}</td>
             <td>$${resumenPorTipo[tipo].totalMovilizacion.toFixed(2)}</td>
             <td>$${(resumenPorTipo[tipo].totalMonto + resumenPorTipo[tipo].totalMovilizacion).toFixed(2)}</td>
-        </tr>`;
+        </tr>;
     }
-    resumenTabla += `</table><br><strong><span class="total-general">Total General Monto: $${totalMonto.toFixed(2)}</span></strong><br>`;
-    resumenTabla += `<strong><span class="total-general">Total General Movilización: $${totalMovilizacion.toFixed(2)}</span></strong><br>`;
-    resumenTabla += `<strong><span class="total-general">Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</span></strong>`;
+    resumenTabla += </table><br><strong><span class="total-general">Total General Monto: $${totalMonto.toFixed(2)}</span></strong><br>;
+    resumenTabla += <strong><span class="total-general">Total General Movilización: $${totalMovilizacion.toFixed(2)}</span></strong><br>;
+    resumenTabla += <strong><span class="total-general">Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</span></strong>;
 
     document.getElementById('summary').innerHTML = resumenTabla;
 
@@ -847,6 +847,14 @@ async function finalizeAndDownload() {
 
     XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
+    // Enviar datos a Firebase después de generar el archivo Excel
+    await enviarDatosAFirebase();
+
+    // Limpiar la tabla después de enviar los datos a Firebase
+    clearTable();
+}
+
+
     // Enviar datos al endpoint
     await enviarDatos(otData);
 
@@ -874,6 +882,34 @@ async function enviarDatos(otData) {
     } catch (e) {
         console.error('Error en la solicitud:', e);
         alert('Error al enviar los datos al servidor.');
+    }
+}
+// Función para enviar los datos de OT a Firebase Firestore
+async function enviarDatosAFirebase() {
+    const contratista = document.getElementById('contratista').value;
+    if (otData.length > 0 && contratista) {
+        try {
+            // Agregar cada OT a Firebase
+            for (const ot of otData) {
+                await addDoc(collection(db, "ordenes_trabajo"), {
+                    contratista: ot.contratista,
+                    ot: ot.ot,
+                    tipo: ot.tipo,
+                    cantidad: ot.cantidad,
+                    descripcion: ot.descripcion,
+                    monto: ot.monto,
+                    movilizacion: ot.movilizacion,
+                    subtotal: ot.subtotal,
+                    fecha: serverTimestamp()
+                });
+            }
+            alert('Datos enviados correctamente a Firebase.');
+        } catch (error) {
+            console.error("Error al enviar datos a Firebase: ", error);
+            alert('Error al enviar los datos a Firebase.');
+        }
+    } else {
+        alert('No hay datos para enviar a Firebase.');
     }
 }
 
@@ -912,7 +948,7 @@ function checkSession() {
 
     if (sesionIniciada === 'true' && usuario) {
         // Mostrar mensaje de bienvenida y botones
-        document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
+        document.getElementById('welcome-msg').innerHTML = Bienvenido, <strong>${usuario}</strong>!;
         document.getElementById('logoutBtn').classList.remove('hidden');
     } else {
         // Redirigir al login si no está autenticado
@@ -963,48 +999,28 @@ window.onload = function() {
     // Añadir clase 'loaded' para el efecto de fade-in
     document.body.classList.add('loaded');
 };
-
-// Firebase integration for saving OT data
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-// Firebase config
-const firebaseConfig = {
-    apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
-    authDomain: "formulariogithub.firebaseapp.com",
-    projectId: "formulariogithub",
-    storageBucket: "formulariogithub.appspot.com",
-    messagingSenderId: "377516389796",
-    appId: "1:377516389796:web:93c39e97d017fe16093d31",
-    measurementId: "G-NVGW5516Y0"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Function to save OT data to Firebase
-async function saveToFirebase(otData) {
-    try {
-        // Save each OT entry to Firestore
-        for (let entry of otData) {
-            await addDoc(collection(db, "ordenesTrabajo"), {
-                ...entry,
-                fecha: serverTimestamp()
-            });
-        }
-        console.log('Datos guardados en Firebase exitosamente.');
-        document.getElementById('success-msg').style.display = "block";
-    } catch (error) {
-        console.error("Error al guardar en Firebase: ", error);
-        document.getElementById('error-msg').textContent = `Error al guardar los datos: ${error.message}`;
-        document.getElementById('error-msg').style.display = "block";
-    }
-}
-
-// Call this function within finalizeAndDownload() or any other function after processing OT data
-saveToFirebase(otData);
-
     </script>
+    <!-- Importar los SDK de Firebase -->
+<script type="module">
+    // Importa las funciones necesarias desde los SDK de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
+      authDomain: "formulariogithub.firebaseapp.com",
+      projectId: "formulariogithub",
+      storageBucket: "formulariogithub.appspot.com",
+      messagingSenderId: "377516389796",
+      appId: "1:377516389796:web:93c39e97d017fe16093d31",
+      measurementId: "G-NVGW5516Y0"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+</script>
+
 </body>
 </html>
