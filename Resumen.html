@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Tabla de SharePoint</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resumen de la Tabla de SharePoint</h1>
+    <table id="summaryTable">
+        <thead>
+            <tr>
+                <!-- Define los encabezados de tu tabla según los campos de tu lista -->
+                <th>ID</th>
+                <th>Título</th>
+                <th>Fecha</th>
+                <!-- Agrega más encabezados según sea necesario -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los datos se insertarán aquí -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Reemplaza estos valores con los de tu entorno
+            const siteUrl = "https://tu-dominio.sharepoint.com/sites/tu-sitio";
+            const listName = "NombreDeTuLista";
+
+            // Construir la URL de la API REST
+            const apiUrl = `${siteUrl}/_api/web/lists/getbytitle('${listName}')/items?$select=ID,Title,Fecha`;
+
+            // Realizar la solicitud fetch
+            fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json; odata=verbose"
+                },
+                credentials: "include" // Asegura que las cookies de autenticación se envíen
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const items = data.d.results;
+                const tbody = document.querySelector("#summaryTable tbody");
+
+                items.forEach(item => {
+                    const tr = document.createElement("tr");
+
+                    const tdId = document.createElement("td");
+                    tdId.textContent = item.ID;
+                    tr.appendChild(tdId);
+
+                    const tdTitle = document.createElement("td");
+                    tdTitle.textContent = item.Title;
+                    tr.appendChild(tdTitle);
+
+                    const tdFecha = document.createElement("td");
+                    // Asegúrate de que "Fecha" es el nombre interno del campo en tu lista
+                    tdFecha.textContent = new Date(item.Fecha).toLocaleDateString();
+                    tr.appendChild(tdFecha);
+
+                    // Agrega más celdas según los campos que necesites
+
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error("Error al obtener los datos de SharePoint:", error);
+                const tbody = document.querySelector("#summaryTable tbody");
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                td.colSpan = 3; // Ajusta según el número de columnas
+                td.textContent = "Error al cargar los datos.";
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            });
+        });
+    </script>
+</body>
+</html>
