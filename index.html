@@ -512,6 +512,30 @@ footer {
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
+    <!-- Firebase App (core SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js"></script>
+<!-- Firebase Firestore SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js"></script>
+
+<script>
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+      authDomain: "pagocontratistas.firebaseapp.com",
+      databaseURL: "https://pagocontratistas-default-rtdb.firebaseio.com",
+      projectId: "pagocontratistas",
+      storageBucket: "pagocontratistas.appspot.com",
+      messagingSenderId: "87829393195",
+      appId: "1:87829393195:web:d46970885f29126eef5f6e",
+      measurementId: "G-NHR6KRCG3R"
+    };
+
+    // Inicializar Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+</script>
+
+    
     <!-- Tu script JavaScript -->
     <script>
 let otData = [];
@@ -871,6 +895,17 @@ async function enviarDatos(otData) {
             console.error('Error al enviar datos:', response.statusText);
             alert('Error al enviar los datos al servidor.');
         }
+
+        // Enviar los datos a Firebase
+        const batch = db.batch(); // Usamos un batch para múltiples operaciones
+        otData.forEach((row) => {
+            const docRef = db.collection("ordenesTrabajo").doc(); // Crear un nuevo documento
+            batch.set(docRef, row); // Agregar datos al batch
+        });
+
+        await batch.commit(); // Enviar batch a Firebase
+        console.log('Datos enviados exitosamente a Firebase.');
+        alert('Datos enviados exitosamente a Firebase.');
     } catch (e) {
         console.error('Error en la solicitud:', e);
         alert('Error al enviar los datos al servidor.');
