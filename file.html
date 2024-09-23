@@ -8,38 +8,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-e6iZ5qXcQoHj5ThQ1kHvS6k6Yt3cfi9GjPNn8Xb0h8Y2+6n3p6eI5B6dq3o7YYZ0" crossorigin="anonymous">
     <!-- Estilos CSS -->
     <style>
-/* (Tus estilos CSS existentes aquí) */
-/* ... (Mantén tus estilos CSS sin cambios) ... */
+        /* Estilos para mensajes de éxito y error */
+        #success-msg, #error-msg {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
 
-/* Estilos para mensajes de éxito y error */
-#success-msg, #error-msg {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1em;
-}
+        #success-msg {
+            color: var(--success-color);
+            display: none;
+        }
 
-#success-msg {
-    color: var(--success-color);
-    display: none;
-}
+        #error-msg {
+            color: var(--invalid-color);
+            display: none;
+        }
 
-#error-msg {
-    color: var(--invalid-color);
-    display: none;
-}
-
-/* Estilos para inputs inválidos */
-.invalid-input {
-    border-color: var(--invalid-color) !important;
-    box-shadow: 0 0 5px var(--invalid-color) !important;
-}
+        /* Estilos para inputs inválidos */
+        .invalid-input {
+            border-color: var(--invalid-color) !important;
+            box-shadow: 0 0 5px var(--invalid-color) !important;
+        }
     </style>
     <!-- Firebase SDKs -->
-    <!-- Firebase App (la base de Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <!-- Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <!-- Firebase Analytics (opcional) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
 </head>
 <body>
@@ -51,10 +45,8 @@
         <nav>
             <ul>
                 <li class="active"><a href="#">Inicio</a></li>
-                <!-- Otros elementos de navegación si es necesario -->
             </ul>
         </nav>
-        <!-- Interruptor de Modo Oscuro con Texto -->
         <button id="theme-toggle-button" aria-label="Cambiar Modo">
             <i id="theme-icon" class="fas fa-moon"></i>
             <span id="theme-toggle-text">Modo Oscuro</span>
@@ -65,45 +57,40 @@
     <main>
         <h2>Ingreso de Cobros Mensuales (OT)</h2>
         <p id="current-date"></p>
-        
+
         <div id="welcome-msg"></div>
         <div id="success-msg">Datos guardados exitosamente.</div>
         <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
 
-        <!-- Contratista (Oculto) -->
+        <!-- Contratista -->
         <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
         <div class="form-group">
             <select id="contratista" aria-label="Seleccionar Contratista">
                 <option value="">Seleccione un contratista</option>
             </select>
-            <!-- El botón Cargar OT sigue visible -->
             <button type="button" onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
         </div>
 
         <div class="table-responsive">
             <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
                 <tr>
-                    <th class="col-ot">OT</th>
-                    <th class="col-tipo">Tipo de OT</th>
-                    <th class="col-cant">Cant</th>
-                    <th class="col-descripcion">Descripción</th>
-                    <th class="col-monto">Monto</th>
-                    <th class="col-movilizacion">Movilización</th>
-                    <th class="col-subtotal">Subtotal</th>
-                    <th class="col-acciones">Acciones</th>
+                    <th>OT</th>
+                    <th>Tipo de OT</th>
+                    <th>Cant</th>
+                    <th>Descripción</th>
+                    <th>Monto</th>
+                    <th>Movilización</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
                 </tr>
             </table>
         </div>
 
-        <!-- Botones alineados al centro -->
         <div class="button-group">
             <button type="button" onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
             <button id="summaryBtn" type="button" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
             <button id="logoutBtn" type="button" class="burdeo hidden" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
         </div>
-
-        <!-- Línea divisoria -->
-        <hr>
 
         <h3>Resumen</h3>
         <div id="summary">Total Facturado: $0.00</div>
@@ -117,17 +104,14 @@
     <footer>
         Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-        <div class="footer-right">Área de Redes y Granel</div>
     </footer>
 
-    <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
-    <!-- Tu script JavaScript -->
     <script>
 let otData = [];
 
-// Tu configuración de Firebase (ya inicializado en el head)
+// Configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAzg3r9rPjHbG_AXmINsBo05Dd1TFn3uxU",
   authDomain: "cobrocontratistas.firebaseapp.com",
@@ -138,495 +122,129 @@ const firebaseConfig = {
   measurementId: "G-NBFSPCG4TK"
 };
 
-// Inicializar Firebase solo una vez
+// Inicializar Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 } else {
-    firebase.app(); // Usa la instancia existente
+    firebase.app();
 }
-const analytics = firebase.analytics();
 const db = firebase.firestore();
-
-// Función para mostrar la fecha actual
-function displayCurrentDate() {
-    const dateElement = document.getElementById('current-date');
-    const today = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = today.toLocaleDateString('es-ES', options);
-    dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-}
-
-// Función para cargar contratistas desde JSON
-async function loadContratistas() {
-    try {
-        const contratistaSelect = document.getElementById('contratista');
-        
-        const response = await fetch('contratistas.json');
-        if (!response.ok) {
-            throw new Error('Error al cargar contratistas');
-        }
-        const contratistas = await response.json();
-        contratistas.forEach(contratista => {
-            const option = document.createElement('option');
-            option.value = contratista.nombreCompleto;
-            option.text = contratista.nombreCompleto;
-            contratistaSelect.appendChild(option);
-        });
-
-        // Obtener el usuario autenticado desde localStorage
-        const usuarioAutenticado = localStorage.getItem('usuario');
-
-        if (usuarioAutenticado) {
-            // Establecer el valor seleccionado en el select
-            contratistaSelect.value = usuarioAutenticado;
-
-            // Opcional: Deshabilitar el select para evitar cambios
-            contratistaSelect.disabled = true;
-        }
-    } catch (error) {
-        console.error('Error al cargar contratistas:', error);
-        alert('Error al cargar los contratistas.');
-    }
-}
-
-// Función para cargar tipos de trabajos desde JSON
-async function loadTrabajos() {
-    try {
-        const response = await fetch('trabajos.json');
-        if (!response.ok) {
-            throw new Error('Error al cargar trabajos');
-        }
-        const trabajos = await response.json();
-        console.log(trabajos); // Verificar el contenido
-        window.trabajosList = trabajos.trabajos;
-    } catch (error) {
-        console.error('Error al cargar trabajos:', error);
-        alert('Error al cargar los trabajos.');
-    }
-}
 
 // Función para agregar una fila de OT
 function addRow() {
     const table = document.getElementById('otTable');
     const row = table.insertRow();
+    // Celdas de la tabla
     const otCell = row.insertCell(0);
     const tipoCell = row.insertCell(1);
     const cantCell = row.insertCell(2);
     const descCell = row.insertCell(3);
     const montoCell = row.insertCell(4);
-    const movilizacionCell = row.insertCell(5); // Nueva celda para Movilización
+    const movilizacionCell = row.insertCell(5);
     const subtotalCell = row.insertCell(6);
     const actionsCell = row.insertCell(7);
 
-    const inputOT = document.createElement('input');
-    inputOT.type = 'number';
-    inputOT.step = "1";  
-    inputOT.min = "1";
-    inputOT.setAttribute('aria-label', 'Ingresar OT');
-    inputOT.classList.add('ot-input'); // Añadida la clase
-    otCell.appendChild(inputOT);
-
-    const selectTipo = document.createElement('select');
-    window.trabajosList.forEach(trabajo => {
-        const optionElement = document.createElement('option');
-        optionElement.value = trabajo;
-        optionElement.text = trabajo;
-        selectTipo.appendChild(optionElement);
-    });
-    selectTipo.setAttribute('aria-label', 'Seleccionar Tipo de OT');
-    tipoCell.appendChild(selectTipo);
-
-    const inputCant = document.createElement('input');
-    inputCant.type = 'number';
-    inputCant.min = "1";
-    inputCant.value = "1";
-    inputCant.setAttribute('aria-label', 'Ingresar Cantidad');
-    inputCant.classList.add('cantidad-input'); // Añadir clase para ampliar el ancho
-    cantCell.appendChild(inputCant);
-
-    const inputDesc = document.createElement('input');
-    inputDesc.type = 'text';
-    inputDesc.setAttribute('aria-label', 'Ingresar Descripción');
-    inputDesc.classList.add('descripcion-input'); // Añadir clase para alinear a la izquierda
-    descCell.appendChild(inputDesc);
-
-    const inputMonto = document.createElement('input');
-    inputMonto.type = 'number';
-    inputMonto.placeholder = '$0.00';
-    inputMonto.step = "0.01";
-    inputMonto.min = "0";
-    inputMonto.setAttribute('aria-label', 'Ingresar Monto');
-    inputMonto.classList.add('monetary'); // Añadir clase para alinear a la derecha
-    montoCell.appendChild(inputMonto);
-
-    const inputMovilizacion = document.createElement('input'); // Nuevo input para Movilización
-    inputMovilizacion.type = 'number';
-    inputMovilizacion.placeholder = '$0.00';
-    inputMovilizacion.step = "0.01";
-    inputMovilizacion.min = "0";
-    inputMovilizacion.setAttribute('aria-label', 'Ingresar Movilización');
-    inputMovilizacion.classList.add('monetary'); // Añadir clase para alinear a la derecha
-    movilizacionCell.appendChild(inputMovilizacion);
-
-    const inputSubtotal = document.createElement('input');
-    inputSubtotal.type = 'text';
-    inputSubtotal.placeholder = '$0.00';
-    inputSubtotal.disabled = true;
-    inputSubtotal.setAttribute('aria-label', 'Subtotal');
-    inputSubtotal.classList.add('monetary'); // Añadir clase para alinear a la derecha
-    subtotalCell.appendChild(inputSubtotal);
-
-    // Calcular subtotal al cambiar cantidad, monto o movilización
-    inputCant.oninput = function() {
-        calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
-    };
-    inputMonto.oninput = function() {
-        calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
-    };
-    inputMovilizacion.oninput = function() {
-        calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
-    };
+    // Campos de entrada
+    otCell.innerHTML = `<input type="number" min="1" step="1" aria-label="Ingresar OT">`;
+    tipoCell.innerHTML = `<select aria-label="Seleccionar Tipo de OT"></select>`;
+    cantCell.innerHTML = `<input type="number" min="1" value="1" aria-label="Ingresar Cantidad">`;
+    descCell.innerHTML = `<input type="text" aria-label="Ingresar Descripción">`;
+    montoCell.innerHTML = `<input type="number" step="0.01" min="0" placeholder="$0.00" aria-label="Ingresar Monto">`;
+    movilizacionCell.innerHTML = `<input type="number" step="0.01" min="0" placeholder="$0.00" aria-label="Ingresar Movilización">`;
+    subtotalCell.innerHTML = `<input type="text" disabled value="$0.00" aria-label="Subtotal">`;
 
     const deleteButton = document.createElement('button');
     deleteButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar OT';
-    deleteButton.className = 'acciones-btn burdeo';
-    deleteButton.style.whiteSpace = "nowrap";  // Asegurar que se mantenga en una sola línea
-    deleteButton.onclick = () => deleteRow(row);
+    deleteButton.onclick = () => row.remove();
     actionsCell.appendChild(deleteButton);
-
-    document.getElementById('summaryBtn').classList.remove('hidden');
 }
 
-function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal) {
-    const cantidad = parseFloat(inputCant.value) || 0;
-    const monto = parseFloat(inputMonto.value) || 0;
-    const movilizacion = parseFloat(inputMovilizacion.value) || 0;
-    inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
-}
-
-function deleteRow(row) {
-    row.remove(); 
-}
-
-function viewSummary() {
-    const table = document.getElementById('otTable');
-    otData = [];
-    const contratista = document.getElementById('contratista').value.trim();
-    let valid = true;
-
-    // Limpiar la clase invalid-input antes de hacer la validación
-    document.getElementById('contratista').classList.remove('invalid-input');
-    for (let i = 1; i < table.rows.length; i++) {
-        for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
-            table.rows[i].cells[j].children[0].classList.remove('invalid-input');
-        }
-    }
-
-    // Validar contratista
-    if (contratista === "") {
-        document.getElementById('contratista').classList.add('invalid-input');
-        valid = false;
-    }
-
-    // Validar cada fila de la tabla
-    for (let i = 1; i < table.rows.length; i++) {
-        const row = table.rows[i];
-        const ot = row.cells[0].children[0].value.trim();
-        const descripcion = row.cells[3].children[0].value.trim();
-        const monto = row.cells[4].children[0].value.trim();
-        const movilizacion = row.cells[5].children[0].value.trim(); // Nuevo campo
-
-        if (ot === "") {
-            row.cells[0].children[0].classList.add('invalid-input');
-            valid = false;
-        }
-
-        if (descripcion === "") {
-            row.cells[3].children[0].classList.add('invalid-input');
-            valid = false;
-        }
-
-        if (monto === "") {
-            row.cells[4].children[0].classList.add('invalid-input');
-            valid = false;
-        }
-
-        if (movilizacion === "") { // Validar Movilización
-            row.cells[5].children[0].classList.add('invalid-input');
-            valid = false;
-        }
-    }
-
-    if (valid) {
-        document.getElementById('error-msg').style.display = "none";
-        // Procesar los datos ingresados para el resumen
-        for (let i = 1; i < table.rows.length; i++) {
-            const row = table.rows[i];
-            const ot = row.cells[0].children[0].value.trim();
-            const tipo = row.cells[1].children[0].value;
-            const cantidad = row.cells[2].children[0].value;
-            const descripcion = row.cells[3].children[0].value.trim();
-            const monto = row.cells[4].children[0].value.trim();
-            const movilizacion = row.cells[5].children[0].value.trim(); // Nuevo campo
-            const subtotal = row.cells[6].children[0].value.trim().replace('$','');
-
-            otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, movilizacion, subtotal });
-        }
-
-        displaySummary();
-        document.getElementById('finalizeBtn').classList.remove('hidden');
-        document.getElementById('clearBtn').classList.remove('hidden');
-    } else {
-        document.getElementById('error-msg').style.display = "block";
-    }
-}
-
-// Función para mostrar el resumen
-function displaySummary() {
-    if (otData.length === 0) {
-        document.getElementById('summary').innerHTML = "No hay datos para mostrar.";
-        return;
-    }
-
-    const resumenPorTipo = {};
-    let totalMonto = 0;
-    let totalMovilizacion = 0;
-
-    otData.forEach(data => {
-        if (!resumenPorTipo[data.tipo]) {
-            resumenPorTipo[data.tipo] = { cantidad: 0, totalMonto: 0, totalMovilizacion: 0 };
-        }
-        resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
-        resumenPorTipo[data.tipo].totalMonto += parseFloat(data.monto) * parseFloat(data.cantidad);
-        resumenPorTipo[data.tipo].totalMovilizacion += parseFloat(data.movilizacion);
-        totalMonto += parseFloat(data.monto) * parseFloat(data.cantidad);
-        totalMovilizacion += parseFloat(data.movilizacion);
-    });
-
-    let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>`;
-    resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>`;
-
-    for (const tipo in resumenPorTipo) {
-        resumenTabla += `<tr>
-            <td>${resumenPorTipo[tipo].cantidad}</td>
-            <td>${tipo}</td>
-            <td>$${resumenPorTipo[tipo].totalMonto.toFixed(2)}</td>
-            <td>$${resumenPorTipo[tipo].totalMovilizacion.toFixed(2)}</td>
-            <td>$${(resumenPorTipo[tipo].totalMonto + resumenPorTipo[tipo].totalMovilizacion).toFixed(2)}</td>
-        </tr>`;
-    }
-    resumenTabla += `</table><br><strong><span class="total-general">Total General Monto: $${totalMonto.toFixed(2)}</span></strong><br>`;
-    resumenTabla += `<strong><span class="total-general">Total General Movilización: $${totalMovilizacion.toFixed(2)}</span></strong><br>`;
-    resumenTabla += `<strong><span class="total-general">Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</span></strong>`;
-
-    document.getElementById('summary').innerHTML = resumenTabla;
-
-    // Cambiar el texto y el estilo del botón
-    const summaryBtn = document.getElementById('summaryBtn');
-    summaryBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Actualizar Resumen';
-    summaryBtn.classList.remove('burdeo');
-    summaryBtn.classList.add('azul');
-}
-
-// Función para generar y descargar el archivo XLSX y enviar datos al endpoint y a Firebase
 async function finalizeAndDownload() {
-    const resumenContent = [
-        ["Resumen de Cobros del Mes"],
-        ["Cantidad", "Tipo de OT", "Valor Monto", "Valor Movilización", "Subtotal"]
-    ];
-
-    const detalleContent = [
-        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Movilización", "Subtotal"]
-    ];
-
-    let totalMonto = 0;
-    let totalMovilizacion = 0;
+    // Preparar los datos para el archivo Excel
+    const resumenContent = [["Resumen de Cobros"], ["Cantidad", "Tipo OT", "Monto", "Movilización", "Subtotal"]];
+    const detalleContent = [["Contratista", "OT", "Tipo OT", "Cantidad", "Descripción", "Monto", "Movilización", "Subtotal"]];
 
     otData.forEach(row => {
-        detalleContent.push([
-            row.contratista,
-            row.ot,
-            row.tipo,
-            row.cantidad,
-            row.descripcion,
-            row.monto,
-            row.movilizacion,
-            row.subtotal
-        ]);
-        const resumenRow = resumenContent.find(res => res[1] === row.tipo);
-        if (!resumenRow) {
-            resumenContent.push([row.cantidad, row.tipo, row.monto, row.movilizacion, row.subtotal]);
-        } else {
-            resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
-            resumenRow[2] = (parseFloat(resumenRow[2]) + (parseFloat(row.monto) * parseFloat(row.cantidad))).toFixed(2);
-            resumenRow[3] = (parseFloat(resumenRow[3]) + parseFloat(row.movilizacion)).toFixed(2);
-            resumenRow[4] = (parseFloat(resumenRow[4]) + parseFloat(row.subtotal)).toFixed(2);
-        }
-        totalMonto += parseFloat(row.monto) * parseFloat(row.cantidad);
-        totalMovilizacion += parseFloat(row.movilizacion);
+        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.movilizacion, row.subtotal]);
     });
 
-    resumenContent.push(["", "Total", totalMonto.toFixed(2), totalMovilizacion.toFixed(2), (totalMonto + totalMovilizacion).toFixed(2)]);
-
     const workbook = XLSX.utils.book_new();
-
     const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
     const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
 
-    XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
-    XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
+    XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen");
+    XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle");
 
+    // Generar archivo Excel
     XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
-        // Enviar datos a Firebase Firestore
-    await enviarDatosAFirebase(otData);
-    
-    // Enviar datos al endpoint
-    await enviarDatos(otData);
+    // Enviar datos a SharePoint
+    try {
+        await enviarDatos(otData);
+        console.log('Datos enviados a SharePoint.');
+    } catch (error) {
+        console.error('Error al enviar datos a SharePoint:', error);
+        alert('Error al enviar datos a SharePoint.');
+        return;
+    }
 
+    // Enviar datos a Firebase Firestore
+    try {
+        await enviarDatosAFirebase(otData);
+        console.log('Datos enviados a Firebase.');
+        alert('Datos enviados a Firebase.');
+    } catch (error) {
+        console.error('Error al enviar datos a Firebase:', error);
+        alert('Error al enviar datos a Firebase.');
+    }
 
-
-    // Limpiar la tabla después de descargar
     clearTable();
 }
 
-// Función para enviar datos al endpoint
+// Función para enviar datos a SharePoint
 async function enviarDatos(otData) {
     try {
-        const response = await fetch('https://prod-128.westus.logic.azure.com:443/workflows/49e80f55e1a241b4bf544c1844198d76/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Fav22oO_Stk8uY0qUZ7Q-XIrt4xbvquMOe52D_HNHw8', {
+        const response = await fetch('https://tu-endpoint-sharepoint.com', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(otData)
         });
-        if (response.ok) {
-            console.log('Datos enviados exitosamente al endpoint.');
-            alert('Datos enviados exitosamente al servidor.');
-        } else {
-            console.error('Error al enviar datos:', response.statusText);
-            alert('Error al enviar los datos al servidor.');
+        if (!response.ok) {
+            throw new Error('Error al enviar datos a SharePoint.');
         }
-    } catch (e) {
-        console.error('Error en la solicitud:', e);
-        alert('Error al enviar los datos al servidor.');
+    } catch (error) {
+        console.error('Error al enviar datos a SharePoint:', error);
+        throw error;  // Re-lanzar el error para que se gestione en la función principal
     }
 }
 
 // Función para enviar datos a Firebase Firestore
 async function enviarDatosAFirebase(otData) {
     try {
-        console.log('Enviando datos a Firestore:', otData);
-        
-        // Verificar que otData no esté vacío
         if (otData.length === 0) {
-            console.error('No hay datos para enviar a Firestore.');
-            alert('No hay datos para enviar a Firebase Firestore.');
-            return;
+            throw new Error('No hay datos para enviar a Firebase.');
         }
-        
-        // Crear un nuevo documento en la colección 'cobros'
-        const docRef = await db.collection("cobros").add({
+        await db.collection("cobros").add({
             contratista: otData[0].contratista,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             detalles: otData
         });
-        
-        console.log('Datos enviados exitosamente a Firestore. ID del documento:', docRef.id);
-        // Mostrar mensaje de éxito en la página
-        document.getElementById('success-msg').style.display = "block";
     } catch (error) {
-        console.error('Error al enviar datos a Firestore:', error);
-        alert('Error al enviar los datos a Firebase Firestore.');
+        console.error('Error al enviar datos a Firebase:', error);
+        throw error;  // Re-lanzar el error para gestión en la función principal
     }
 }
 
-// Función para limpiar la tabla después de la descarga
+// Función para limpiar la tabla
 function clearTable() {
     const table = document.getElementById('otTable');
-    const rowCount = table.rows.length;
-
-    for (let i = rowCount - 1; i > 0; i--) {
-        table.deleteRow(i);
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
     }
-
-    document.getElementById('summary').innerHTML = "Total Facturado: $0.00";
-    document.getElementById('finalizeBtn').classList.add('hidden');
-    document.getElementById('clearBtn').classList.add('hidden');
-
-    // Restablecer el botón de resumen
-    const summaryBtn = document.getElementById('summaryBtn');
-    summaryBtn.innerHTML = '<i class="fas fa-file-alt"></i> Ver Resumen';
-    summaryBtn.classList.remove('azul');
-    summaryBtn.classList.add('burdeo');
-    summaryBtn.classList.add('hidden');
+    document.getElementById('summary').textContent = "Total Facturado: $0.00";
 }
-
-// Función de Logout
-function logout() {
-    localStorage.removeItem('sesionIniciada');
-    localStorage.removeItem('usuario');
-    window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-}
-
-// Función para verificar la sesión
-function checkSession() {
-    const sesionIniciada = localStorage.getItem('sesionIniciada');
-    const usuario = localStorage.getItem('usuario');
-
-    if (sesionIniciada === 'true' && usuario) {
-        // Mostrar mensaje de bienvenida y botones
-        document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
-        document.getElementById('logoutBtn').classList.remove('hidden');
-    } else {
-        // Redirigir al login si no está autenticado
-        window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
-    }
-}
-
-// Manejador del cambio de tema
-const themeToggleButton = document.getElementById('theme-toggle-button');
-const themeIcon = document.getElementById('theme-icon');
-const themeToggleText = document.getElementById('theme-toggle-text');
-
-// Verificar si el usuario ya tiene una preferencia guardada
-const currentTheme = localStorage.getItem('theme') || 'light';
-document.documentElement.setAttribute('data-theme', currentTheme);
-if (currentTheme === 'dark') {
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-    themeToggleText.textContent = 'Modo Claro';
-} else {
-    themeToggleText.textContent = 'Modo Oscuro';
-}
-
-themeToggleButton.addEventListener('click', function() {
-    let theme = document.documentElement.getAttribute('data-theme');
-    if (theme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-        themeToggleText.textContent = 'Modo Claro';
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
-        themeToggleText.textContent = 'Modo Oscuro';
-    }
-});
-
-// Llamar a las funciones al cargar la página
-window.onload = function() {
-    checkSession(); // Verificar sesión
-    loadContratistas(); // Cargar contratistas
-    loadTrabajos(); // Cargar trabajos
-    displayCurrentDate(); // Mostrar la fecha actual
-
-    // Añadir clase 'loaded' para el efecto de fade-in
-    document.body.classList.add('loaded');
-};
     </script>
 </body>
 </html>
