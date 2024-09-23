@@ -478,11 +478,13 @@ async function finalizeAndDownload() {
 
     XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
+        // Enviar datos a Firebase Firestore
+    await enviarDatosAFirebase(otData);
+    
     // Enviar datos al endpoint
     await enviarDatos(otData);
 
-    // Enviar datos a Firebase Firestore
-    await enviarDatosAFirebase(otData);
+
 
     // Limpiar la tabla después de descargar
     clearTable();
