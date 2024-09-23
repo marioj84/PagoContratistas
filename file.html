@@ -1,250 +1,108 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago Contratistas</title>
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-e6iZ5qXcQoHj5ThQ1kHvS6k6Yt3cfi9GjPNn8Xb0h8Y2+6n3p6eI5B6dq3o7YYZ0" crossorigin="anonymous">
-    <!-- Estilos CSS -->
+    <title>Formulario con Firebase</title>
     <style>
-        /* Estilos para mensajes de éxito y error */
-        #success-msg, #error-msg {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1em;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
         }
-
-        #success-msg {
-            color: var(--success-color);
-            display: none;
+        form {
+            max-width: 400px;
         }
-
-        #error-msg {
-            color: var(--invalid-color);
-            display: none;
+        label {
+            display: block;
+            margin-top: 15px;
         }
-
-        /* Estilos para inputs inválidos */
-        .invalid-input {
-            border-color: var(--invalid-color) !important;
-            box-shadow: 0 0 5px var(--invalid-color) !important;
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+        }
+        #mensaje {
+            margin-top: 20px;
+            font-weight: bold;
         }
     </style>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
 </head>
 <body>
-    <!-- Encabezado Fijo -->
-    <header>
-        <div class="logo-container">
-            <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
-        </div>
-        <nav>
-            <ul>
-                <li class="active"><a href="#">Inicio</a></li>
-            </ul>
-        </nav>
-        <button id="theme-toggle-button" aria-label="Cambiar Modo">
-            <i id="theme-icon" class="fas fa-moon"></i>
-            <span id="theme-toggle-text">Modo Oscuro</span>
-        </button>
-    </header>
+    <h2>Formulario de Registro</h2>
+    <form id="registroForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
 
-    <!-- Contenido principal -->
-    <main>
-        <h2>Ingreso de Cobros Mensuales (OT)</h2>
-        <p id="current-date"></p>
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required>
 
-        <div id="welcome-msg"></div>
-        <div id="success-msg">Datos guardados exitosamente.</div>
-        <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
+        <button type="submit">Enviar</button>
+    </form>
 
-        <!-- Contratista -->
-        <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
-        <div class="form-group">
-            <select id="contratista" aria-label="Seleccionar Contratista">
-                <option value="">Seleccione un contratista</option>
-            </select>
-            <button type="button" onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
-        </div>
+    <p id="mensaje"></p>
 
-        <div class="table-responsive">
-            <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
-                <tr>
-                    <th>OT</th>
-                    <th>Tipo de OT</th>
-                    <th>Cant</th>
-                    <th>Descripción</th>
-                    <th>Monto</th>
-                    <th>Movilización</th>
-                    <th>Subtotal</th>
-                    <th>Acciones</th>
-                </tr>
-            </table>
-        </div>
+    <!-- Importar los SDK de Firebase -->
+    <script type="module">
+        // Importa las funciones necesarias desde los SDK de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        <div class="button-group">
-            <button type="button" onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
-            <button id="summaryBtn" type="button" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
-            <button id="logoutBtn" type="button" class="burdeo hidden" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-        </div>
+        // Configuración de Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
+          authDomain: "formulariogithub.firebaseapp.com",
+          projectId: "formulariogithub",
+          storageBucket: "formulariogithub.appspot.com",
+          messagingSenderId: "377516389796",
+          appId: "1:377516389796:web:93c39e97d017fe16093d31",
+          measurementId: "G-NVGW5516Y0"
+        };
 
-        <h3>Resumen</h3>
-        <div id="summary">Total Facturado: $0.00</div>
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
 
-        <div class="button-group">
-            <button id="finalizeBtn" type="button" class="burdeo hidden" onclick="finalizeAndDownload()"><i class="fas fa-download"></i> Validar y Descargar Soporte</button>
-            <button id="clearBtn" type="button" class="verde hidden" onclick="clearTable()"><i class="fas fa-broom"></i> Limpiar Tabla</button>
-        </div>
-    </main>
+        // Referencias al formulario y al mensaje
+        const form = document.getElementById('registroForm');
+        const mensaje = document.getElementById('mensaje');
 
-    <footer>
-        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
-        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
-    </footer>
+        // Manejar el evento de envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita que el formulario se recargue
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
 
-    <script>
-let otData = [];
+            if (nombre === "" || apellido === "") {
+                mensaje.style.color = "red";
+                mensaje.textContent = "Por favor, completa todos los campos.";
+                return;
+            }
 
-// Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAzg3r9rPjHbG_AXmINsBo05Dd1TFn3uxU",
-  authDomain: "cobrocontratistas.firebaseapp.com",
-  projectId: "cobrocontratistas",
-  storageBucket: "cobrocontratistas.appspot.com",
-  messagingSenderId: "912397521211",
-  appId: "1:912397521211:web:b00cfdc5c079ff9658671e",
-  measurementId: "G-NBFSPCG4TK"
-};
-
-// Inicializar Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-} else {
-    firebase.app();
-}
-const db = firebase.firestore();
-
-// Función para agregar una fila de OT
-function addRow() {
-    const table = document.getElementById('otTable');
-    const row = table.insertRow();
-    // Celdas de la tabla
-    const otCell = row.insertCell(0);
-    const tipoCell = row.insertCell(1);
-    const cantCell = row.insertCell(2);
-    const descCell = row.insertCell(3);
-    const montoCell = row.insertCell(4);
-    const movilizacionCell = row.insertCell(5);
-    const subtotalCell = row.insertCell(6);
-    const actionsCell = row.insertCell(7);
-
-    // Campos de entrada
-    otCell.innerHTML = `<input type="number" min="1" step="1" aria-label="Ingresar OT">`;
-    tipoCell.innerHTML = `<select aria-label="Seleccionar Tipo de OT"></select>`;
-    cantCell.innerHTML = `<input type="number" min="1" value="1" aria-label="Ingresar Cantidad">`;
-    descCell.innerHTML = `<input type="text" aria-label="Ingresar Descripción">`;
-    montoCell.innerHTML = `<input type="number" step="0.01" min="0" placeholder="$0.00" aria-label="Ingresar Monto">`;
-    movilizacionCell.innerHTML = `<input type="number" step="0.01" min="0" placeholder="$0.00" aria-label="Ingresar Movilización">`;
-    subtotalCell.innerHTML = `<input type="text" disabled value="$0.00" aria-label="Subtotal">`;
-
-    const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar OT';
-    deleteButton.onclick = () => row.remove();
-    actionsCell.appendChild(deleteButton);
-}
-
-async function finalizeAndDownload() {
-    // Preparar los datos para el archivo Excel
-    const resumenContent = [["Resumen de Cobros"], ["Cantidad", "Tipo OT", "Monto", "Movilización", "Subtotal"]];
-    const detalleContent = [["Contratista", "OT", "Tipo OT", "Cantidad", "Descripción", "Monto", "Movilización", "Subtotal"]];
-
-    otData.forEach(row => {
-        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.movilizacion, row.subtotal]);
-    });
-
-    const workbook = XLSX.utils.book_new();
-    const resumenSheet = XLSX.utils.aoa_to_sheet(resumenContent);
-    const detalleSheet = XLSX.utils.aoa_to_sheet(detalleContent);
-
-    XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen");
-    XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle");
-
-    // Generar archivo Excel
-    XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
-
-    // Enviar datos a SharePoint
-    try {
-        await enviarDatos(otData);
-        console.log('Datos enviados a SharePoint.');
-    } catch (error) {
-        console.error('Error al enviar datos a SharePoint:', error);
-        alert('Error al enviar datos a SharePoint.');
-        return;
-    }
-
-    // Enviar datos a Firebase Firestore
-    try {
-        await enviarDatosAFirebase(otData);
-        console.log('Datos enviados a Firebase.');
-        alert('Datos enviados a Firebase.');
-    } catch (error) {
-        console.error('Error al enviar datos a Firebase:', error);
-        alert('Error al enviar datos a Firebase.');
-    }
-
-    clearTable();
-}
-
-// Función para enviar datos a SharePoint
-async function enviarDatos(otData) {
-    try {
-        const response = await fetch('https://tu-endpoint-sharepoint.com', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(otData)
+            try {
+                // Agregar datos a Firestore
+                const docRef = await addDoc(collection(db, "usuarios"), {
+                    nombre: nombre,
+                    apellido: apellido,
+                    fecha: serverTimestamp()
+                });
+                mensaje.style.color = "green";
+                mensaje.textContent = `Datos enviados correctamente. ID: ${docRef.id}`;
+                form.reset(); // Reiniciar el formulario
+            } catch (error) {
+                console.error("Error al agregar documento: ", error);
+                mensaje.style.color = "red";
+                mensaje.textContent = `Error al enviar los datos: ${error.message}`;
+            }
         });
-        if (!response.ok) {
-            throw new Error('Error al enviar datos a SharePoint.');
-        }
-    } catch (error) {
-        console.error('Error al enviar datos a SharePoint:', error);
-        throw error;  // Re-lanzar el error para que se gestione en la función principal
-    }
-}
-
-// Función para enviar datos a Firebase Firestore
-async function enviarDatosAFirebase(otData) {
-    try {
-        if (otData.length === 0) {
-            throw new Error('No hay datos para enviar a Firebase.');
-        }
-        await db.collection("cobros").add({
-            contratista: otData[0].contratista,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            detalles: otData
-        });
-    } catch (error) {
-        console.error('Error al enviar datos a Firebase:', error);
-        throw error;  // Re-lanzar el error para gestión en la función principal
-    }
-}
-
-// Función para limpiar la tabla
-function clearTable() {
-    const table = document.getElementById('otTable');
-    while (table.rows.length > 1) {
-        table.deleteRow(1);
-    }
-    document.getElementById('summary').textContent = "Total Facturado: $0.00";
-}
     </script>
 </body>
 </html>
