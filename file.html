@@ -4,86 +4,463 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
-    <!-- Estilos CSS y otros enlaces -->
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-e6iZ5qXcQoHj5ThQ1kHvS6k6Yt3cfi9GjPNn8Xb0h8Y2+6n3p6eI5B6dq3o7YYZ0" crossorigin="anonymous">
+    <!-- Estilos CSS -->
+    <style>
+        /* Importar fuentes */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    <!-- Firebase SDK -->
+        /* Variables para Modo Claro */
+        :root {
+            --background-color: #f4f4f4;
+            --text-color: #333333;
+            --primary-color: #004aad; /* Azul */
+            --secondary-color: #28a745; /* Verde */
+            --danger-color: #800000; /* Burdeo */
+            --warning-color: #fdd835;
+            --input-background: #ffffff;
+            --input-border: #ccc;
+            --button-hover-primary: #003380;
+            --button-hover-secondary: #218838;
+            --button-hover-danger: #5a0000;
+            --success-color: green;
+            --invalid-color: red;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Variables para Modo Oscuro */
+        [data-theme="dark"] {
+            --background-color: #2c3e50;
+            --text-color: #ecf0f1;
+            --primary-color: #3498db;
+            --secondary-color: #27ae60;
+            --danger-color: #c0392b;
+            --warning-color: #f39c12;
+            --input-background: #34495e;
+            --input-border: #7f8c8d;
+            --button-hover-primary: #2980b9;
+            --button-hover-secondary: #1e8449;
+            --button-hover-danger: #922b21;
+            --success-color: #2ecc71;
+            --invalid-color: #e74c3c;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Otros estilos... */
+        /* Reset de márgenes y paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Scrollbar personalizado */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Encabezado Fijo */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            z-index: 1000;
+        }
+
+        /* Resto de los estilos de la página... */
+    </style>
+</head>
+<body>
+    <!-- Encabezado Fijo -->
+    <header>
+        <div class="logo-container">
+            <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
+        </div>
+        <nav>
+            <ul>
+                <li class="active"><a href="#">Inicio</a></li>
+                <!-- Otros elementos de navegación si es necesario -->
+            </ul>
+        </nav>
+        <button id="theme-toggle-button" aria-label="Cambiar Modo">
+            <i id="theme-icon" class="fas fa-moon"></i>
+            <span id="theme-toggle-text">Modo Oscuro</span>
+        </button>
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        <h2>Ingreso de Cobros Mensuales (OT)</h2>
+        <p id="current-date"></p>
+        
+        <div id="welcome-msg"></div>
+        <div id="success-msg">Datos guardados exitosamente.</div>
+        <div id="error-msg">Por favor, complete todos los campos correctamente.</div>
+
+        <!-- Contratista (Oculto) -->
+        <label for="contratista">Nombre del Contratista<span id="contratista-asterisk" class="asterisk hidden">*</span></label>
+        <div class="form-group">
+            <select id="contratista" aria-label="Seleccionar Contratista">
+                <option value="">Seleccione un contratista</option>
+            </select>
+            <!-- El botón Cargar OT sigue visible -->
+            <button onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
+        </div>
+
+        <div class="table-responsive">
+            <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
+                <tr>
+                    <th class="col-ot">OT</th>
+                    <th class="col-tipo">Tipo de OT</th> <!-- Clase añadida -->
+                    <th class="col-cant">Cant</th>
+                    <th class="col-descripcion">Descripción</th>
+                    <th class="col-monto">Monto</th>
+                    <th class="col-movilizacion">Movilización</th>
+                    <th class="col-subtotal">Subtotal</th>
+                    <th class="col-acciones">Acciones</th>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Botones alineados al centro -->
+        <div class="button-group">
+            <button onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
+            <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
+            <button id="logoutBtn" class="burdeo hidden" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+        </div>
+
+        <!-- Línea divisoria -->
+        <hr>
+
+        <h3>Resumen</h3>
+        <div id="summary">Total Facturado: $0.00</div>
+
+        <div class="button-group">
+            <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">
+                <i class="fas fa-download"></i> Validar y Descargar Soporte
+            </button>
+            <button id="sendToServerBtn" class="azul hidden" onclick="sendToServer()">
+                <i class="fas fa-cloud-upload-alt"></i> Datos Servidor
+            </button>
+            <button id="clearBtn" class="verde hidden" onclick="clearTable()">
+                <i class="fas fa-broom"></i> Limpiar Tabla
+            </button>
+        </div>
+    </main>
+
+    <footer>
+        Para cualquier duda o consulta, por favor contactar a Mario Jaimes a través del correo: 
+        <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
+        <div class="footer-right">Área de Redes y Granel</div>
+    </footer>
+
+    <!-- Librería para descargar XLSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <!-- Firebase y Script de tu página -->
     <script type="module">
+        // Importar las funciones necesarias desde los SDK de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+        // Configuración de Firebase
         const firebaseConfig = {
-          apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
-          authDomain: "formulariogithub.firebaseapp.com",
-          projectId: "formulariogithub",
-          storageBucket: "formulariogithub.appspot.com",
-          messagingSenderId: "377516389796",
-          appId: "1:377516389796:web:93c39e97d017fe16093d31",
-          measurementId: "G-NVGW5516Y0"
+            apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
+            authDomain: "formulariogithub.firebaseapp.com",
+            projectId: "formulariogithub",
+            storageBucket: "formulariogithub.appspot.com",
+            messagingSenderId: "377516389796",
+            appId: "1:377516389796:web:93c39e97d017fe16093d31",
+            measurementId: "G-NVGW5516Y0"
         };
 
         // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Función para enviar los datos a Firestore
-        async function enviarDatosAFirebase(otData) {
+        let otData = [];
+
+        // Función para cargar contratistas desde JSON
+        async function loadContratistas() {
             try {
-                const docRef = await addDoc(collection(db, "usuarios"), {
-                    datos: otData,
-                    fecha: serverTimestamp()
+                const contratistaSelect = document.getElementById('contratista');
+                
+                const response = await fetch('contratistas.json');
+                if (!response.ok) {
+                    throw new Error('Error al cargar contratistas');
+                }
+                const contratistas = await response.json();
+                contratistas.forEach(contratista => {
+                    const option = document.createElement('option');
+                    option.value = contratista.nombreCompleto;
+                    option.text = contratista.nombreCompleto;
+                    contratistaSelect.appendChild(option);
                 });
-                alert(`Datos enviados correctamente. ID: ${docRef.id}`);
+
+                const usuarioAutenticado = localStorage.getItem('usuario');
+                if (usuarioAutenticado) {
+                    contratistaSelect.value = usuarioAutenticado;
+                    contratistaSelect.disabled = true;
+                }
             } catch (error) {
-                console.error("Error al enviar datos a Firebase: ", error);
-                alert("Error al enviar los datos al servidor.");
+                console.error('Error al cargar contratistas:', error);
+                alert('Error al cargar los contratistas.');
             }
         }
-    </script>
-    <!-- Fin Firebase SDK -->
-    
-    <!-- Estilos y otros scripts omitidos por brevedad -->
-</head>
-<body>
-    <!-- Encabezado, contenido principal y tabla, omitidos por brevedad -->
 
-    <!-- Botón para enviar datos a Firestore -->
-    <div class="button-group">
-        <button id="enviarDatosBtn" class="azul" onclick="enviarDatosFirebase()">
-            <i class="fas fa-server"></i> Enviar Datos Servidor
-        </button>
-    </div>
+        // Función para enviar los datos a Firebase
+        async function sendToServer() {
+            const contratista = document.getElementById('contratista').value;
+            
+            if (otData.length > 0 && contratista) {
+                try {
+                    for (const ot of otData) {
+                        await addDoc(collection(db, "ordenes_trabajo"), {
+                            contratista: ot.contratista,
+                            ot: ot.ot,
+                            tipo: ot.tipo,
+                            cantidad: ot.cantidad,
+                            descripcion: ot.descripcion,
+                            monto: ot.monto,
+                            movilizacion: ot.movilizacion,
+                            subtotal: ot.subtotal,
+                            fecha: serverTimestamp()
+                        });
+                    }
+                    alert('Datos enviados correctamente a Firebase.');
+                } catch (error) {
+                    console.error("Error al enviar datos a Firebase: ", error);
+                    alert('Error al enviar los datos a Firebase.');
+                }
+            } else {
+                alert('No hay datos para enviar.');
+            }
+        }
 
-    <!-- Footer y otros elementos -->
+        // Función para agregar una fila de OT
+        function addRow() {
+            const table = document.getElementById('otTable');
+            const row = table.insertRow();
+            const otCell = row.insertCell(0);
+            const tipoCell = row.insertCell(1);
+            const cantCell = row.insertCell(2);
+            const descCell = row.insertCell(3);
+            const montoCell = row.insertCell(4);
+            const movilizacionCell = row.insertCell(5); // Nueva celda para Movilización
+            const subtotalCell = row.insertCell(6);
+            const actionsCell = row.insertCell(7);
 
-    <script>
-        let otData = []; // Aquí se guardan los datos de la tabla de OT
+            const inputOT = document.createElement('input');
+            inputOT.type = 'number';
+            inputOT.step = "1";  
+            inputOT.min = "1";
+            inputOT.setAttribute('aria-label', 'Ingresar OT');
+            inputOT.classList.add('ot-input'); // Añadida la clase
+            otCell.appendChild(inputOT);
 
-        // Función que se llama cuando el usuario hace clic en "Enviar Datos Servidor"
-        function enviarDatosFirebase() {
+            const selectTipo = document.createElement('select');
+            window.trabajosList.forEach(trabajo => {
+                const optionElement = document.createElement('option');
+                optionElement.value = trabajo;
+                optionElement.text = trabajo;
+                selectTipo.appendChild(optionElement);
+            });
+            selectTipo.setAttribute('aria-label', 'Seleccionar Tipo de OT');
+            tipoCell.appendChild(selectTipo);
+
+            const inputCant = document.createElement('input');
+            inputCant.type = 'number';
+            inputCant.min = "1";
+            inputCant.value = "1";
+            inputCant.setAttribute('aria-label', 'Ingresar Cantidad');
+            inputCant.classList.add('cantidad-input'); // Añadir clase para ampliar el ancho
+            cantCell.appendChild(inputCant);
+
+            const inputDesc = document.createElement('input');
+            inputDesc.type = 'text';
+            inputDesc.setAttribute('aria-label', 'Ingresar Descripción');
+            inputDesc.classList.add('descripcion-input'); // Añadir clase para alinear a la izquierda
+            descCell.appendChild(inputDesc);
+
+            const inputMonto = document.createElement('input');
+            inputMonto.type = 'number';
+            inputMonto.placeholder = '$0.00';
+            inputMonto.step = "0.01";
+            inputMonto.min = "0";
+            inputMonto.setAttribute('aria-label', 'Ingresar Monto');
+            inputMonto.classList.add('monetary'); // Añadir clase para alinear a la derecha
+            montoCell.appendChild(inputMonto);
+
+            const inputMovilizacion = document.createElement('input'); // Nuevo input para Movilización
+            inputMovilizacion.type = 'number';
+            inputMovilizacion.placeholder = '$0.00';
+            inputMovilizacion.step = "0.01";
+            inputMovilizacion.min = "0";
+            inputMovilizacion.setAttribute('aria-label', 'Ingresar Movilización');
+            inputMovilizacion.classList.add('monetary'); // Añadir clase para alinear a la derecha
+            movilizacionCell.appendChild(inputMovilizacion);
+
+            const inputSubtotal = document.createElement('input');
+            inputSubtotal.type = 'text';
+            inputSubtotal.placeholder = '$0.00';
+            inputSubtotal.disabled = true;
+            inputSubtotal.setAttribute('aria-label', 'Subtotal');
+            inputSubtotal.classList.add('monetary'); // Añadir clase para alinear a la derecha
+            subtotalCell.appendChild(inputSubtotal);
+
+            inputCant.oninput = function() {
+                calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
+            };
+            inputMonto.oninput = function() {
+                calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
+            };
+            inputMovilizacion.oninput = function() {
+                calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
+            };
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar OT';
+            deleteButton.className = 'acciones-btn burdeo';
+            deleteButton.onclick = () => deleteRow(row);
+            actionsCell.appendChild(deleteButton);
+
+            document.getElementById('summaryBtn').classList.remove('hidden');
+        }
+
+        function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal) {
+            const cantidad = parseFloat(inputCant.value) || 0;
+            const monto = parseFloat(inputMonto.value) || 0;
+            const movilizacion = parseFloat(inputMovilizacion.value) || 0;
+            inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
+        }
+
+        function deleteRow(row) {
+            row.remove(); 
+        }
+
+        function viewSummary() {
             const table = document.getElementById('otTable');
             otData = [];
+            const contratista = document.getElementById('contratista').value.trim();
+            let valid = true;
 
-            // Recolectar los datos de la tabla
+            document.getElementById('contratista').classList.remove('invalid-input');
+            for (let i = 1; i < table.rows.length; i++) {
+                for (let j = 0; j < table.rows[i].cells.length - 1; j++) {
+                    table.rows[i].cells[j].children[0].classList.remove('invalid-input');
+                }
+            }
+
+            if (contratista === "") {
+                document.getElementById('contratista').classList.add('invalid-input');
+                valid = false;
+            }
+
             for (let i = 1; i < table.rows.length; i++) {
                 const row = table.rows[i];
                 const ot = row.cells[0].children[0].value.trim();
-                const tipo = row.cells[1].children[0].value;
-                const cantidad = row.cells[2].children[0].value;
                 const descripcion = row.cells[3].children[0].value.trim();
                 const monto = row.cells[4].children[0].value.trim();
-                const movilizacion = row.cells[5].children[0].value.trim();
-                const subtotal = row.cells[6].children[0].value.trim().replace('$', '');
+                const movilizacion = row.cells[5].children[0].value.trim(); 
 
-                otData.push({ ot, tipo, cantidad, descripcion, monto, movilizacion, subtotal });
+                if (ot === "") {
+                    row.cells[0].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (descripcion === "") {
+                    row.cells[3].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (monto === "") {
+                    row.cells[4].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
+
+                if (movilizacion === "") {
+                    row.cells[5].children[0].classList.add('invalid-input');
+                    valid = false;
+                }
             }
 
-            // Enviar los datos a Firestore
-            if (otData.length > 0) {
-                enviarDatosAFirebase(otData);
+            if (valid) {
+                document.getElementById('error-msg').style.display = "none";
+                for (let i = 1; i < table.rows.length; i++) {
+                    const row = table.rows[i];
+                    const ot = row.cells[0].children[0].value.trim();
+                    const tipo = row.cells[1].children[0].value;
+                    const cantidad = row.cells[2].children[0].value;
+                    const descripcion = row.cells[3].children[0].value.trim();
+                    const monto = row.cells[4].children[0].value.trim();
+                    const movilizacion = row.cells[5].children[0].value.trim();
+                    const subtotal = row.cells[6].children[0].value.trim().replace('$','');
+
+                    otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, movilizacion, subtotal });
+                }
+
+                displaySummary();
+                document.getElementById('finalizeBtn').classList.remove('hidden');
+                document.getElementById('clearBtn').classList.remove('hidden');
             } else {
-                alert("No hay datos para enviar.");
+                document.getElementById('error-msg').style.display = "block";
             }
         }
+
+        function displaySummary() {
+            if (otData.length === 0) {
+                document.getElementById('summary').innerHTML = "No hay datos para mostrar.";
+                return;
+            }
+
+            const resumenPorTipo = {};
+            let totalMonto = 0;
+            let totalMovilizacion = 0;
+
+            otData.forEach(data => {
+                if (!resumenPorTipo[data.tipo]) {
+                    resumenPorTipo[data.tipo] = { cantidad: 0, totalMonto: 0, totalMovilizacion: 0 };
+                }
+                resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].totalMonto += parseFloat(data.monto) * parseFloat(data.cantidad);
+                resumenPorTipo[data.tipo].totalMovilizacion += parseFloat(data.movilizacion);
+                totalMonto += parseFloat(data.monto) * parseFloat(data.cantidad);
+                totalMovilizacion += parseFloat(data.movilizacion);
+            });
+
+            let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros.<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>`;
+
+            for (const tipo in resumenPorTipo) {
+                resumenTabla += `<tr>
+                    <td>${resumenPorTipo[tipo].cantidad}</td>
+                    <td>${tipo}</td>
+                    <td>$${resumenPorTipo[tipo].totalMonto.toFixed(2)}</td>
+                    <td>$${resumenPorTipo[tipo].totalMovilizacion.toFixed(2)}</td>
+                    <td>$${(resumenPorTipo[tipo].totalMonto + resumenPorTipo[tipo].totalMovilizacion).toFixed(2)}</td>
+                </tr>`;
+            }
+            resumenTabla += `</table><br><strong>Total General Monto: $${totalMonto.toFixed(2)}</strong><br>`;
+            resumenTabla += `<strong>Total General Movilización: $${totalMovilizacion.toFixed(2)}</strong><br>`;
+            resumenTabla += `<strong>Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</strong>`;
+
+            document.getElementById('summary').innerHTML = resumenTabla;
+        }
+
+        window.onload = function() {
+            loadContratistas(); 
+        };
     </script>
 </body>
 </html>
