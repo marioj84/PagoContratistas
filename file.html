@@ -5,213 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Contratistas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h2 {
-            color: #004aad;
-            text-align: center;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-
-        p {
-            text-align: center;
-            font-size: 1.1em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        #logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 240px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .col-ot {
-            width: 10%;
-        }
-
-        .col-cant {
-            width: 5%;
-        }
-
-        .col-descripcion {
-            width: 30%;
-        }
-
-        .col-monto {
-            width: 15%;
-        }
-
-        .col-subtotal {
-            width: 15%;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            font-size: 0.9em;
-        }
-
-        th {
-            background-color: #fdd835;
-            color: #004aad;
-        }
-
-        td input, td select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        td select {
-            width: auto;
-        }
-
-        .invalid-input {
-            border: 2px solid red;
-        }
-
-        button {
-            padding: 8px 15px;
-            margin: 5px;
-            background-color: #004aad;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .burdeo {
-            background-color: #800000;
-        }
-
-        .verde {
-            background-color: #28a745;
-        }
-
-        button:hover {
-            background-color: #003380;
-        }
-
-        .burdeo:hover {
-            background-color: #5a0000;
-        }
-
-        .verde:hover {
-            background-color: #218838;
-        }
-
-        #summary {
-            font-size: 1.2em;
-            background-color: #fdd835;
-            color: #004aad;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: block;
-            color: #333;
-        }
-
-        #contratista {
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            width: auto;
-        }
-
-        #error-msg {
-            color: red;
-            font-size: 0.9em;
-            display: none;
-            margin-bottom: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #999;
-        }
-
-        .acciones-btn {
-            white-space: nowrap;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            table {
-                font-size: 0.8em;
-            }
-
-            th, td {
-                padding: 6px;
-            }
-
-            #logo {
-                width: 180px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.5em;
-            }
-
-            p {
-                font-size: 1em;
-            }
-
-            button {
-                font-size: 0.8em;
-                padding: 6px 10px;
-            }
-
-            th, td {
-                padding: 5px;
-                font-size: 0.8em;
-            }
-
-            #logo {
-                width: 120px;
-            }
-        }
+        /* ... (Tu CSS existente) ... */
     </style>
 </head>
 <body>
@@ -275,8 +69,27 @@
         <a href="mailto:mjaimes@lipigas.cl">mjaimes@lipigas.cl</a>.
     </footer>
 
+    <!-- Librerías Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <!-- Librería XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script>
+        // TODO: Reemplaza las siguientes configuraciones con las de tu proyecto de Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
+          authDomain: "formulariogithub.firebaseapp.com",
+          projectId: "formulariogithub",
+          storageBucket: "formulariogithub.appspot.com",
+          messagingSenderId: "377516389796",
+          appId: "1:377516389796:web:93c39e97d017fe16093d31",
+          measurementId: "G-NVGW5516Y0"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         let otData = [];
 
         // Función para cargar contratistas desde JSON
@@ -374,13 +187,13 @@
 
             // Calcular subtotal al cambiar cantidad o monto
             inputCant.oninput = function() {
-                const cantidad = inputCant.value;
-                const monto = inputMonto.value;
+                const cantidad = parseFloat(inputCant.value) || 0;
+                const monto = parseFloat(inputMonto.value) || 0;
                 inputSubtotal.value = (cantidad * monto).toFixed(2);
             };
             inputMonto.oninput = function() {
-                const cantidad = inputCant.value;
-                const monto = inputMonto.value;
+                const cantidad = parseFloat(inputCant.value) || 0;
+                const monto = parseFloat(inputMonto.value) || 0;
                 inputSubtotal.value = (cantidad * monto).toFixed(2);
             };
 
@@ -479,20 +292,20 @@
                 totalMonto += parseFloat(data.subtotal);
             });
 
-            let resumenTabla = <strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>;
-            resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>;
+            let resumenTabla = `<strong>${otData[0].contratista}</strong>, este es el resumen de los valores ingresados:<br><br>`;
+            resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>`;
 
             for (const tipo in resumenPorTipo) {
-                resumenTabla += <tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>;
+                resumenTabla += `<tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>`;
             }
-            resumenTabla += </table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>;
+            resumenTabla += `</table><br><strong>Total General: $${totalMonto.toFixed(2)}</strong>`;
 
             document.getElementById('summary').innerHTML = resumenTabla;
             document.getElementById('summaryBtn').classList.add('hidden');
         }
 
-        // Función para generar y descargar el archivo XLSX
-        function finalizeAndDownload() {
+        // Función para generar y descargar el archivo XLSX y enviar datos a Firestore
+        async function finalizeAndDownload() {
             const resumenContent = [
                 ["Resumen de Cobros del Mes"],
                 ["Cantidad", "Tipo de OT", "Valor"]
@@ -526,7 +339,30 @@
             XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
             XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-            XLSX.writeFile(workbook, Resumen_OT_${Date.now()}.xlsx);
+            XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
+
+            // Enviar datos a Firestore
+            try {
+                const batch = db.batch(); // Usamos batch para múltiples escrituras
+                otData.forEach((ot, index) => {
+                    const docRef = db.collection('ordenes_de_trabajo').doc(); // Genera un ID único
+                    batch.set(docRef, {
+                        contratista: ot.contratista,
+                        ot: ot.ot,
+                        tipo: ot.tipo,
+                        cantidad: parseInt(ot.cantidad),
+                        descripcion: ot.descripcion,
+                        monto: parseFloat(ot.monto),
+                        subtotal: parseFloat(ot.subtotal),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                });
+                await batch.commit();
+                alert('Datos enviados exitosamente a Firestore.');
+            } catch (error) {
+                console.error('Error al enviar datos a Firestore:', error);
+                alert('Hubo un error al enviar los datos. Por favor, intenta nuevamente.');
+            }
         }
 
         // Función para limpiar la tabla después de la descarga
@@ -551,7 +387,7 @@
             window.location.href = 'https://marioj84.github.io/PagoContratistas/login.html';
         }
 
-        // Cargar contratistas y trabajos al cargar la págin
+        // Cargar contratistas y trabajos al cargar la página
         window.onload = function() {
             loadContratistas();
             loadTrabajos();
