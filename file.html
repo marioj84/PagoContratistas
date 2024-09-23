@@ -4,74 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario con Firebase</title>
-    <!-- Firebase App (Necesario para Firebase) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-    <!-- Firebase Firestore -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        form {
+            max-width: 400px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+        }
+        #mensaje {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <h2>Formulario de Registro</h2>
     <form id="registroForm">
-        <label for="nombre">Nombre:</label><br>
-        <input type="text" id="nombre" name="nombre" required><br><br>
-        
-        <label for="apellido">Apellido:</label><br>
-        <input type="text" id="apellido" name="apellido" required><br><br>
-        
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required>
+
         <button type="submit">Enviar</button>
     </form>
 
     <p id="mensaje"></p>
 
-    <script>
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+    <!-- Importar los SDK de Firebase -->
+    <script type="module">
+        // Importa las funciones necesarias desde los SDK de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
-  authDomain: "formulariogithub.firebaseapp.com",
-  projectId: "formulariogithub",
-  storageBucket: "formulariogithub.appspot.com",
-  messagingSenderId: "377516389796",
-  appId: "1:377516389796:web:93c39e97d017fe16093d31",
-  measurementId: "G-NVGW5516Y0"
-};
+        // Configuración de Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
+          authDomain: "formulariogithub.firebaseapp.com",
+          projectId: "formulariogithub",
+          storageBucket: "formulariogithub.appspot.com",
+          messagingSenderId: "377516389796",
+          appId: "1:377516389796:web:93c39e97d017fe16093d31",
+          measurementId: "G-NVGW5516Y0"
+        };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
 
-        // Referencia al formulario
+        // Referencias al formulario y al mensaje
         const form = document.getElementById('registroForm');
         const mensaje = document.getElementById('mensaje');
 
-        form.addEventListener('submit', (e) => {
+        // Manejar el evento de envío del formulario
+        form.addEventListener('submit', async (e) => {
             e.preventDefault(); // Evita que el formulario se recargue
 
             // Obtener valores del formulario
-            const nombre = document.getElementById('nombre').value;
-            const apellido = document.getElementById('apellido').value;
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
 
-            // Agregar datos a Firestore
-            db.collection("usuarios").add({
-                nombre: nombre,
-                apellido: apellido,
-                fecha: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then((docRef) => {
-                mensaje.style.color = "green";
-                mensaje.textContent = "Datos enviados correctamente. ID: " + docRef.id;
-                form.reset(); // Reiniciar el formulario
-            })
-            .catch((error) => {
+            if (nombre === "" || apellido === "") {
                 mensaje.style.color = "red";
-                mensaje.textContent = "Error al enviar los datos: " + error;
-            });
+                mensaje.textContent = "Por favor, completa todos los campos.";
+                return;
+            }
+
+            try {
+                // Agregar datos a Firestore
+                const docRef = await addDoc(collection(db, "usuarios"), {
+                    nombre: nombre,
+                    apellido: apellido,
+                    fecha: serverTimestamp()
+                });
+                mensaje.style.color = "green";
+                mensaje.textContent = `Datos enviados correctamente. ID: ${docRef.id}`;
+                form.reset(); // Reiniciar el formulario
+            } catch (error) {
+                console.error("Error al agregar documento: ", error);
+                mensaje.style.color = "red";
+                mensaje.textContent = `Error al enviar los datos: ${error.message}`;
+            }
         });
     </script>
 </body>
