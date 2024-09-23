@@ -498,9 +498,16 @@ footer {
         <div id="summary">Total Facturado: $0.00</div>
 
         <div class="button-group">
-            <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()"><i class="fas fa-download"></i> Validar y Descargar Soporte</button>
-            <button id="clearBtn" class="verde hidden" onclick="clearTable()"><i class="fas fa-broom"></i> Limpiar Tabla</button>
-        </div>
+    <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()">
+        <i class="fas fa-download"></i> Validar y Descargar Soporte
+    </button>
+    <button id="sendToServerBtn" class="azul hidden" onclick="sendToServer()">
+        <i class="fas fa-cloud-upload-alt"></i> Datos Servidor
+    </button>
+    <button id="clearBtn" class="verde hidden" onclick="clearTable()">
+        <i class="fas fa-broom"></i> Limpiar Tabla
+    </button>
+</div>
     </main>
 
     <footer>
@@ -555,6 +562,36 @@ async function loadContratistas() {
     } catch (error) {
         console.error('Error al cargar contratistas:', error);
         alert('Error al cargar los contratistas.');
+    }
+}
+// Función para enviar los datos de OT a Firebase Firestore
+async function sendToServer() {
+    const contratista = document.getElementById('contratista').value;
+    
+    // Verifica si hay datos para enviar
+    if (otData.length > 0 && contratista) {
+        try {
+            // Enviar cada OT a Firebase
+            for (const ot of otData) {
+                await addDoc(collection(db, "ordenes_trabajo"), {
+                    contratista: ot.contratista,
+                    ot: ot.ot,
+                    tipo: ot.tipo,
+                    cantidad: ot.cantidad,
+                    descripcion: ot.descripcion,
+                    monto: ot.monto,
+                    movilizacion: ot.movilizacion,
+                    subtotal: ot.subtotal,
+                    fecha: serverTimestamp()
+                });
+            }
+            alert('Datos enviados correctamente a Firebase.');
+        } catch (error) {
+            console.error("Error al enviar datos a Firebase: ", error);
+            alert('Error al enviar los datos a Firebase.');
+        }
+    } else {
+        alert('No hay datos para enviar.');
     }
 }
 
@@ -772,7 +809,7 @@ function displaySummary() {
         totalMovilizacion += parseFloat(data.movilizacion);
     });
 
-    let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>`;
+    let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'V Soporte' para obtener respaldo.<br><br>`;
     resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>`;
 
     for (const tipo in resumenPorTipo) {
