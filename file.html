@@ -10,28 +10,29 @@
     <style>
 /* (Tus estilos CSS existentes aquí) */
 /* ... (Mantén tus estilos CSS sin cambios) ... */
-    /* Añade estilos para mensajes de éxito y error */
-    #success-msg, #error-msg {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 1em;
-    }
 
-    #success-msg {
-        color: var(--success-color);
-        display: none;
-    }
+/* Estilos para mensajes de éxito y error */
+#success-msg, #error-msg {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1em;
+}
 
-    #error-msg {
-        color: var(--invalid-color);
-        display: none;
-    }
+#success-msg {
+    color: var(--success-color);
+    display: none;
+}
 
-    /* Añade estilos para inputs inválidos */
-    .invalid-input {
-        border-color: var(--invalid-color) !important;
-        box-shadow: 0 0 5px var(--invalid-color) !important;
-    }
+#error-msg {
+    color: var(--invalid-color);
+    display: none;
+}
+
+/* Estilos para inputs inválidos */
+.invalid-input {
+    border-color: var(--invalid-color) !important;
+    box-shadow: 0 0 5px var(--invalid-color) !important;
+}
     </style>
     <!-- Firebase SDKs -->
     <!-- Firebase App (la base de Firebase) -->
@@ -76,14 +77,14 @@
                 <option value="">Seleccione un contratista</option>
             </select>
             <!-- El botón Cargar OT sigue visible -->
-            <button onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
+            <button type="button" onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
         </div>
 
         <div class="table-responsive">
             <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
                 <tr>
                     <th class="col-ot">OT</th>
-                    <th class="col-tipo">Tipo de OT</th> <!-- Clase añadida -->
+                    <th class="col-tipo">Tipo de OT</th>
                     <th class="col-cant">Cant</th>
                     <th class="col-descripcion">Descripción</th>
                     <th class="col-monto">Monto</th>
@@ -96,9 +97,9 @@
 
         <!-- Botones alineados al centro -->
         <div class="button-group">
-            <button onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
-            <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
-            <button id="logoutBtn" class="burdeo hidden" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            <button type="button" onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
+            <button id="summaryBtn" type="button" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
+            <button id="logoutBtn" type="button" class="burdeo hidden" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
         </div>
 
         <!-- Línea divisoria -->
@@ -108,8 +109,8 @@
         <div id="summary">Total Facturado: $0.00</div>
 
         <div class="button-group">
-            <button id="finalizeBtn" class="burdeo hidden" onclick="finalizeAndDownload()"><i class="fas fa-download"></i> Validar y Descargar Soporte</button>
-            <button id="clearBtn" class="verde hidden" onclick="clearTable()"><i class="fas fa-broom"></i> Limpiar Tabla</button>
+            <button id="finalizeBtn" type="button" class="burdeo hidden" onclick="finalizeAndDownload()"><i class="fas fa-download"></i> Validar y Descargar Soporte</button>
+            <button id="clearBtn" type="button" class="verde hidden" onclick="clearTable()"><i class="fas fa-broom"></i> Limpiar Tabla</button>
         </div>
     </main>
 
@@ -137,8 +138,12 @@ const firebaseConfig = {
   measurementId: "G-NBFSPCG4TK"
 };
 
-// Inicializar Firebase (ya hecho en el head)
-firebase.initializeApp(firebaseConfig);
+// Inicializar Firebase solo una vez
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+} else {
+    firebase.app(); // Usa la instancia existente
+}
 const analytics = firebase.analytics();
 const db = firebase.firestore();
 
@@ -509,28 +514,24 @@ async function enviarDatos(otData) {
 // Función para enviar datos a Firebase Firestore
 async function enviarDatosAFirebase(otData) {
     try {
-        // Asegurarse de que Firestore esté inicializado
-        if (!db) {
-            console.error('Firestore no está inicializado.');
-            alert('Error al enviar los datos a Firebase Firestore.');
-            return;
-        }
-
-        // Verificar que otData tenga al menos un elemento
+        console.log('Enviando datos a Firestore:', otData);
+        
+        // Verificar que otData no esté vacío
         if (otData.length === 0) {
             console.error('No hay datos para enviar a Firestore.');
             alert('No hay datos para enviar a Firebase Firestore.');
             return;
         }
-
+        
         // Crear un nuevo documento en la colección 'cobros'
         const docRef = await db.collection("cobros").add({
             contratista: otData[0].contratista,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             detalles: otData
         });
+        
         console.log('Datos enviados exitosamente a Firestore. ID del documento:', docRef.id);
-        // Opcional: Mostrar un mensaje al usuario
+        // Mostrar mensaje de éxito en la página
         document.getElementById('success-msg').style.display = "block";
     } catch (error) {
         console.error('Error al enviar datos a Firestore:', error);
