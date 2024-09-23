@@ -270,7 +270,7 @@ table {
 }
 
 th, td {
-    padding: 12px 15px;
+    padding: 12px 5px; /* Reducido el padding horizontal */
     border-bottom: 1px solid var(--input-border);
     font-size: 0.95em;
     color: var(--text-color);
@@ -297,12 +297,17 @@ tr:hover {
 }
 
 /* Ajustes de columnas */
-.col-ot { width: 12%; } /* Incrementado de 10% a 12% */
-.col-cant { width: 7.5%; } /* El ancho permanece igual */
-.col-descripcion { width: 30%; }
-.col-monto { width: 15%; }
-.col-subtotal { width: 15%; }
-.col-acciones { width: 20%; }
+.col-ot { width: 8%; }
+.col-tipo { 
+    width: 15%; 
+    white-space: nowrap; /* Prevenir el salto de línea */
+}
+.col-cant { width: 7.5%; }
+.col-descripcion { width: 20%; }
+.col-monto { width: 10%; }
+.col-movilizacion { width: 10%; }
+.col-subtotal { width: 10%; }
+.col-acciones { width: 19.5%; }
 
 /* Inputs y selects dentro de la tabla */
 td input, td select {
@@ -341,14 +346,16 @@ td input.descripcion-input {
     text-align: left;
 }
 
-/* Aumentar el ancho del campo Cantidad */
+/* Ajuste del ancho del campo Cantidad para evitar superposición */
 .cantidad-input {
-    width: 120%;
+    width: 100%; /* Cambiado de 120% a 100% */
 }
+
 /* Campo de entrada OT */
 .ot-input {
     width: 100%; /* Asegura que ocupe todo el ancho de la columna OT */
 }
+
 /* Animaciones y Transiciones Suaves */
 a, button, input, select, th, td {
     transition: all 0.3s ease;
@@ -420,7 +427,8 @@ footer {
     font-size: 0.9em;
     color: var(--text-color);
     padding: 20px;
-    border-to
+    border-top: 1px solid var(--input-border); /* Corrección de la propiedad */
+}
     </style>
 </head>
 <body>
@@ -465,12 +473,13 @@ footer {
             <table id="otTable" aria-label="Tabla de Órdenes de Trabajo">
                 <tr>
                     <th class="col-ot">OT</th>
-                    <th>Tipo de OT</th>
+                    <th class="col-tipo">Tipo de OT</th> <!-- Clase añadida -->
                     <th class="col-cant">Cant</th>
                     <th class="col-descripcion">Descripción</th>
                     <th class="col-monto">Monto</th>
+                    <th class="col-movilizacion">Movilización</th>
                     <th class="col-subtotal">Subtotal</th>
-                    <th>Acciones</th>
+                    <th class="col-acciones">Acciones</th>
                 </tr>
             </table>
         </div>
@@ -574,8 +583,9 @@ function addRow() {
     const cantCell = row.insertCell(2);
     const descCell = row.insertCell(3);
     const montoCell = row.insertCell(4);
-    const subtotalCell = row.insertCell(5);
-    const actionsCell = row.insertCell(6);
+    const movilizacionCell = row.insertCell(5); // Nueva celda para Movilización
+    const subtotalCell = row.insertCell(6);
+    const actionsCell = row.insertCell(7);
 
     const inputOT = document.createElement('input');
     inputOT.type = 'number';
@@ -618,6 +628,15 @@ function addRow() {
     inputMonto.classList.add('monetary'); // Añadir clase para alinear a la derecha
     montoCell.appendChild(inputMonto);
 
+    const inputMovilizacion = document.createElement('input'); // Nuevo input para Movilización
+    inputMovilizacion.type = 'number';
+    inputMovilizacion.placeholder = '$0.00';
+    inputMovilizacion.step = "0.01";
+    inputMovilizacion.min = "0";
+    inputMovilizacion.setAttribute('aria-label', 'Ingresar Movilización');
+    inputMovilizacion.classList.add('monetary'); // Añadir clase para alinear a la derecha
+    movilizacionCell.appendChild(inputMovilizacion);
+
     const inputSubtotal = document.createElement('input');
     inputSubtotal.type = 'text';
     inputSubtotal.placeholder = '$0.00';
@@ -626,12 +645,15 @@ function addRow() {
     inputSubtotal.classList.add('monetary'); // Añadir clase para alinear a la derecha
     subtotalCell.appendChild(inputSubtotal);
 
-    // Calcular subtotal al cambiar cantidad o monto
+    // Calcular subtotal al cambiar cantidad, monto o movilización
     inputCant.oninput = function() {
-        calcularSubtotal(inputCant, inputMonto, inputSubtotal);
+        calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
     };
     inputMonto.oninput = function() {
-        calcularSubtotal(inputCant, inputMonto, inputSubtotal);
+        calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
+    };
+    inputMovilizacion.oninput = function() {
+        calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal);
     };
 
     const deleteButton = document.createElement('button');
@@ -644,10 +666,11 @@ function addRow() {
     document.getElementById('summaryBtn').classList.remove('hidden');
 }
 
-function calcularSubtotal(inputCant, inputMonto, inputSubtotal) {
+function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal) {
     const cantidad = parseFloat(inputCant.value) || 0;
     const monto = parseFloat(inputMonto.value) || 0;
-    inputSubtotal.value = $${(cantidad * monto).toFixed(2)};
+    const movilizacion = parseFloat(inputMovilizacion.value) || 0;
+    inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
 }
 
 function deleteRow(row) {
@@ -680,6 +703,7 @@ function viewSummary() {
         const ot = row.cells[0].children[0].value.trim();
         const descripcion = row.cells[3].children[0].value.trim();
         const monto = row.cells[4].children[0].value.trim();
+        const movilizacion = row.cells[5].children[0].value.trim(); // Nuevo campo
 
         if (ot === "") {
             row.cells[0].children[0].classList.add('invalid-input');
@@ -695,6 +719,11 @@ function viewSummary() {
             row.cells[4].children[0].classList.add('invalid-input');
             valid = false;
         }
+
+        if (movilizacion === "") { // Validar Movilización
+            row.cells[5].children[0].classList.add('invalid-input');
+            valid = false;
+        }
     }
 
     if (valid) {
@@ -707,9 +736,10 @@ function viewSummary() {
             const cantidad = row.cells[2].children[0].value;
             const descripcion = row.cells[3].children[0].value.trim();
             const monto = row.cells[4].children[0].value.trim();
-            const subtotal = row.cells[5].children[0].value.trim().replace('$','');
+            const movilizacion = row.cells[5].children[0].value.trim(); // Nuevo campo
+            const subtotal = row.cells[6].children[0].value.trim().replace('$','');
 
-            otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, subtotal });
+            otData.push({ contratista, ot, tipo, cantidad, descripcion, monto, movilizacion, subtotal });
         }
 
         displaySummary();
@@ -729,23 +759,34 @@ function displaySummary() {
 
     const resumenPorTipo = {};
     let totalMonto = 0;
+    let totalMovilizacion = 0;
 
     otData.forEach(data => {
         if (!resumenPorTipo[data.tipo]) {
-            resumenPorTipo[data.tipo] = { cantidad: 0, total: 0 };
+            resumenPorTipo[data.tipo] = { cantidad: 0, totalMonto: 0, totalMovilizacion: 0 };
         }
         resumenPorTipo[data.tipo].cantidad += parseFloat(data.cantidad);
-        resumenPorTipo[data.tipo].total += parseFloat(data.subtotal);
-        totalMonto += parseFloat(data.subtotal);
+        resumenPorTipo[data.tipo].totalMonto += parseFloat(data.monto) * parseFloat(data.cantidad);
+        resumenPorTipo[data.tipo].totalMovilizacion += parseFloat(data.movilizacion);
+        totalMonto += parseFloat(data.monto) * parseFloat(data.cantidad);
+        totalMovilizacion += parseFloat(data.movilizacion);
     });
 
-    let resumenTabla = <strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>;
-    resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor</th></tr>;
+    let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>`;
+    resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>`;
 
     for (const tipo in resumenPorTipo) {
-        resumenTabla += <tr><td>${resumenPorTipo[tipo].cantidad}</td><td>${tipo}</td><td>$${resumenPorTipo[tipo].total.toFixed(2)}</td></tr>;
+        resumenTabla += `<tr>
+            <td>${resumenPorTipo[tipo].cantidad}</td>
+            <td>${tipo}</td>
+            <td>$${resumenPorTipo[tipo].totalMonto.toFixed(2)}</td>
+            <td>$${resumenPorTipo[tipo].totalMovilizacion.toFixed(2)}</td>
+            <td>$${(resumenPorTipo[tipo].totalMonto + resumenPorTipo[tipo].totalMovilizacion).toFixed(2)}</td>
+        </tr>`;
     }
-    resumenTabla += </table><br><strong><span class="total-general">Total General: $${totalMonto.toFixed(2)}</span></strong>;
+    resumenTabla += `</table><br><strong><span class="total-general">Total General Monto: $${totalMonto.toFixed(2)}</span></strong><br>`;
+    resumenTabla += `<strong><span class="total-general">Total General Movilización: $${totalMovilizacion.toFixed(2)}</span></strong><br>`;
+    resumenTabla += `<strong><span class="total-general">Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</span></strong>`;
 
     document.getElementById('summary').innerHTML = resumenTabla;
 
@@ -760,28 +801,41 @@ function displaySummary() {
 async function finalizeAndDownload() {
     const resumenContent = [
         ["Resumen de Cobros del Mes"],
-        ["Cantidad", "Tipo de OT", "Valor"]
+        ["Cantidad", "Tipo de OT", "Valor Monto", "Valor Movilización", "Subtotal"]
     ];
 
     const detalleContent = [
-        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Subtotal"]
+        ["Contratista", "OT", "Tipo de OT", "Cantidad", "Descripción", "Monto", "Movilización", "Subtotal"]
     ];
 
-    let total = 0;
+    let totalMonto = 0;
+    let totalMovilizacion = 0;
 
     otData.forEach(row => {
-        detalleContent.push([row.contratista, row.ot, row.tipo, row.cantidad, row.descripcion, row.monto, row.subtotal]);
+        detalleContent.push([
+            row.contratista,
+            row.ot,
+            row.tipo,
+            row.cantidad,
+            row.descripcion,
+            row.monto,
+            row.movilizacion,
+            row.subtotal
+        ]);
         const resumenRow = resumenContent.find(res => res[1] === row.tipo);
         if (!resumenRow) {
-            resumenContent.push([row.cantidad, row.tipo, row.subtotal]);
+            resumenContent.push([row.cantidad, row.tipo, row.monto, row.movilizacion, row.subtotal]);
         } else {
             resumenRow[0] = parseFloat(resumenRow[0]) + parseFloat(row.cantidad);
-            resumenRow[2] = (parseFloat(resumenRow[2]) + parseFloat(row.subtotal)).toFixed(2);
+            resumenRow[2] = (parseFloat(resumenRow[2]) + (parseFloat(row.monto) * parseFloat(row.cantidad))).toFixed(2);
+            resumenRow[3] = (parseFloat(resumenRow[3]) + parseFloat(row.movilizacion)).toFixed(2);
+            resumenRow[4] = (parseFloat(resumenRow[4]) + parseFloat(row.subtotal)).toFixed(2);
         }
-        total += parseFloat(row.subtotal);
+        totalMonto += parseFloat(row.monto) * parseFloat(row.cantidad);
+        totalMovilizacion += parseFloat(row.movilizacion);
     });
 
-    resumenContent.push(["", "Total", total.toFixed(2)]);
+    resumenContent.push(["", "Total", totalMonto.toFixed(2), totalMovilizacion.toFixed(2), (totalMonto + totalMovilizacion).toFixed(2)]);
 
     const workbook = XLSX.utils.book_new();
 
@@ -791,7 +845,7 @@ async function finalizeAndDownload() {
     XLSX.utils.book_append_sheet(workbook, resumenSheet, "Resumen_OT");
     XLSX.utils.book_append_sheet(workbook, detalleSheet, "Detalle_OT");
 
-    XLSX.writeFile(workbook, Resumen_OT_${Date.now()}.xlsx);
+    XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
     // Enviar datos al endpoint
     await enviarDatos(otData);
@@ -858,7 +912,7 @@ function checkSession() {
 
     if (sesionIniciada === 'true' && usuario) {
         // Mostrar mensaje de bienvenida y botones
-        document.getElementById('welcome-msg').innerHTML = Bienvenido, <strong>${usuario}</strong>!;
+        document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
         document.getElementById('logoutBtn').classList.remove('hidden');
     } else {
         // Redirigir al login si no está autenticado
