@@ -670,9 +670,8 @@ function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtota
     const cantidad = parseFloat(inputCant.value) || 0;
     const monto = parseFloat(inputMonto.value) || 0;
     const movilizacion = parseFloat(inputMovilizacion.value) || 0;
-    inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;  // Cambiado $$ por ${}
+    inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
 }
-
 
 function deleteRow(row) {
     row.remove(); 
@@ -798,7 +797,6 @@ function displaySummary() {
     summaryBtn.classList.add('azul');
 }
 
-
 // Función para generar y descargar el archivo XLSX y enviar datos al endpoint
 async function finalizeAndDownload() {
     const resumenContent = [
@@ -849,10 +847,7 @@ async function finalizeAndDownload() {
 
     XLSX.writeFile(workbook, `Resumen_OT_${Date.now()}.xlsx`);
 
-    // Enviar datos a Firebase después de generar el archivo Excel
-    await enviarDatosAFirebase();
-
-    // Enviar datos a Sharepoint
+    // Enviar datos al endpoint
     await enviarDatos(otData);
 
     // Limpiar la tabla después de descargar
@@ -879,34 +874,6 @@ async function enviarDatos(otData) {
     } catch (e) {
         console.error('Error en la solicitud:', e);
         alert('Error al enviar los datos al servidor.');
-    }
-}
-// Función para enviar los datos de OT a Firebase Firestore
-async function enviarDatosAFirebase() {
-    const contratista = document.getElementById('contratista').value;
-    if (otData.length > 0 && contratista) {
-        try {
-            // Agregar cada OT a Firebase
-            for (const ot of otData) {
-                await addDoc(collection(db, "ordenes_trabajo"), {
-                    contratista: ot.contratista,
-                    ot: ot.ot,
-                    tipo: ot.tipo,
-                    cantidad: ot.cantidad,
-                    descripcion: ot.descripcion,
-                    monto: ot.monto,
-                    movilizacion: ot.movilizacion,
-                    subtotal: ot.subtotal,
-                    fecha: serverTimestamp()
-                });
-            }
-            alert('Datos enviados correctamente a Firebase.');
-        } catch (error) {
-            console.error("Error al enviar datos a Firebase: ", error);
-            alert('Error al enviar los datos a Firebase.');
-        }
-    } else {
-        alert('No hay datos para enviar a Firebase.');
     }
 }
 
@@ -945,7 +912,7 @@ function checkSession() {
 
     if (sesionIniciada === 'true' && usuario) {
         // Mostrar mensaje de bienvenida y botones
-        document.getElementById('welcome-msg').innerHTML = Bienvenido, <strong>${usuario}</strong>!;
+        document.getElementById('welcome-msg').innerHTML = `Bienvenido, <strong>${usuario}</strong>!`;
         document.getElementById('logoutBtn').classList.remove('hidden');
     } else {
         // Redirigir al login si no está autenticado
@@ -997,52 +964,5 @@ window.onload = function() {
     document.body.classList.add('loaded');
 };
     </script>
-    <!-- Importar los SDK de Firebase -->
-<script type="module">
-    // Importar Firebase y otras dependencias
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-    // Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
-        authDomain: "formulariogithub.firebaseapp.com",
-        projectId: "formulariogithub",
-        storageBucket: "formulariogithub.appspot.com",
-        messagingSenderId: "377516389796",
-        appId: "1:377516389796:web:93c39e97d017fe16093d31",
-        measurementId: "G-NVGW5516Y0"
-    };
-
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // El resto de tu código JavaScript
-    let otData = [];
-
-    // Función para mostrar la fecha actual
-    function displayCurrentDate() {
-        const dateElement = document.getElementById('current-date');
-        const today = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = today.toLocaleDateString('es-ES', options);
-        dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-    }
-
-    // Funciones adicionales para cargar contratistas, agregar filas, etc.
-
-    window.onload = function() {
-        checkSession(); // Verificar sesión
-        loadContratistas(); // Cargar contratistas
-        loadTrabajos(); // Cargar trabajos
-        displayCurrentDate(); // Mostrar la fecha actual
-
-        // Añadir clase 'loaded' para el efecto de fade-in
-        document.body.classList.add('loaded');
-    };
-</script>
-
-
 </body>
 </html>
