@@ -670,8 +670,9 @@ function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtota
     const cantidad = parseFloat(inputCant.value) || 0;
     const monto = parseFloat(inputMonto.value) || 0;
     const movilizacion = parseFloat(inputMovilizacion.value) || 0;
-    inputSubtotal.value = $${((cantidad * monto) + movilizacion).toFixed(2)};
+    inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;  // Cambiado $$ por ${}
 }
+
 
 function deleteRow(row) {
     row.remove(); 
@@ -772,21 +773,21 @@ function displaySummary() {
         totalMovilizacion += parseFloat(data.movilizacion);
     });
 
-    let resumenTabla = <strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>;
-    resumenTabla += <table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>;
+    let resumenTabla = `<strong>${otData[0].contratista}</strong> - Resumen de tus cobros. Haz clic en 'Validar y Descargar Soporte' para obtener respaldo.<br><br>`;
+    resumenTabla += `<table><tr><th>Cantidad</th><th>Tipo de OT</th><th>Valor Monto</th><th>Valor Movilización</th><th>Subtotal</th></tr>`;
 
     for (const tipo in resumenPorTipo) {
-        resumenTabla += <tr>
+        resumenTabla += `<tr>
             <td>${resumenPorTipo[tipo].cantidad}</td>
             <td>${tipo}</td>
             <td>$${resumenPorTipo[tipo].totalMonto.toFixed(2)}</td>
             <td>$${resumenPorTipo[tipo].totalMovilizacion.toFixed(2)}</td>
             <td>$${(resumenPorTipo[tipo].totalMonto + resumenPorTipo[tipo].totalMovilizacion).toFixed(2)}</td>
-        </tr>;
+        </tr>`;
     }
-    resumenTabla += </table><br><strong><span class="total-general">Total General Monto: $${totalMonto.toFixed(2)}</span></strong><br>;
-    resumenTabla += <strong><span class="total-general">Total General Movilización: $${totalMovilizacion.toFixed(2)}</span></strong><br>;
-    resumenTabla += <strong><span class="total-general">Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</span></strong>;
+    resumenTabla += `</table><br><strong><span class="total-general">Total General Monto: $${totalMonto.toFixed(2)}</span></strong><br>`;
+    resumenTabla += `<strong><span class="total-general">Total General Movilización: $${totalMovilizacion.toFixed(2)}</span></strong><br>`;
+    resumenTabla += `<strong><span class="total-general">Total General: $${(totalMonto + totalMovilizacion).toFixed(2)}</span></strong>`;
 
     document.getElementById('summary').innerHTML = resumenTabla;
 
@@ -796,6 +797,7 @@ function displaySummary() {
     summaryBtn.classList.remove('burdeo');
     summaryBtn.classList.add('azul');
 }
+
 
 // Función para generar y descargar el archivo XLSX y enviar datos al endpoint
 async function finalizeAndDownload() {
@@ -850,12 +852,7 @@ async function finalizeAndDownload() {
     // Enviar datos a Firebase después de generar el archivo Excel
     await enviarDatosAFirebase();
 
-    // Limpiar la tabla después de enviar los datos a Firebase
-    clearTable();
-}
-
-
-    // Enviar datos al endpoint
+    // Enviar datos a Sharepoint
     await enviarDatos(otData);
 
     // Limpiar la tabla después de descargar
