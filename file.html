@@ -587,7 +587,7 @@ async function loadTrabajos() {
             throw new Error('Error al cargar trabajos');
         }
         const trabajos = await response.json();
-        console.log(trabajos); // Verificar el contenido
+        console.log('Trabajos cargados:', trabajos); // Depuración
         window.trabajosList = trabajos.trabajos;
     } catch (error) {
         console.error('Error al cargar trabajos:', error);
@@ -687,6 +687,7 @@ function addRow() {
     document.getElementById('summaryBtn').classList.remove('hidden');
 }
 
+// Función para calcular el subtotal
 function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal) {
     const cantidad = parseFloat(inputCant.value) || 0;
     const monto = parseFloat(inputMonto.value) || 0;
@@ -694,10 +695,12 @@ function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtota
     inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
 }
 
+// Función para eliminar una fila
 function deleteRow(row) {
     row.remove(); 
 }
 
+// Función para validar y preparar los datos para el resumen y Firebase
 function viewSummary() {
     const table = document.getElementById('otTable');
     otData = [];
@@ -871,28 +874,32 @@ async function finalizeAndDownload() {
     // Enviar datos a Firebase
     await enviarDatosAFirebase(otData);
 
+    // Mostrar mensaje de éxito
+    alert('Datos enviados exitosamente a Firebase y archivo descargado.');
+
     // Limpiar la tabla después de descargar
     clearTable();
 }
 
-// Nueva función para enviar datos a Firebase Realtime Database
+// Función para enviar datos a Firebase Realtime Database
 async function enviarDatosAFirebase(otData) {
     try {
+        if (otData.length === 0) {
+            throw new Error('No hay datos para enviar.');
+        }
+
         const contratista = otData[0].contratista;
         const timestamp = Date.now();
         const dataRef = database.ref(`cobros/${contratista}/${timestamp}`);
+
+        console.log('Enviando datos a Firebase:', otData);
         await dataRef.set(otData);
         console.log('Datos enviados exitosamente a Firebase.');
-        // Mostrar mensaje de éxito al usuario
-        document.getElementById('success-msg').style.display = "block";
-        setTimeout(() => {
-            document.getElementById('success-msg').style.display = "none";
-        }, 5000);
+        // Opcional: Mostrar un mensaje al usuario
+        // alert('Datos enviados exitosamente a Firebase.');
     } catch (error) {
         console.error('Error al enviar datos a Firebase:', error);
-        // Mostrar mensaje de error al usuario
-        document.getElementById('error-msg').textContent = "Error al enviar los datos a Firebase.";
-        document.getElementById('error-msg').style.display = "block";
+        alert('Error al enviar los datos a Firebase.');
     }
 }
 
