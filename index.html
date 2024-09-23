@@ -430,6 +430,14 @@ footer {
     border-top: 1px solid var(--input-border); /* Corrección de la propiedad */
 }
     </style>
+
+    <!-- Firebase SDKs -->
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+    <!-- Add Firebase Realtime Database SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <!-- Encabezado Fijo -->
@@ -512,15 +520,9 @@ footer {
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
-    <!-- Firebase App (core SDK) -->
-<script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js"></script>
-<!-- Firebase Firestore SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js"></script>
-
-<script>
-// Importar las funciones necesarias de Firebase
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, writeBatch } from "firebase/firestore";
+    <!-- Tu script JavaScript -->
+    <script>
+let otData = [];
 
 // Configuración de Firebase
 const firebaseConfig = {
@@ -535,17 +537,9 @@ const firebaseConfig = {
 };
 
 // Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-
-// Inicializar Firestore
-const db = getFirestore(app);
-
-</script>
-
-    
-    <!-- Tu script JavaScript -->
-    <script>
-let otData = [];
+firebase.initializeApp(firebaseConfig);
+const analytics = firebase.analytics();
+const database = firebase.database();
 
 // Función para mostrar la fecha actual
 function displayCurrentDate() {
@@ -828,7 +822,7 @@ function displaySummary() {
     summaryBtn.classList.add('azul');
 }
 
-// Función para generar y descargar el archivo XLSX y enviar datos al endpoint
+// Función para generar y descargar el archivo XLSX y enviar datos al endpoint y a Firebase
 async function finalizeAndDownload() {
     const resumenContent = [
         ["Resumen de Cobros del Mes"],
@@ -881,6 +875,9 @@ async function finalizeAndDownload() {
     // Enviar datos al endpoint
     await enviarDatos(otData);
 
+    // Enviar datos a Firebase
+    await enviarDatosFirebase(otData);
+
     // Limpiar la tabla después de descargar
     clearTable();
 }
@@ -902,20 +899,27 @@ async function enviarDatos(otData) {
             console.error('Error al enviar datos:', response.statusText);
             alert('Error al enviar los datos al servidor.');
         }
-
-        // Enviar los datos a Firebase
-        const batch = db.batch(); // Usamos un batch para múltiples operaciones
-        otData.forEach((row) => {
-            const docRef = db.collection("ordenesTrabajo").doc(); // Crear un nuevo documento
-            batch.set(docRef, row); // Agregar datos al batch
-        });
-
-        await batch.commit(); // Enviar batch a Firebase
-        console.log('Datos enviados exitosamente a Firebase.');
-        alert('Datos enviados exitosamente a Firebase.');
     } catch (e) {
         console.error('Error en la solicitud:', e);
         alert('Error al enviar los datos al servidor.');
+    }
+}
+
+// Nueva función para enviar datos a Firebase Realtime Database
+async function enviarDatosFirebase(otData) {
+    try {
+        const contratista = otData[0].contratista;
+        const fecha = new Date().toISOString();
+        const newPaymentRef = database.ref('payments').push();
+        await newPaymentRef.set({
+            contratista: contratista,
+            fecha: fecha,
+            datos: otData
+        });
+        console.log('Datos enviados exitosamente a Firebase.');
+    } catch (error) {
+        console.error('Error al enviar datos a Firebase:', error);
+        alert('Error al enviar los datos a Firebase.');
     }
 }
 
