@@ -6,11 +6,10 @@
     <title>Pago Contratistas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-e6iZ5qXcQoHj5ThQ1kHvS6k6Yt3cfi9GjPNn8Xb0h8Y2+6n3p6eI5B6dq3o7YYZ0" crossorigin="anonymous">
     <style>
-        /* Aquí irían tus estilos personalizados */
+        /* Tus estilos aquí */
     </style>
 </head>
 <body>
-    <!-- Contenido principal -->
     <header>
         <div class="logo-container">
             <img id="logo" src="https://d31n4s42c9zm35.cloudfront.net/cl/uploads/2023/10/logo-lipigas.svg" alt="Logo Empresa">
@@ -40,7 +39,6 @@
             <select id="contratista" aria-label="Seleccionar Contratista">
                 <option value="">Seleccione un contratista</option>
             </select>
-            <!-- El botón Cargar OT sigue visible -->
             <button onclick="addRow()"><i class="fas fa-plus"></i> Cargar OT</button>
         </div>
 
@@ -59,7 +57,6 @@
             </table>
         </div>
 
-        <!-- Botones -->
         <div class="button-group">
             <button onclick="addRow()" class="verde"><i class="fas fa-plus"></i> Agregar OT</button>
             <button id="summaryBtn" class="burdeo hidden" onclick="viewSummary()"><i class="fas fa-file-alt"></i> Ver Resumen</button>
@@ -93,7 +90,6 @@
     <!-- Librería para descargar XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
-    <!-- Script Principal -->
     <script type="module">
         // Importar las funciones necesarias desde los SDK de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -114,38 +110,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let otData = []; // Aquí se almacenan los datos de OT
+        let otData = []; // Almacenará los datos de OT
 
-        // Función para enviar los datos a Firebase
-        async function sendToServer() {
-            const contratista = document.getElementById('contratista').value;
-
-            if (otData.length > 0 && contratista) {
-                try {
-                    for (const ot of otData) {
-                        await addDoc(collection(db, "ordenes_trabajo"), {
-                            contratista: ot.contratista,
-                            ot: ot.ot,
-                            tipo: ot.tipo,
-                            cantidad: ot.cantidad,
-                            descripcion: ot.descripcion,
-                            monto: ot.monto,
-                            movilizacion: ot.movilizacion,
-                            subtotal: ot.subtotal,
-                            fecha: serverTimestamp()
-                        });
-                    }
-                    alert('Datos enviados correctamente a Firebase.');
-                } catch (error) {
-                    console.error("Error al enviar datos a Firebase: ", error);
-                    alert('Error al enviar los datos a Firebase.');
-                }
-            } else {
-                alert('No hay datos para enviar.');
-            }
-        }
-
-        // Funciones adicionales para manejar OTs, agregar filas, etc.
+        // Función para agregar una fila
         function addRow() {
             const table = document.getElementById('otTable');
             const row = table.insertRow();
@@ -201,18 +168,37 @@
             document.getElementById('summaryBtn').classList.remove('hidden');
         }
 
-        // Función para calcular el subtotal
-        function calcularSubtotal(inputCant, inputMonto, inputMovilizacion, inputSubtotal) {
-            const cantidad = parseFloat(inputCant.value) || 0;
-            const monto = parseFloat(inputMonto.value) || 0;
-            const movilizacion = parseFloat(inputMovilizacion.value) || 0;
-            inputSubtotal.value = `$${((cantidad * monto) + movilizacion).toFixed(2)}`;
+        // Función para enviar los datos de OT a Firebase Firestore
+        async function sendToServer() {
+            const contratista = document.getElementById('contratista').value;
+
+            // Verifica si hay datos para enviar
+            if (otData.length > 0 && contratista) {
+                try {
+                    for (const ot of otData) {
+                        await addDoc(collection(db, "ordenes_trabajo"), {
+                            contratista: ot.contratista,
+                            ot: ot.ot,
+                            tipo: ot.tipo,
+                            cantidad: ot.cantidad,
+                            descripcion: ot.descripcion,
+                            monto: ot.monto,
+                            movilizacion: ot.movilizacion,
+                            subtotal: ot.subtotal,
+                            fecha: serverTimestamp()
+                        });
+                    }
+                    alert('Datos enviados correctamente a Firebase.');
+                } catch (error) {
+                    console.error("Error al enviar datos a Firebase: ", error);
+                    alert('Error al enviar los datos a Firebase.');
+                }
+            } else {
+                alert('No hay datos para enviar.');
+            }
         }
 
-        // Cargar otros datos como contratistas
-        async function loadContratistas() {
-            // Cargar datos desde un JSON o similar
-        }
+        // Otras funciones: Resumen, cálculo de subtotales, etc.
 
         // Función para mostrar la fecha actual
         function displayCurrentDate() {
@@ -220,7 +206,7 @@
             const today = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const formattedDate = today.toLocaleDateString('es-ES', options);
-            dateElement.textContent = formattedDate;
+            dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
         }
 
         window.onload = function () {
