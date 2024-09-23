@@ -518,21 +518,28 @@ footer {
 <script src="https://www.gstatic.com/firebasejs/9.13.0/firebase-firestore.js"></script>
 
 <script>
-    // Configuración de Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
-      authDomain: "pagocontratistas.firebaseapp.com",
-      databaseURL: "https://pagocontratistas-default-rtdb.firebaseio.com",
-      projectId: "pagocontratistas",
-      storageBucket: "pagocontratistas.appspot.com",
-      messagingSenderId: "87829393195",
-      appId: "1:87829393195:web:d46970885f29126eef5f6e",
-      measurementId: "G-NHR6KRCG3R"
-    };
+// Importar las funciones necesarias de Firebase
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, writeBatch } from "firebase/firestore";
 
-    // Inicializar Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+// Configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAtXhHrY8EKzmE_yo0rA18rvzKZXyoZFGs",
+  authDomain: "pagocontratistas.firebaseapp.com",
+  databaseURL: "https://pagocontratistas-default-rtdb.firebaseio.com",
+  projectId: "pagocontratistas",
+  storageBucket: "pagocontratistas.appspot.com",
+  messagingSenderId: "87829393195",
+  appId: "1:87829393195:web:d46970885f29126eef5f6e",
+  measurementId: "G-NHR6KRCG3R"
+};
+
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
+
+// Inicializar Firestore
+const db = getFirestore(app);
+
 </script>
 
     
