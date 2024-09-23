@@ -9,7 +9,29 @@
     <!-- Estilos CSS -->
     <style>
 /* (Tus estilos CSS existentes aquí) */
-    /* ... (Mantén tus estilos CSS sin cambios) ... */
+/* ... (Mantén tus estilos CSS sin cambios) ... */
+    /* Añade estilos para mensajes de éxito y error */
+    #success-msg, #error-msg {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1em;
+    }
+
+    #success-msg {
+        color: var(--success-color);
+        display: none;
+    }
+
+    #error-msg {
+        color: var(--invalid-color);
+        display: none;
+    }
+
+    /* Añade estilos para inputs inválidos */
+    .invalid-input {
+        border-color: var(--invalid-color) !important;
+        box-shadow: 0 0 5px var(--invalid-color) !important;
+    }
     </style>
     <!-- Firebase SDKs -->
     <!-- Firebase App (la base de Firebase) -->
@@ -487,7 +509,21 @@ async function enviarDatos(otData) {
 // Función para enviar datos a Firebase Firestore
 async function enviarDatosAFirebase(otData) {
     try {
-        // Supongamos que cada envío se registra como un documento en la colección 'cobros'
+        // Asegurarse de que Firestore esté inicializado
+        if (!db) {
+            console.error('Firestore no está inicializado.');
+            alert('Error al enviar los datos a Firebase Firestore.');
+            return;
+        }
+
+        // Verificar que otData tenga al menos un elemento
+        if (otData.length === 0) {
+            console.error('No hay datos para enviar a Firestore.');
+            alert('No hay datos para enviar a Firebase Firestore.');
+            return;
+        }
+
+        // Crear un nuevo documento en la colección 'cobros'
         const docRef = await db.collection("cobros").add({
             contratista: otData[0].contratista,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -495,7 +531,7 @@ async function enviarDatosAFirebase(otData) {
         });
         console.log('Datos enviados exitosamente a Firestore. ID del documento:', docRef.id);
         // Opcional: Mostrar un mensaje al usuario
-        // alert('Datos enviados exitosamente a Firebase Firestore.');
+        document.getElementById('success-msg').style.display = "block";
     } catch (error) {
         console.error('Error al enviar datos a Firestore:', error);
         alert('Error al enviar los datos a Firebase Firestore.');
