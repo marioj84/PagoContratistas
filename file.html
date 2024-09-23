@@ -1001,27 +1001,30 @@ window.onload = function() {
     document.body.classList.add('loaded');
 };
     </script>
-<!-- Importar los SDK de Firebase -->
-<script type="module">
-    // Importar las funciones necesarias desde los SDK de Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Configuración de Firebase (tu configuración)
-    const firebaseConfig = {
-        apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
-        authDomain: "formulariogithub.firebaseapp.com",
-        projectId: "formulariogithub",
-        storageBucket: "formulariogithub.appspot.com",
-        messagingSenderId: "377516389796",
-        appId: "1:377516389796:web:93c39e97d017fe16093d31",
-        measurementId: "G-NVGW5516Y0"
-    };
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyANmPIkq2scSmoA-SGRv-tCh7WKWLcH4rQ",
+  authDomain: "formulariogithub.firebaseapp.com",
+  projectId: "formulariogithub",
+  storageBucket: "formulariogithub.appspot.com",
+  messagingSenderId: "377516389796",
+  appId: "1:377516389796:web:93c39e97d017fe16093d31",
+  measurementId: "G-NVGW5516Y0"
+};
 
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+    
 </script>
+
 
 </body>
 </html>
