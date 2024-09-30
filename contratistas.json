@@ -1,135 +1,154 @@
 [
     {
         "nombreCompleto": "INGESER",
-        "responsable": "Victor Acuña Rojas",
+        "usuario": "ingeser",
+        "clave": "A1b7c9D$4",
+        "mail": "ingeser.ing@gmail.com",
         "zona": "ARICA",
-        "usuario": "ingeser.ing@gusuario.com",
-        "clave": "A1b7c9D$4"
+        "responsable": "Victor Acuña Rojas"
     },
     {
         "nombreCompleto": "INGENIERIA Y SERVICIOS INTEGRADOS (EVJ)",
-        "responsable": "Angelica Fuentes",
+        "usuario": "afuentes",
+        "clave": "F2x5L1p@7",
+        "mail": "afuentes@ingenieriaevj.com",
         "zona": "TALCA",
-        "usuario": "afuentes@ingenieriaevj.com",
-        "clave": "F2x5L1p@7"
+        "responsable": "Angelica Fuentes"
     },
     {
         "nombreCompleto": "DANIEL OJEDA",
-        "responsable": "Daniel Ojeda",
+        "usuario": "dojeda",
+        "clave": "O3q8N4b!6",
+        "mail": "danielojedap@gmail.com",
         "zona": "OSORNO",
-        "usuario": "danielojedap@gusuario.com",
-        "clave": "O3q8N4b!6"
+        "responsable": "Daniel Ojeda"
     },
     {
         "nombreCompleto": "EFRAIN ALVAREZ",
-        "responsable": "Efrain Alvarez",
+        "usuario": "ealvarez",
+        "clave": "V5m1A9c#7",
+        "mail": "efrain08@gmail.com",
         "zona": "VALDIVIA",
-        "usuario": "efrain08@gusuario.com",
-        "clave": "V5m1A9c#7"
+        "responsable": "Efrain Alvarez"
     },
     {
         "nombreCompleto": "FERNANDO SOTO",
-        "responsable": "Fernando Soto",
+        "usuario": "fsoto",
+        "clave": "S2z7F6k$9",
+        "mail": "fernando.soto@sover.cl",
         "zona": "GENERAL",
-        "usuario": "fernando.soto@sover.cl",
-        "clave": "S2z7F6k$9"
+        "responsable": "Fernando Soto"
     },
     {
         "nombreCompleto": "FREDDY PALAVICINO",
-        "responsable": "Freddy Palavicino",
+        "usuario": "fpalavicino",
+        "clave": "P1h6F8d!2",
+        "mail": "fpalavicino@asimtec.cl",
         "zona": "CHILLAN",
-        "usuario": "fpalavicino@asimtec.cl",
-        "clave": "P1h6F8d!2"
+        "responsable": "Freddy Palavicino"
     },
     {
         "nombreCompleto": "GERMAN STUARDO GALDAMES OBRAS CIVILES MENORES",
-        "responsable": "Galdames Obras",
+        "usuario": "gstuardo",
+        "clave": "G9d4L1r@3",
+        "mail": "climaygas@gmail.com",
         "zona": "CONCEPCION",
-        "usuario": "climaygas@gusuario.com",
-        "clave": "G9d4L1r@3"
+        "responsable": "Galdames Obras"
     },
     {
         "nombreCompleto": "HUGO PAVEZ",
-        "responsable": "Hugo Pavez",
+        "usuario": "hpavez",
+        "clave": "P8g6H1m#4",
+        "mail": "hpavezp@gmail.com",
         "zona": "IQUIQUE",
-        "usuario": "hpavezp@gusuario.com",
-        "clave": "P8g6H1m#4"
+        "responsable": "Hugo Pavez"
     },
     {
         "nombreCompleto": "HYC CONSTRUCCIONES HENRRI QUINILLAO E.I.R.L.",
-        "responsable": "Henrri Quinillao",
+        "usuario": "hconstrucciones",
+        "clave": "Q4j1K9f@8",
+        "mail": "henrriq@gmail.com",
         "zona": "TEMUCO",
-        "usuario": "henrriq@gusuario.com",
-        "clave": "Q4j1K9f@8"
+        "responsable": "Henrri Quinillao"
     },
     {
         "nombreCompleto": "JENNY VEGA",
-        "responsable": "Jenny Vega",
+        "usuario": "jvega",
+        "clave": "V3l9J2t!5",
+        "mail": "vegasoledad@gmail.com",
         "zona": "MAIPU",
-        "usuario": "vegasoledad@gusuario.com",
-        "clave": "V3l9J2t!5"
+        "responsable": "Jenny Vega"
     },
     {
         "nombreCompleto": "JMG SERVICIOS",
-        "responsable": "José Mauad",
+        "usuario": "jservicios",
+        "clave": "M1h7J6k@4",
+        "mail": "jmauadg@yahoo.com",
         "zona": "COQUIMBO",
-        "usuario": "jmauadg@yahoo.com",
-        "clave": "M1h7J6k@4"
+        "responsable": "José Mauad"
     },
     {
         "nombreCompleto": "JUAN FERRADA ESCOBAR",
-        "responsable": "Juan Ferrada",
+        "usuario": "jferrada",
+        "clave": "F8r2J5g!6",
+        "mail": "jferradatecnico@gmail.com",
         "zona": "COYHAIQUE",
-        "usuario": "jferradatecnico@gusuario.com",
-        "clave": "F8r2J5g!6"
+        "responsable": "Juan Ferrada"
     },
     {
         "nombreCompleto": "JUAN GALLARDO CERDA",
-        "responsable": "Juan Gallardo",
+        "usuario": "jgallardo",
+        "clave": "G3b7N8v#1",
+        "mail": "mantencionespuertomontt@gmail.com",
         "zona": "PUERTO MONTT",
-        "usuario": "mantencionespuertomontt@gusuario.com",
-        "clave": "G3b7N8v#1"
+        "responsable": "Juan Gallardo"
     },
     {
         "nombreCompleto": "KLAIT",
-        "responsable": "Claudio Iturriaga",
+        "usuario": "citurriaga",
+        "clave": "I6k9C2p$7",
+        "mail": "claudioandres@klait.cl",
         "zona": "ANTOFAGASTA, CALAMA",
-        "usuario": "claudioandres@klait.cl",
-        "clave": "I6k9C2p$7"
+        "responsable": "Claudio Iturriaga"
     },
     {
         "nombreCompleto": "MANUEL SUAREZ",
-        "responsable": "Manuel Suarez",
+        "usuario": "msuarez",
+        "clave": "S5n2M4c@8",
+        "mail": "jmsuarez@vtr.net",
         "zona": "VIÑA DEL MAR",
-        "usuario": "jmsuarez@vtr.net",
-        "clave": "S5n2M4c@8"
+        "responsable": "Manuel Suarez"
     },
     {
         "nombreCompleto": "ALL SERVICE",
-        "responsable": "Dilia Gonzalez",
+        "usuario": "allservice",
+        "clave": "S3g6D9k#4",
+        "mail": "copiapo@allservicegas.cl",
         "zona": "COPIAPO",
-        "usuario": "copiapo@allservicegas.cl",
-        "clave": "S3g6D9k#4"
+        "responsable": "Dilia Gonzalez"
     },
     {
         "nombreCompleto": "VICTOR FERNANDO CRUCES CESPEDES",
-        "responsable": "Victor Cruces",
+        "usuario": "vcruces",
+        "clave": "C7m4V1f@2",
+        "mail": "vcrucesc@gmail.com",
         "zona": "SANTIAGO",
-        "usuario": "vcrucesc@gusuario.com",
-        "clave": "C7m4V1f@2"
+        "responsable": "Victor Cruces"
     },
     {
         "nombreCompleto": "YANINA BECERRA",
-        "responsable": "Yanina Becerra",
+        "usuario": "ybecerra",
+        "clave": "B1r5Y8n!4",
+        "mail": "yaninabecerralorr@gmail.com",
         "zona": "VIÑA DEL MAR",
-        "usuario": "yaninabecerralorr@gusuario.com",
-        "clave": "B1r5Y8n!4"
+        "responsable": "Yanina Becerra"
     },
     {
         "nombreCompleto": "RIVERA Y VIDAL COMPANIA LIMITADA",
-        "responsable": "Rodolfo Vidal",
+        "usuario": "rvidal",
+        "clave": "V9k2L7t#1",
+        "mail": "rodolfovidalp@hotmail.com",
         "zona": "ACONCAGUA",
-        "usuario": "rodolfovidalp@hotusuario.com",
-        "clave": "V9k2L7t#1"
+        "responsable": "Rodolfo Vidal"
     }
 ]
