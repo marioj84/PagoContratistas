@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Datos Cargados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Resumen de Datos Cargados</h1>
+
+    <!-- Tabla donde se mostrarán los datos -->
+    <table id="resumenTable">
+        <thead>
+            <tr>
+                <th>ID Contratista</th>
+                <th>Orden de Trabajo</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se insertarán dinámicamente los datos -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Aquí debes conectar con la API de SharePoint o usar una librería para conectarte con tu base de datos
+    async function fetchResumenData() {
+        // Aquí debes hacer una llamada a tu SharePoint para traer los datos
+        // Por ejemplo, podrías usar Fetch API o Axios si tienes acceso a una API REST que te dé los datos
+
+        const data = [
+            {
+                id: 1,
+                orden: "OT001",
+                monto: "$500",
+                fecha: "2024-09-30"
+            },
+            {
+                id: 2,
+                orden: "OT002",
+                monto: "$750",
+                fecha: "2024-09-28"
+            }
+        ];
+
+        return data;
+    }
+
+    // Función para renderizar los datos en la tabla
+    async function renderResumenData() {
+        const data = await fetchResumenData();
+        const tableBody = document.querySelector('#resumenTable tbody');
+
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.orden}</td>
+                <td>${item.monto}</td>
+                <td>${item.fecha}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Cargar los datos al cargar la página
+    document.addEventListener('DOMContentLoaded', renderResumenData);
+</script>
+
+</body>
+</html>
